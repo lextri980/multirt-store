@@ -4,7 +4,7 @@ const isAdmin = (req, res, next) => {
   } else {
     return res.status(400).json({
       success: false,
-      message: "Admin resource, not authorized",
+      message: "Admin resource, you are not authorized",
     });
   }
 };
