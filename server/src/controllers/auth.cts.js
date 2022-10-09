@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
 const { emailRegex } = require("../constants/regex");
+const dto = require("../utils/dto");
 
 //! desc   Login
 //! route  POST /auth/login
@@ -9,28 +10,12 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   //Validate lack of field
   if (!email || !password) {
-    console.log(emailRegex.test(email));
-    return res.status(400).json({
-      success: false,
-      message: "Missing information",
-    });
-  }
-  //Validate email format
-  if (emailRegex.test(email) === false) {
-    console.log("in");
-    return res.status(400).json({
-      success: false,
-      message: "Email is invalid",
-    });
+    return dto(res, 400, false, "Missing information");
   }
   try {
     const user = await User.findOne({ email, password }).select("-password");
-    console.log(user);
     if (!user || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Incorrect information",
-      });
+      return dto(res, 400, false, "Incorrect information");
     }
     return res.status(200).json({
       success: true,
@@ -40,10 +25,7 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
+    return dto(res, 500, false, "Internal server error");
   }
 };
 
@@ -52,28 +34,18 @@ const login = async (req, res) => {
 //! access Public
 const register = async (req, res) => {
   const { name, email, password } = req.body;
-  const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
   //Validate lack of field
   if (!name || !email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "Missing information",
-    });
+    return dto(res, 400, false, "Missing information");
   }
   //Validate email format
   if (emailRegex.test(email) === false) {
-    return res.status(400).json({
-      success: false,
-      message: "Email is invalid",
-    });
+    return dto(res, 400, false, "Email is invalid");
   }
   try {
     const user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is already existed",
-      });
+      return dto(res, 400, false, "Email is already existed");
     }
 
     const newUser = new User({ name, email, password });
@@ -85,10 +57,7 @@ const register = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
+    return dto(res, 500, false, "Internal server error");
   }
 };
 
