@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { dtoSc, dtoFail, dtoServer, dto } = require("../utils/dto");
 
 const protectedRoute = async (req, res, next) => {
   let token;
@@ -9,12 +10,6 @@ const protectedRoute = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-    if (!token) {
-      return res.status(400).json({
-        success: false,
-        message: "Access token not found",
-      });
-    }
     try {
       const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
 
@@ -22,11 +17,10 @@ const protectedRoute = async (req, res, next) => {
 
       next();
     } catch (error) {
-      return res.status(403).json({
-        success: false,
-        message: "Invalid token",
-      });
+      return dto(res, 403, false, "Invalid token");
     }
+  } else {
+    return dtoFail(res, "Access token is not found");
   }
 };
 
