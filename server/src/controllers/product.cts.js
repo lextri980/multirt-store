@@ -53,7 +53,8 @@ const GetProductTop = async (req, res) => {
 //! route  /product/create
 //! access Private/isAdmin
 const createProduct = async (req, res) => {
-  const { name, image, brand, category, description, price, countInStock } =
+  const image = req.file
+  const { name, brand, category, description, price, countInStock } =
     req.body;
   //* Validate missing field
   if (
@@ -76,8 +77,14 @@ const createProduct = async (req, res) => {
       description,
       price,
       countInStock,
+      user: req.user._id,
     });
     await newProduct.save();
+    return dtoSc(res, {
+      success: true,
+      message: 'Create product successfully',
+      data: newProduct
+    });
   } catch (error) {
     console.log(error);
     return dtoServer(res);
