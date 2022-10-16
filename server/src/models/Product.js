@@ -8,7 +8,7 @@ const productSchema = new Schema({
     ref: "users",
   },
   name: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: Object, required: true },
   brand: { type: String, required: true },
   category: { type: String, required: true },
   description: { type: String, required: true },
@@ -28,9 +28,8 @@ const productSchema = new Schema({
     },
   ],
   rating: { type: Number, required: true, default: 0 },
-  reviewNumber: { type: Number, required: true, default: 0 },
   price: { type: Number, required: true, default: 0 },
   countInStock: { type: Number, required: true, default: 0 },
 });
 
-module.exports = mongoose.model("product", productSchema);
+module.exports = mongoose.model("products", productSchema);
