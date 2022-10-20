@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 async function connect() {
   try {
     await mongoose.connect(
-      `mongodb://localhost:27017/multirt-store`,
+      `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@multirt-store.fobqfgi.mongodb.net/?retryWrites=true&w=majority`,
+      // `mongodb://localhost:27017/multirt-store`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
