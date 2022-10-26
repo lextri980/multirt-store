@@ -4,7 +4,7 @@ const {
   getProductDetail,
   createProduct,
   GetProductTop,
-} = require("../controllers/product.cts");
+} = require("../controllers/product.controller");
 const isAdmin = require("../middleware/isAdmin");
 const protectedRoute = require("../middleware/protectedRoute");
 const idMatch = require("../middleware/idMatch");

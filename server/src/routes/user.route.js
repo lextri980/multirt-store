@@ -6,7 +6,7 @@ const {
   deleteUser,
   getUserProfile,
   updateUserProfile,
-} = require("../controllers/user.cts");
+} = require("../controllers/user.controller");
 const idMatch = require("../middleware/idMatch");
 const isAdmin = require("../middleware/isAdmin");
 const protectedRoute = require("../middleware/protectedRoute");
