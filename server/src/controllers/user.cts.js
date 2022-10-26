@@ -97,7 +97,7 @@ const getUserProfile = async (req, res) => {
 };
 
 //! desc   Update user profile
-//! route  POST /user/profile
+//! route  POST /user/profile/update
 //! access Private
 const updateUserProfile = async (req, res) => {
   const { email, name, password } = req.body;

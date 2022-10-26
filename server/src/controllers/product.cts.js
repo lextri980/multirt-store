@@ -6,7 +6,65 @@ const Product = require("../models/Product");
 //! access Public
 const getProduct = async (req, res) => {
   try {
-    const data = await Product.find();
+    //* Init variables --------------------
+    let data;
+    const query = req.query;
+    const querylength = Object.keys(query).length;
+    const searchArray = [];
+    const sortObject = {};
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 2;
+    let startIndex = (page - 1) * limit;
+
+    //* Loop handle query search --------------------
+    for (let i = 0; i < querylength; i++) {
+      searchArray.push({
+        [Object.keys(query)[i]]: {
+          $regex: query[Object.keys(query)[i]],
+          $options: "i",
+        },
+      });
+    }
+
+    //* Sort function --------------------
+    if (query.sort) {
+      const sortSplit = query.sort.split("_")[0];
+      if (query.sort === `${sortSplit}_asc`) {
+        sortObject[sortSplit] = 1;
+      } else if (query.sort === `${sortSplit}_desc`) {
+        sortObject[sortSplit] = -1;
+      }
+    }
+
+    //* Search function - Pagination - find() model --------------------
+    if (querylength > 0 && query.search) {
+      console.log("Normal search");
+      data = await Product.find({
+        $or: [
+          { name: { $regex: query.search, $options: "i" } },
+          { brand: { $regex: query.search, $options: "i" } },
+          { category: { $regex: query.search, $options: "i" } },
+        ],
+      })
+        .sort(sortObject)
+        .skip(startIndex)
+        .limit(limit);
+    } else if (querylength > 0 && !query.search) {
+      console.log("Advanced search");
+      data = await Product.find({
+        $and: searchArray,
+      })
+        .sort(sortObject)
+        .skip(startIndex)
+        .limit(limit);
+    } else {
+      console.log("No query");
+      data = await Product.find()
+        .sort({ name: 1 })
+        .skip(startIndex)
+        .limit(limit);
+    }
+
     return dtoSc(res, {
       success: true,
       data,
@@ -53,9 +111,8 @@ const GetProductTop = async (req, res) => {
 //! route  /product/create
 //! access Private/isAdmin
 const createProduct = async (req, res) => {
-  const image = req.file
-  const { name, brand, category, description, price, countInStock } =
-    req.body;
+  const image = req.file;
+  const { name, brand, category, description, price, countInStock } = req.body;
   //* Validate missing field
   if (
     !name ||
@@ -82,8 +139,8 @@ const createProduct = async (req, res) => {
     await newProduct.save();
     return dtoSc(res, {
       success: true,
-      message: 'Create product successfully',
-      data: newProduct
+      message: "Create product successfully",
+      data: newProduct,
     });
   } catch (error) {
     console.log(error);
