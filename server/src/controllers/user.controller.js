@@ -1,13 +1,68 @@
 const { emailRegex, passwordRegex } = require("../constants/regex");
 const User = require("../models/User");
 const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
+const { PAGE, LIMIT } = require("../constants/common");
 
 //! desc   Get all user
 //! route  GET /user
 //! access Private/isAdmin
 const getUser = async (req, res) => {
   try {
-    const data = await User.find({});
+    //* Init variables --------------------
+    let data;
+    const query = req.query;
+    const querylength = Object.keys(query).length;
+    const searchArray = [];
+    const sortObject = {};
+    const page = Number(query.page) || PAGE;
+    const limit = Number(query.limit) || LIMIT;
+    const startIndex = (page - 1) * limit;
+
+    //* Loop handle query search --------------------
+    for (let i = 0; i < querylength; i++) {
+      searchArray.push({
+        [Object.keys(query)[i]]: {
+          $regex: query[Object.keys(query)[i]],
+          $options: "i",
+        },
+      });
+    }
+
+    //* Sort function --------------------
+    if (query.sort) {
+      const sortSplit = query.sort.split("_")[0];
+      if (query.sort === `${sortSplit}_asc`) {
+        sortObject[sortSplit] = 1;
+      } else if (query.sort === `${sortSplit}_desc`) {
+        sortObject[sortSplit] = -1;
+      }
+    }
+    data = await User.find({});
+    //* Search function - Pagination - find() model --------------------
+    if (querylength > 0 && query.search) {
+      console.log("Normal search");
+      data = await User.find({
+        $or: [
+          { name: { $regex: query.search, $options: "i" } },
+          { email: { $regex: query.search, $options: "i" } },
+        ],
+      })
+        .sort(sortObject)
+        .skip(startIndex)
+        .limit(limit);
+    } else if (querylength > 0 && !query.search) {
+      console.log("Advanced search");
+      data = await User.find({
+        $and: searchArray,
+      })
+        .sort(sortObject)
+        .skip(startIndex)
+        .limit(limit);
+    } else {
+      console.log("No query");
+      data = await User.find().sort({ name: 1 }).skip(startIndex).limit(limit);
+    }
+
     return dtoSc(res, {
       success: true,
       data,
@@ -82,7 +137,7 @@ const deleteUser = async (req, res) => {
 
 //! desc   Get user profile
 //! route  GET /user/profile
-//! access Private
+//! access Private/Owner
 const getUserProfile = async (req, res) => {
   try {
     const data = await User.findById(req.user._id);
@@ -98,7 +153,7 @@ const getUserProfile = async (req, res) => {
 
 //! desc   Update user profile
 //! route  POST /user/profile/update
-//! access Private
+//! access Private/Owner
 const updateUserProfile = async (req, res) => {
   const { email, name, password } = req.body;
 

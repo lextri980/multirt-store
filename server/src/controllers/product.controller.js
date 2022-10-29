@@ -1,5 +1,7 @@
 const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
 const Product = require("../models/Product");
+const { PAGE, LIMIT } = require("../constants/common");
+const { findOneAndUpdate } = require("../models/Product");
 
 //! desc   Get all products
 //! route  /product/list
@@ -12,9 +14,9 @@ const getProduct = async (req, res) => {
     const querylength = Object.keys(query).length;
     const searchArray = [];
     const sortObject = {};
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 2;
-    let startIndex = (page - 1) * limit;
+    const page = Number(query.page) || PAGE;
+    const limit = Number(query.limit) || LIMIT;
+    const startIndex = (page - 1) * limit;
 
     //* Loop handle query search --------------------
     for (let i = 0; i < querylength; i++) {
@@ -48,7 +50,8 @@ const getProduct = async (req, res) => {
       })
         .sort(sortObject)
         .skip(startIndex)
-        .limit(limit);
+        .limit(limit)
+        .populate("user", ["name"]);
     } else if (querylength > 0 && !query.search) {
       console.log("Advanced search");
       data = await Product.find({
@@ -56,15 +59,33 @@ const getProduct = async (req, res) => {
       })
         .sort(sortObject)
         .skip(startIndex)
-        .limit(limit);
+        .limit(limit)
+        .populate("user", ["name"]);
     } else {
       console.log("No query");
       data = await Product.find()
-        .sort({ name: 1 })
+        .sort({ createdAt: -1 })
         .skip(startIndex)
-        .limit(limit);
+        .limit(limit)
+        .populate("user", ["name"]);
     }
 
+    return dtoSc(res, {
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+    return dtoServer(res);
+  }
+};
+
+//! desc   Get all products of an user
+//! route  /product/list
+//! access Private/isAdmin/Owner
+const getProductEachUser = async (req, res) => {
+  try {
+    const data = Product.find({ user: req.user.id });
     return dtoSc(res, {
       success: true,
       data,
@@ -148,4 +169,74 @@ const createProduct = async (req, res) => {
   }
 };
 
-module.exports = { getProduct, getProductDetail, GetProductTop, createProduct };
+//! desc   Update product
+//! route  /product/update/:id
+//! access Private/isAdmin/Owner
+const updateProduct = async (req, res) => {
+  const image = req.file;
+  const { name, brand, category, description, price } = req.body;
+
+  if (!name || !image || !brand || !category || !description || !price) {
+    return dtoFail(res, "Missing infomation");
+  }
+
+  try {
+    let updateData = {
+      name,
+      brand,
+      category,
+      description,
+      price,
+    };
+    const updateCondition = { _id: req.params.id, user: req.user._id };
+    updateData = await Product.findOneAndUpdate(updateCondition, updateData, {
+      new: true,
+    });
+
+    if (!updateData) {
+      return dtoFail(res, "Product is not found");
+    }
+
+    return dtoSc(res, {
+      success: true,
+      message: "Update product successfully",
+      data: updateData,
+    });
+  } catch (error) {
+    console.log(error);
+    return dtoServer(res);
+  }
+};
+
+//! desc   Delete product
+//! route  /product/delete/:id
+//! access Private/isAdmin/Owner
+const deleteProduct = async (req, res) => {
+  try {
+    const deleteCondition = { _id: req.params.id, user: req.user.id };
+    const deleteData = await Product.findOneAndDelete(deleteCondition);
+
+    if (!deleteData) {
+      return dtoFail(res, "Product is not found");
+    }
+
+    return dtoSc(res, {
+      success: true,
+      message: "Delete product successfully",
+      data: deleteData,
+    });
+  } catch (error) {
+    console.log(error);
+    return dtoServer(res);
+  }
+};
+
+module.exports = {
+  getProduct,
+  getProductEachUser,
+  getProductDetail,
+  GetProductTop,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};
