@@ -28,6 +28,25 @@
   color: #61dafb;
 }
 
+.link-redirect {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  transition: color 0.5s;
+
+  &:hover {
+    color: #00ABB3;
+    transition: color 0.5s;
+  }
+}
+
+.icon-clickable {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

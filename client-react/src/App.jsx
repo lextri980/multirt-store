@@ -1,22 +1,15 @@
-import './themes/scss/App.scss';
+import { NextUIProvider } from "@nextui-org/react";
+import { useRoutes } from "react-router-dom";
+import { theme } from "utils/theme.utils";
+import routes from "./routes/routes";
+import "./themes/scss/App.scss";
 
 function App() {
+  const route = useRoutes(routes());
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <NextUIProvider theme={theme}>
+      <div className="App">{route}</div>
+    </NextUIProvider>
   );
 }
 
