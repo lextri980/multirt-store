@@ -5,14 +5,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCart from "@mui/icons-material/ShoppingCartOutlined";
 import Sun from "@mui/icons-material/WbSunnyOutlined";
 import {
-  Badge,
-  Dropdown,
-  Input,
-  Navbar,
-  Switch,
-  Text,
-  Spacer,
-  Tooltip,
+Badge,
+Dropdown,
+Input,
+Navbar, Spacer, Switch,
+Text, Tooltip
 } from "@nextui-org/react";
 import clsx from "clsx";
 import { useState } from "react";
@@ -21,10 +18,12 @@ import Button from "../button/Button";
 import { NavbarContainer } from "./Navbar.style";
 
 function NavbarMenu() {
+  //Local state
   const [switchChecked, setSwitchChecked] = useState(true);
+
+  //* (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
     setSwitchChecked(!switchChecked);
-    console.log(switchChecked);
   };
 
   return (
@@ -68,7 +67,7 @@ function NavbarMenu() {
           <Tooltip
             content="You do not have an account? Click here to create an account."
             placement="bottom"
-            color='invert'
+            color="invert"
           >
             <Link to="/authentication" className="link-redirect login-link">
               <Account style={{ marginRight: "5px" }} />

@@ -5,7 +5,13 @@ import {
   REGISTERING,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  SET_AUTH,
 } from "constants/actions/auth.const";
+
+export const setAuth = (data) => ({
+  type: SET_AUTH,
+  payload: data,
+});
 
 export const loginning = (data) => ({
   type: LOGINNING,
