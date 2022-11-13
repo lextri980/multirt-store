@@ -1,3 +1,4 @@
+export const SET_AUTH = 'SET_AUTH'
 export const LOGINNING = 'LOGINNING'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAIL = 'LOGIN_FAIL'

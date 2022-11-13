@@ -11,7 +11,6 @@ apiAxios.interceptors.request.use(
   (config) => {
     let token;
     if (localStorage[LOCALSTORAGE_TOKEN_NAME]) {
-      console.log("yes");
       token = localStorage[LOCALSTORAGE_TOKEN_NAME];
     }
     config.headers = {

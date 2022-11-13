@@ -1,8 +1,10 @@
 import { useOutletContext } from "react-router-dom";
+import { titlePage } from "utils/titlePage.util";
 import Login from "./Login";
 import Register from "./Register";
 
 function Auth() {
+  titlePage("Authentication");
   const [isActive] = useOutletContext();
   let body;
   if (isActive === true) {

@@ -15,8 +15,6 @@ function Login() {
     password: "",
   });
 
-  //* Hooks
-
   //* Other
   const { email, password } = form;
 

@@ -1,8 +1,15 @@
-import { combineReducers } from 'redux';
-import authReducer from './auth.reducer';
+import { createBrowserHistory } from "history";
+import { combineReducers } from "redux";
+import { createReduxHistoryContext } from "redux-first-history";
+import authReducer from "./auth.reducer";
+
+const { routerReducer } = createReduxHistoryContext({
+  history: createBrowserHistory(),
+});
 
 const rootReducer = combineReducers({
-  auth: authReducer
-})
+  router: routerReducer,
+  auth: authReducer,
+});
 
 export default rootReducer;
