@@ -10,6 +10,8 @@ export const theme = createTheme({
       error: color.redP,
       warning: color.orangeP,
       secondary: color.navi,
+      light: color.white,
+      dark: color.black,
     },
   },
 });

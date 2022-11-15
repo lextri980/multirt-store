@@ -15,6 +15,7 @@ function Button(props) {
           color: props.text,
           minWidth: "50px",
         }}
+        disabled={props.disabled || false}
       >
         {props.name}
       </Buttonx>

@@ -1,13 +1,15 @@
 import { Card, Input, Row, Spacer } from "@nextui-org/react";
 import Button from "components/common/button/Button";
+import Loading from "components/common/loading/Loading";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginning } from "store/actions/auth.action";
 import { AuthContainer } from "./Auth.style";
 
 function Login() {
   //* Redux hooks
   const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
   //* Local state
   const [form, setForm] = useState({
@@ -76,10 +78,11 @@ function Login() {
             />
             <Spacer x={1} />
             <Button
-              name="Confirm"
+              name={loading === true ? <Loading size="" /> : "Confirm"}
               color="success"
               width="100px"
               type="submit"
+              disabled={loading === true ? true : false}
               onClick={onSubmitLogin}
             />
           </Row>
