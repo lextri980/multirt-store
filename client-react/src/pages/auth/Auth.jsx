@@ -4,7 +4,7 @@ import Login from "./Login";
 import Register from "./Register";
 
 function Auth() {
-  titlePage("Authentication");
+  titlePage("Multirt | Authentication");
   const [isActive] = useOutletContext();
   let body;
   if (isActive === true) {

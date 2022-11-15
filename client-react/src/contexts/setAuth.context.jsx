@@ -7,7 +7,7 @@ export const SetAuthContext = createContext();
 
 function SetAuthContextProvider({ children }) {
   const dispatch = useDispatch();
-  
+
   const setAuthLogin = () => {
     if (localStorage[LOCALSTORAGE_TOKEN_NAME]) {
       const userData = JSON.parse(localStorage.getItem("user"));
@@ -16,7 +16,8 @@ function SetAuthContextProvider({ children }) {
   };
 
   useEffect(() => {
-    setAuthLogin()
+    setAuthLogin();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const SetAuthContextData = {};
