@@ -43,11 +43,7 @@ function Register() {
   //! async (onSubmitLogin): click to submit login form
   const onSubmitRegister = () => {
     dispatch(registering(form));
-    setForm({
-      email: "",
-      name: "",
-      password: "",
-    });
+    handleClearform()
   };
 
   return (
