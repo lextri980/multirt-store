@@ -14,6 +14,7 @@ Text, Tooltip
 import clsx from "clsx";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Button from "../button/Button";
 import { NavbarContainer } from "./Navbar.style";
 
@@ -21,10 +22,15 @@ function NavbarMenu() {
   //Local state
   const [switchChecked, setSwitchChecked] = useState(true);
 
-  //* (handleChangeSwitch): change color for switch
+  //@ (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
     setSwitchChecked(!switchChecked);
   };
+
+  //@ (showToast): show toast
+  const showToast = () => {
+    toast.success('show')
+  }
 
   return (
     <NavbarContainer switchChecked={switchChecked}>
@@ -86,7 +92,7 @@ function NavbarMenu() {
           </Dropdown.Menu>
         </Dropdown>
         <Spacer x={2} />
-        <Button name="ABC" className="ml-20" color="success" />
+        <Button name="ABC" className="ml-20" color="warning" onClick={showToast} />
         <Spacer x={2} />
         <Button name="ABC" className="ml-20" color="success" />
         <Spacer x={2} />

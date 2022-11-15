@@ -2,18 +2,24 @@ import styled from "styled-components";
 import { color } from "themes/colors";
 
 export const ButtonContainer = styled.div`
-  .primary{
-    background-color: ${color.blue} ;
+  .primary {
+    background-color: ${color.blue};
   }
-  .warning{
+  .warning {
     background-color: ${color.orangeP};
   }
-  .danger{
-    background-color: ${color.redP} ;
+  .danger {
+    background-color: ${color.redP};
   }
-  .secondary{
-    background-color: ${color.navi} ;
+  .secondary {
+    background-color: ${color.navi};
   }
-  .success{
-    background-color: ${color.green} ;
+  .success {
+    background-color: ${color.green};
+  }
+  button:disabled,
+  button[disabled] {
+    opacity: 0.7;
+    color: ${color.white};
+  }
 `;

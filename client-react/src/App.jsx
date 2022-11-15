@@ -1,6 +1,8 @@
 import { NextUIProvider } from "@nextui-org/react";
 import SetAuthContextProvider from "contexts/setAuth.context";
 import { useRoutes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { theme } from "utils/theme.util";
 import routes from "./routes/routes";
 import "./themes/scss/App.scss";
@@ -10,6 +12,7 @@ function App() {
   return (
     <SetAuthContextProvider>
       <NextUIProvider theme={theme}>
+        <ToastContainer theme="colored" pauseOnFocusLoss={false}/>
         <div className="App">{route}</div>
       </NextUIProvider>
     </SetAuthContextProvider>

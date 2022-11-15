@@ -2,9 +2,14 @@ import { Card, Input, Row, Spacer } from "@nextui-org/react";
 import { AuthContainer } from "./Auth.style";
 import Button from "components/common/button/Button";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registering } from "store/actions/auth.action";
+import Loading from "components/common/loading/Loading";
 
 function Register() {
   //* Redux hooks
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
   //* Local state
   const [form, setForm] = useState({
@@ -36,9 +41,15 @@ function Register() {
   };
 
   //! async (onSubmitLogin): click to submit login form
-  const onSubmitLogin = async () => {
-    console.log(form);
+  const onSubmitRegister = () => {
+    dispatch(registering(form));
+    setForm({
+      email: "",
+      name: "",
+      password: "",
+    });
   };
+
   return (
     <AuthContainer>
       <Card css={{ mw: "400px", mh: "400px" }}>
@@ -86,11 +97,12 @@ function Register() {
             />
             <Spacer x={1} />
             <Button
-              name="Confirm"
+              name={loading === true ? <Loading /> : "Confirm"}
               color="success"
               width="100px"
               type="submit"
-              onClick={onSubmitLogin}
+              onClick={onSubmitRegister}
+              disabled={loading === true ? true : false}
             />
           </Row>
         </Card.Footer>

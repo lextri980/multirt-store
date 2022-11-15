@@ -1,8 +1,11 @@
 import {
-LOGINNING,
-LOGIN_FAIL,
-LOGIN_SUCCESS,
-SET_AUTH
+  LOGINNING,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
+  REGISTERING,
+  REGISTER_FAIL,
+  REGISTER_SUCCESS,
+  SET_AUTH,
 } from "constants/actions/auth.const";
 
 const initState = {
@@ -24,6 +27,7 @@ function authReducer(state = initState, { type, payload }) {
       };
 
     case LOGINNING:
+    case REGISTERING:
       return {
         ...state,
         loading: true,
@@ -39,7 +43,16 @@ function authReducer(state = initState, { type, payload }) {
         message: payload.message,
       };
 
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: payload.success,
+        message: payload.message,
+      };
+
     case LOGIN_FAIL:
+    case REGISTER_FAIL:
       return {
         ...state,
         loading: false,
