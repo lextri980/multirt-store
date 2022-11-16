@@ -29,7 +29,7 @@ import {
 import clsx from "clsx";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logoutRequest } from "store/actions/auth.action";
 import { color } from "themes/colors";
@@ -46,6 +46,10 @@ function NavbarMenu() {
   const [switchChecked, setSwitchChecked] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const open = Boolean(openDropdown);
+
+  //* Hooks
+  const navigate = useNavigate();
+  const location = useLocation();
 
   //@ (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
@@ -101,7 +105,12 @@ function NavbarMenu() {
           }}
           onClose={() => setOpenDropdown(null)}
         >
-          <MenuItem onClick={() => setOpenDropdown(null)}>
+          <MenuItem
+            onClick={() => {
+              navigate("/profile");
+              setOpenDropdown(null);
+            }}
+          >
             <ListItemIcon>
               <AssignmentIndIcon fontSize="small" />
             </ListItemIcon>
@@ -141,7 +150,10 @@ function NavbarMenu() {
   return (
     <NavbarContainer switchChecked={switchChecked}>
       <Navbar isBordered className="dark-theme">
-        <Navbar.Brand>
+        <Navbar.Brand
+          onClick={() => navigate("/dashboard")}
+          style={{ cursor: "pointer" }}
+        >
           <span className="logo-web">
             <AnchorIcon />
           </span>
@@ -190,29 +202,33 @@ function NavbarMenu() {
           {topLoginBtn}
         </Navbar.Content>
       </Navbar>
-      <div className="secondary-menu">
-        <Dropdown>
-          <Dropdown.Button>Menu</Dropdown.Button>
-          <Dropdown.Menu aria-label="Static Actions">
-            <Dropdown.Item key="new">New file</Dropdown.Item>
-            <Dropdown.Item key="copy">Copy link</Dropdown.Item>
-            <Dropdown.Item key="edit">Edit file</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        <Spacer x={2} />
-        <Button
-          name="ABC"
-          className="ml-20"
-          color="warning"
-          onClick={showToast}
-        />
-        <Spacer x={2} />
-        <Button name="ABC" className="ml-20" color="success" />
-        <Spacer x={2} />
-        <Button name="ABC" className="ml-20" color="success" />
-        <Spacer x={2} />
-        <Button name="ABC" className="ml-20" color="success" />
-      </div>
+      {location.pathname !== "/profile" ? (
+        <div className="secondary-menu">
+          <Dropdown>
+            <Dropdown.Button>Menu</Dropdown.Button>
+            <Dropdown.Menu aria-label="Static Actions">
+              <Dropdown.Item key="new">New file</Dropdown.Item>
+              <Dropdown.Item key="copy">Copy link</Dropdown.Item>
+              <Dropdown.Item key="edit">Edit file</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <Spacer x={2} />
+          <Button
+            name="ABC"
+            className="ml-20"
+            color="warning"
+            onClick={showToast}
+          />
+          <Spacer x={2} />
+          <Button name="ABC" className="ml-20" color="success" />
+          <Spacer x={2} />
+          <Button name="ABC" className="ml-20" color="success" />
+          <Spacer x={2} />
+          <Button name="ABC" className="ml-20" color="success" />
+        </div>
+      ) : (
+        ""
+      )}
     </NavbarContainer>
   );
 }

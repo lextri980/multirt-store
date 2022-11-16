@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registering } from "store/actions/auth.action";
 import Loading from "components/common/loading/Loading";
+import { toast } from "react-toastify";
 
 function Register() {
   //* Redux hooks
@@ -17,9 +18,9 @@ function Register() {
     name: "",
     password: "",
   });
-  
+
   //* Other
-  const { email, name, password } = form;
+  const { email, name, password, confirmPassword } = form;
 
   //@ (handleChangeLogin): handle change input
   const handleChangeLogin = (e) => {
@@ -35,18 +36,19 @@ function Register() {
       email: "",
       name: "",
       password: "",
+      confirmPassword: "",
     });
   };
 
   //! async (onSubmitLogin): click to submit login form
   const onSubmitRegister = () => {
     dispatch(registering(form));
-    handleClearform()
+    handleClearform();
   };
 
   return (
     <AuthContainer>
-      <Card css={{ mw: "400px", mh: "400px" }}>
+      <Card css={{ mw: "400px", mh: "700px" }}>
         <Card.Header className="card-header">
           <p className="title-card">Register</p>
         </Card.Header>
@@ -76,6 +78,15 @@ function Register() {
             labelPlaceholder="Password"
             name="password"
             value={password}
+            onChange={handleChangeLogin}
+          />
+          <Spacer y={1.8} />
+          <Input.Password
+            bordered
+            clearable
+            labelPlaceholder="Confirm password"
+            name="confirmPassword"
+            value={confirmPassword}
             onChange={handleChangeLogin}
           />
         </Card.Body>

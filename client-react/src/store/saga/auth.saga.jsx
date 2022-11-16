@@ -52,6 +52,7 @@ function* workerLogoutSaga() {
   localStorage.removeItem("user");
   yield delay(500);
   yield put(logoutSuccess());
+  yield put(push("/dashboard"));
   yield toast.success("Logout successfully");
 }
 
