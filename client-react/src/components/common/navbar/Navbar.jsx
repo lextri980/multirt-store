@@ -1,26 +1,51 @@
 import Account from "@mui/icons-material/AccountCircleOutlined";
 import AnchorIcon from "@mui/icons-material/Anchor";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import Moon from "@mui/icons-material/DarkModeOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PeopleIcon from "@mui/icons-material/People";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCart from "@mui/icons-material/ShoppingCartOutlined";
 import Sun from "@mui/icons-material/WbSunnyOutlined";
 import {
+Divider,
+ListItemIcon,
+ListItemText,
+Menu,
+MenuItem
+} from "@mui/material";
+import {
+Avatar,
 Badge,
 Dropdown,
 Input,
-Navbar, Spacer, Switch,
-Text, Tooltip
+Navbar,
+Spacer,
+Switch,
+Text,
+Tooltip
 } from "@nextui-org/react";
 import clsx from "clsx";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { logoutRequest } from "store/actions/auth.action";
+import { color } from "themes/colors";
 import Button from "../button/Button";
+import ButtonLight from "../button/ButtonLight";
 import { NavbarContainer } from "./Navbar.style";
 
 function NavbarMenu() {
-  //Local state
+  //* Redux hooks
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  //* Local state
   const [switchChecked, setSwitchChecked] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const open = Boolean(openDropdown);
 
   //@ (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
@@ -29,7 +54,70 @@ function NavbarMenu() {
 
   //@ (showToast): show toast
   const showToast = () => {
-    toast.success('show')
+    toast.success("show");
+  };
+
+  //! async (onSubmitLogout):  handle logout
+  const onSubmitLogout = () => {
+    dispatch(logoutRequest());
+  };
+
+  //* Condition rendering
+  let topLoginBtn;
+  if (isAuthenticated === false) {
+    topLoginBtn = (
+      <Tooltip
+        content="You do not have an account? Click here to create an account."
+        placement="bottom"
+        color="invert"
+      >
+        <Link to="/authentication" className="link-redirect login-link">
+          <Account style={{ marginRight: "5px" }} />
+          Login
+        </Link>
+      </Tooltip>
+    );
+  } else {
+    topLoginBtn = (
+      <>
+        <Avatar
+          style={{ marginRight: "-20px" }}
+          text={user.name.charAt(0).toUpperCase()}
+          src=""
+        />
+        <ButtonLight
+          name={user.name}
+          element={<ArrowDropDownIcon />}
+          onClick={(e) => setOpenDropdown(e.currentTarget)}
+        />
+        <Menu
+          id="basic-menu"
+          anchorEl={openDropdown}
+          open={open}
+          onClose={() => setOpenDropdown(null)}
+        >
+          <MenuItem onClick={() => setOpenDropdown(null)}>
+            <ListItemIcon>
+              <AssignmentIndIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Profile</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => setOpenDropdown(null)}>
+            <ListItemIcon>
+              <PeopleIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Manage user</ListItemText>
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={onSubmitLogout}>
+            <ListItemIcon sx={{ color: color.redP }}>
+              <LogoutIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText sx={{ color: color.redP }}>Logout</ListItemText>
+          </MenuItem>
+        </Menu>
+      </>
+    );
   }
 
   return (
@@ -70,16 +158,7 @@ function NavbarMenu() {
             aria-label="switch"
             onChange={handleChangeSwitch}
           />
-          <Tooltip
-            content="You do not have an account? Click here to create an account."
-            placement="bottom"
-            color="invert"
-          >
-            <Link to="/authentication" className="link-redirect login-link">
-              <Account style={{ marginRight: "5px" }} />
-              Login
-            </Link>
-          </Tooltip>
+          {topLoginBtn}
         </Navbar.Content>
       </Navbar>
       <div className="secondary-menu">
@@ -92,7 +171,12 @@ function NavbarMenu() {
           </Dropdown.Menu>
         </Dropdown>
         <Spacer x={2} />
-        <Button name="ABC" className="ml-20" color="warning" onClick={showToast} />
+        <Button
+          name="ABC"
+          className="ml-20"
+          color="warning"
+          onClick={showToast}
+        />
         <Spacer x={2} />
         <Button name="ABC" className="ml-20" color="success" />
         <Spacer x={2} />

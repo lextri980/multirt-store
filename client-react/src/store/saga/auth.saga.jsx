@@ -1,5 +1,9 @@
 import { loginApi, registerApi } from "api/auth.api";
-import { LOGINNING, REGISTERING } from "constants/actions/auth.const";
+import {
+  LOGINNING,
+  LOGOUT_REQUEST,
+  REGISTERING,
+} from "constants/actions/auth.const";
 import { LOCALSTORAGE_TOKEN_NAME } from "constants/service.const";
 import { toast } from "react-toastify";
 import { push } from "redux-first-history";
@@ -7,6 +11,7 @@ import { call, delay, fork, put, takeLatest } from "redux-saga/effects";
 import {
   loginFail,
   loginSuccess,
+  logoutSuccess,
   registerFail,
   registerSuccess,
 } from "store/actions/auth.action";
@@ -38,9 +43,16 @@ function* workerRegisterSaga({ payload }) {
     }
   } catch (error) {
     yield put(registerFail(error.response.data));
-    yield delay(1500);
     yield toast.error(error.response.data.message);
   }
+}
+
+function* workerLogoutSaga() {
+  localStorage.removeItem(LOCALSTORAGE_TOKEN_NAME);
+  localStorage.removeItem("user");
+  yield delay(500);
+  yield put(logoutSuccess());
+  yield toast.success("Logout successfully");
 }
 
 function* watcherLoginSaga() {
@@ -51,4 +63,12 @@ function* watcherRegisterSaga() {
   yield takeLatest(REGISTERING, workerRegisterSaga);
 }
 
-export const authSaga = [fork(watcherLoginSaga), fork(watcherRegisterSaga)];
+function* watcherLogoutSaga() {
+  yield takeLatest(LOGOUT_REQUEST, workerLogoutSaga);
+}
+
+export const authSaga = [
+  fork(watcherLoginSaga),
+  fork(watcherRegisterSaga),
+  fork(watcherLogoutSaga),
+];
