@@ -43,14 +43,14 @@ export const ButtonLightContainer = styled.button`
   transition: background-color 0.5s;
 
   &:hover {
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     cursor: pointer;
     transition: background-color 0.5s;
     border-radius: 10px;
   }
 
   p {
-    font-size: 14px;
+    font-size: 15px;
     margin-right: 5px;
   }
 `;

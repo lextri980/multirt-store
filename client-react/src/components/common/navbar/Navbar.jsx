@@ -9,22 +9,22 @@ import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCart from "@mui/icons-material/ShoppingCartOutlined";
 import Sun from "@mui/icons-material/WbSunnyOutlined";
 import {
-Divider,
-ListItemIcon,
-ListItemText,
-Menu,
-MenuItem
+  Divider,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import {
-Avatar,
-Badge,
-Dropdown,
-Input,
-Navbar,
-Spacer,
-Switch,
-Text,
-Tooltip
+  Avatar,
+  Badge,
+  Dropdown,
+  Input,
+  Navbar,
+  Spacer,
+  Switch,
+  Text,
+  Tooltip,
 } from "@nextui-org/react";
 import clsx from "clsx";
 import { useState } from "react";
@@ -94,26 +94,44 @@ function NavbarMenu() {
           id="basic-menu"
           anchorEl={openDropdown}
           open={open}
+          PaperProps={{
+            style: {
+              width: 200,
+            },
+          }}
           onClose={() => setOpenDropdown(null)}
         >
           <MenuItem onClick={() => setOpenDropdown(null)}>
             <ListItemIcon>
               <AssignmentIndIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Profile</ListItemText>
+            <ListItemText primaryTypographyProps={{ fontSize: "15px" }}>
+              Profile
+            </ListItemText>
           </MenuItem>
-          <MenuItem onClick={() => setOpenDropdown(null)}>
-            <ListItemIcon>
-              <PeopleIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Manage user</ListItemText>
-          </MenuItem>
+          {user.isAdmin === true ? (
+            <MenuItem onClick={() => setOpenDropdown(null)}>
+              <ListItemIcon>
+                <PeopleIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primaryTypographyProps={{ fontSize: "15px" }}>
+                Manage user
+              </ListItemText>
+            </MenuItem>
+          ) : (
+            ""
+          )}
           <Divider />
           <MenuItem onClick={onSubmitLogout}>
             <ListItemIcon sx={{ color: color.redP }}>
               <LogoutIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText sx={{ color: color.redP }}>Logout</ListItemText>
+            <ListItemText
+              sx={{ color: color.redP }}
+              primaryTypographyProps={{ fontSize: "15px" }}
+            >
+              Logout
+            </ListItemText>
           </MenuItem>
         </Menu>
       </>
@@ -130,6 +148,17 @@ function NavbarMenu() {
           <Text b color="inherit" hideIn="xs">
             MULTIRT STORE
           </Text>
+          <Spacer x={1}></Spacer>
+          {user ? (
+            <Badge
+              size="md"
+              color={user.isAdmin === true ? "warning" : "success"}
+            >
+              {user.isAdmin === true ? "Admin account" : "User account"}
+            </Badge>
+          ) : (
+            ""
+          )}
         </Navbar.Brand>
         <Navbar.Content>
           <Input
@@ -142,7 +171,7 @@ function NavbarMenu() {
           />
         </Navbar.Content>
         <Navbar.Content>
-          <Badge size="sm" content="1" className="badge-cart">
+          <Badge size="sm" content="1" color="error">
             <ShoppingCart className="icon-clickable" />
           </Badge>
           <Switch

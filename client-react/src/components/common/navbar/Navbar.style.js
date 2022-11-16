@@ -29,12 +29,6 @@ export const NavbarContainer = styled.div`
     }
   }
 
-  .badge-cart {
-    > span {
-      background-color: ${color.redP};
-    }
-  }
-
   .secondary-menu {
     display: flex;
     justify-content: center;
