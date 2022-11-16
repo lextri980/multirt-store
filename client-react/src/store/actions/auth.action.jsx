@@ -6,6 +6,8 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   SET_AUTH,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
 } from "constants/actions/auth.const";
 
 export const setAuth = (data) => ({
@@ -41,4 +43,12 @@ export const registerSuccess = (data) => ({
 export const registerFail = (error) => ({
   type: REGISTER_FAIL,
   payload: error,
+});
+
+export const logoutRequest = () => ({
+  type: LOGOUT_REQUEST,
+});
+
+export const logoutSuccess = () => ({
+  type: LOGOUT_SUCCESS,
 });

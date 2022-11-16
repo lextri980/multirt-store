@@ -2,6 +2,8 @@ import {
   LOGINNING,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
   REGISTERING,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
@@ -28,6 +30,7 @@ function authReducer(state = initState, { type, payload }) {
 
     case LOGINNING:
     case REGISTERING:
+    case LOGOUT_REQUEST:
       return {
         ...state,
         loading: true,
@@ -49,6 +52,14 @@ function authReducer(state = initState, { type, payload }) {
         loading: false,
         success: payload.success,
         message: payload.message,
+      };
+
+    case LOGOUT_SUCCESS:
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        loading: false,
       };
 
     case LOGIN_FAIL:

@@ -17,9 +17,7 @@ function Register() {
     name: "",
     password: "",
   });
-
-  //* Hooks
-
+  
   //* Other
   const { email, name, password } = form;
 

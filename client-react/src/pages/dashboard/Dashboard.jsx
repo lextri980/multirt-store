@@ -13,10 +13,6 @@ function Dashboard() {
   //* Local state
 
   //* Hooks
-  useEffect(() => {
-    console.log(loading)
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
 
   //* Other
 
