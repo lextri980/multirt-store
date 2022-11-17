@@ -44,17 +44,17 @@ export const NavbarContainer = styled.div`
   }
 
   .search-input {
-    width: 30vw;
+    width: 25vw;
 
     &:focus-within {
       .search-icon {
-        color: black;
+        color: ${color.blue};
       }
     }
 
     &:hover {
       .search-icon {
-        color: black;
+        color: ${color.blue};
       }
     }
   }
@@ -91,6 +91,24 @@ export const NavbarContainer = styled.div`
       &:not(&:active) {
         background-color: ${color.blackP};
       }
+    }
+  }
+
+  .title-profile {
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      cursor: pointer
+    }
+
+    svg {
+      margin-right: 10px;
+      font-size: 35px;
+    }
+
+    h4 {
+      margin: 0
     }
   }
 `;

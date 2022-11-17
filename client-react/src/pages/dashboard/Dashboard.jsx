@@ -1,3 +1,4 @@
+import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { useSelector } from "react-redux";
 import { titlePage } from "utils/titlePage.util";
 import { DashboardContainer } from "./Dashboard.style";
@@ -16,10 +17,12 @@ function Dashboard() {
   //* Other
 
   return (
-    <DashboardContainer>
-      <p>Dashboard</p>
-      <p>{loading}</p>
-    </DashboardContainer>
+    <AnimatedLayout>
+      <DashboardContainer>
+        <p>Dashboard</p>
+        <p>{loading}</p>
+      </DashboardContainer>
+    </AnimatedLayout>
   );
 }
 

@@ -1,14 +1,16 @@
-import React from "react";
 import { Outlet } from "react-router";
 import NavbarMenu from "../../common/navbar/Navbar";
+import AnimatedNavLayout from "../animatedLayout/AnimatedNavLayout";
 import { DashboardLayoutContainer } from "./DashboardLayout.style";
 
 function DashboardLayout() {
   return (
-    <DashboardLayoutContainer>
-      <NavbarMenu />
-      <Outlet />
-    </DashboardLayoutContainer>
+    <AnimatedNavLayout>
+      <DashboardLayoutContainer>
+        <NavbarMenu />
+        <Outlet />
+      </DashboardLayoutContainer>
+    </AnimatedNavLayout>
   );
 }
 
