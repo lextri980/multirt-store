@@ -4,6 +4,7 @@ import Loading from "components/common/loading/Loading";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginning } from "store/actions/auth.action";
+import * as yup from "yup";
 import { AuthContainer } from "./Auth.style";
 
 function Login() {
@@ -19,6 +20,19 @@ function Login() {
 
   //* Other
   const { email, password } = form;
+  const schema = yup.object().shape({
+    email: yup.string().required("Email is required"),
+    password: yup.string().required("Password is required"),
+  });
+
+  schema
+    .validate(form)
+    .then(function (value) {
+      console.log(value);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 
   //@ (handleChangeLogin): handle change input
   const handleChangeLogin = (e) => {
@@ -78,7 +92,7 @@ function Login() {
             />
             <Spacer x={1} />
             <Button
-              name={loading === true ? <Loading size="" /> : "Confirm"}
+              name={loading === true ? <Loading /> : "Confirm"}
               color="success"
               width="100px"
               type="submit"

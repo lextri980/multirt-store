@@ -1,11 +1,10 @@
 import { Card, Input, Row, Spacer } from "@nextui-org/react";
-import { AuthContainer } from "./Auth.style";
 import Button from "components/common/button/Button";
+import Loading from "components/common/loading/Loading";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registering } from "store/actions/auth.action";
-import Loading from "components/common/loading/Loading";
-import { toast } from "react-toastify";
+import { AuthContainer } from "./Auth.style";
 
 function Register() {
   //* Redux hooks

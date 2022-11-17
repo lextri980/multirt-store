@@ -1,36 +1,34 @@
-import { padding } from "@mui/system";
+import EmailIcon from "@mui/icons-material/EmailOutlined";
+import LockIcon from "@mui/icons-material/LockOutlined";
+import UsernameIcon from "@mui/icons-material/PeopleAltOutlined";
 import { Avatar, Card, Checkbox, Input, Row, Text } from "@nextui-org/react";
 import Button from "components/common/button/Button";
+import File from "components/common/file/File";
 import Modal from "components/common/modal/Modal";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { formatDate } from "utils/date.util";
 import { ProfileContainer } from "./Profile.style";
-import UsernameIcon from "@mui/icons-material/PeopleAltRounded";
-import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
-import LockRoundedIcon from "@mui/icons-material/LockRounded";
-import File from "components/common/file/File";
 
 function Profile() {
   //* Declare global variables
-  
+
   //* Redux hooks
   const { user } = useSelector((state) => state.auth);
 
   //* Local state
   const [openModal, setOpenModal] = useState(false);
-  const [fileName, setfileName] = useState('')
+  const [fileName, setfileName] = useState("");
   //* Hooks
 
   //* Other
 
   //* Condition rendering
 
-
   const onChange = (e) => {
-    console.log(e)
-    setfileName(e.target.value)
-  }
+    console.log(e);
+    setfileName(e.target.value);
+  };
   return (
     <ProfileContainer>
       <Card css={{ mw: "420px", padding: "25px 40px" }}>
@@ -96,7 +94,7 @@ function Profile() {
           color="primary"
           size="lg"
           placeholder="Email"
-          contentLeft={<EmailRoundedIcon />}
+          contentLeft={<EmailIcon />}
         />
         <Input.Password
           clearable
@@ -104,7 +102,7 @@ function Profile() {
           color="primary"
           size="lg"
           placeholder="Password"
-          contentLeft={<LockRoundedIcon />}
+          contentLeft={<LockIcon />}
         />
         <Input.Password
           clearable
@@ -112,7 +110,7 @@ function Profile() {
           color="primary"
           size="lg"
           placeholder="Confirm password"
-          contentLeft={<LockRoundedIcon />}
+          contentLeft={<LockIcon />}
         />
         <File onChange={onChange} name={fileName} fileTitle="Avatar" value="" />
         <Row justify="space-between">

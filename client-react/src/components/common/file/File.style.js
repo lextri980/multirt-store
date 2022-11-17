@@ -24,5 +24,7 @@ export const FileContainer = styled.div`
 
   label {
     margin-right: 10px;
+    display: flex;
+    align-items: center;
   }
 `;

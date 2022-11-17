@@ -1,6 +1,7 @@
 import AuthLayout from "components/layouts/authLayout/AuthLayout";
 import DashboardLayout from "components/layouts/dashboardLayout/DashboardLayout";
 import Landing from "components/routes/Landing";
+import ProtectedRoute from "components/routes/ProtectedRoute";
 import Auth from "pages/auth/Auth";
 import Login from "pages/auth/Login";
 import Register from "pages/auth/Register";
@@ -42,7 +43,11 @@ const routes = () => {
         },
         {
           path: "/profile",
-          element: <Profile />,
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
         },
       ],
     },

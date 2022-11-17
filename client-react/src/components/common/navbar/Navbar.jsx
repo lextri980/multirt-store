@@ -147,6 +147,7 @@ function NavbarMenu() {
     );
   }
 
+  //!! Return section ---------------------------------
   return (
     <NavbarContainer switchChecked={switchChecked}>
       <Navbar isBordered className="dark-theme">
