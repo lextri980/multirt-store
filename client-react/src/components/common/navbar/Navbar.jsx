@@ -30,7 +30,6 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { logoutRequest } from "store/actions/auth.action";
 import { color } from "themes/colors";
 import Button from "../button/Button";
@@ -54,11 +53,6 @@ function NavbarMenu() {
   //@ (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
     setSwitchChecked(!switchChecked);
-  };
-
-  //@ (showToast): show toast
-  const showToast = () => {
-    toast.success("show");
   };
 
   //! async (onSubmitLogout):  handle logout
@@ -90,10 +84,12 @@ function NavbarMenu() {
           src=""
         />
         <ButtonLight
-          name={user.name}
           element={<ArrowDropDownIcon />}
           onClick={(e) => setOpenDropdown(e.currentTarget)}
-        />
+        >
+          {user.name}
+          <ArrowDropDownIcon />
+        </ButtonLight>
         <Menu
           id="basic-menu"
           anchorEl={openDropdown}
@@ -214,18 +210,23 @@ function NavbarMenu() {
             </Dropdown.Menu>
           </Dropdown>
           <Spacer x={2} />
-          <Button
-            name="ABC"
-            className="ml-20"
-            color="warning"
-            onClick={showToast}
-          />
+          <Button name="ABC" className="ml-20" color="success">
+            ABC
+          </Button>
+
           <Spacer x={2} />
-          <Button name="ABC" className="ml-20" color="success" />
+          <Button name="ABC" className="ml-20" color="success">
+            ABC
+          </Button>
           <Spacer x={2} />
-          <Button name="ABC" className="ml-20" color="success" />
+          <Button name="ABC" className="ml-20" color="success">
+            ABC
+          </Button>
+
           <Spacer x={2} />
-          <Button name="ABC" className="ml-20" color="success" />
+          <Button name="ABC" className="ml-20" color="success">
+            ABC
+          </Button>
         </div>
       ) : (
         ""

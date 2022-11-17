@@ -12,22 +12,18 @@ function Modal(props) {
         onClose={props.close}
       >
         <ModalX.Header>
-          <Text id="modal-title" size={25} style={{marginTop: '10px'}}>
+          <Text id="modal-title" size={25} style={{ marginTop: "10px" }}>
             {props.header}
           </Text>
         </ModalX.Header>
         <ModalX.Body>{props.children}</ModalX.Body>
-        <ModalX.Footer style={{marginBottom: '10px'}}>
-          <Button
-            name={props.closeBtn || "Close"}
-            color="danger"
-            onClick={props.close}
-          />
-          <Button
-            color="success"
-            name={props.submitBtn || "Submit"}
-            onClick={props.submit}
-          />
+        <ModalX.Footer style={{ marginBottom: "10px" }}>
+          <Button color="danger" onClick={props.close}>
+            {props.closeBtn || "Close"}
+          </Button>
+          <Button color="success" onClick={props.submit}>
+            {props.submitBtn || "Submit"}
+          </Button>
         </ModalX.Footer>
       </ModalX>
     </ModalContainer>
