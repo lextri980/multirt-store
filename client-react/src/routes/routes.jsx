@@ -1,11 +1,13 @@
 import AuthLayout from "components/layouts/authLayout/AuthLayout";
 import DashboardLayout from "components/layouts/dashboardLayout/DashboardLayout";
 import Landing from "components/routes/Landing";
+import ProtectedRoute from "components/routes/ProtectedRoute";
 import Auth from "pages/auth/Auth";
 import Login from "pages/auth/Login";
 import Register from "pages/auth/Register";
 import Dashboard from "pages/dashboard/Dashboard";
 import NotFound from "pages/notFound/NotFound";
+import Profile from "pages/profile/Profile";
 
 const routes = () => {
   return [
@@ -38,6 +40,14 @@ const routes = () => {
         {
           path: "/dashboard",
           element: <Dashboard />,
+        },
+        {
+          path: "/profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
         },
       ],
     },

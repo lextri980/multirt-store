@@ -36,12 +36,18 @@
   transition: color 0.5s;
 
   &:hover {
-    color: #00ABB3;
+    color: #00abb3;
     transition: color 0.5s;
   }
 }
 
 .icon-clickable {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.pointer {
   &:hover {
     cursor: pointer;
   }

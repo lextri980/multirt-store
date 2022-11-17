@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { titlePage } from "utils/titlePage.util";
 import { DashboardContainer } from "./Dashboard.style";
