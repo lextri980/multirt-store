@@ -66,10 +66,9 @@ function Profile() {
         </Card.Body>
         <Card.Footer className="center">
           <Button
-            name="Update"
             color="warning"
             onClick={() => setOpenModal(true)}
-          />
+          >Update</Button>
         </Card.Footer>
       </Card>
 

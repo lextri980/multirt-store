@@ -1,4 +1,3 @@
-import { Spacer } from "@nextui-org/react";
 import Buttonx from "@nextui-org/react/button";
 import { ButtonContainer } from "./Button.style";
 
@@ -18,11 +17,7 @@ function Button(props) {
         }}
         disabled={props.disabled || false}
       >
-        {props.elementFront}
-        <Spacer x={0.4} />
-        {props.name}
-        <Spacer x={0.4} />
-        {props.elementBack}
+        {props.children}
       </Buttonx>
     </ButtonContainer>
   );

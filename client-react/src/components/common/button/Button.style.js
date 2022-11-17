@@ -53,4 +53,11 @@ export const ButtonLightContainer = styled.button`
     font-size: 15px;
     margin-right: 5px;
   }
+
+  .child-content-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+  }
 `;

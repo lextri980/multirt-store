@@ -84,21 +84,19 @@ function Login() {
         <Card.Divider />
         <Card.Footer>
           <Row justify="flex-end">
-            <Button
-              name="Clear"
-              color="danger"
-              width="100px"
-              onClick={handleClearform}
-            />
+            <Button color="danger" width="100px" onClick={handleClearform}>
+              Clear
+            </Button>
             <Spacer x={1} />
             <Button
-              name={loading === true ? <Loading /> : "Confirm"}
               color="success"
               width="100px"
               type="submit"
               disabled={loading === true ? true : false}
               onClick={onSubmitLogin}
-            />
+            >
+              {loading === true ? <Loading /> : "Confirm"}
+            </Button>
           </Row>
         </Card.Footer>
       </Card>

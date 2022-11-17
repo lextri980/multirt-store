@@ -4,8 +4,7 @@ import { ButtonLightContainer } from "./Button.style";
 function ButtonLight(props) {
   return (
     <ButtonLightContainer onClick={props.onClick} aria-label="Common-btn-light">
-      <p>{props.name}</p>
-      <span>{props.element}</span>
+      <div className="child-content-btn">{props.children}</div>
     </ButtonLightContainer>
   );
 }

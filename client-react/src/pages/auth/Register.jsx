@@ -93,21 +93,23 @@ function Register() {
         <Card.Footer>
           <Row justify="flex-end">
             <Button
-              name="Clear"
               color="danger"
               width="100px"
               type="submit"
               onClick={handleClearform}
-            />
+            >
+              Clear
+            </Button>
             <Spacer x={1} />
             <Button
-              name={loading === true ? <Loading /> : "Confirm"}
               color="success"
               width="100px"
               type="submit"
               onClick={onSubmitRegister}
               disabled={loading === true ? true : false}
-            />
+            >
+              {loading === true ? <Loading /> : "Confirm"}
+            </Button>
           </Row>
         </Card.Footer>
       </Card>
