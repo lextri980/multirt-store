@@ -1,11 +1,13 @@
-import { Card, Input, Row, Spacer } from "@nextui-org/react";
+import { Card, Checkbox, Input, Row, Spacer, Text } from "@nextui-org/react";
 import Button from "components/common/button/Button";
 import Loading from "components/common/loading/Loading";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginning } from "store/actions/auth.action";
-import * as yup from "yup";
 import { AuthContainer } from "./Auth.style";
+import EmailIcon from "@mui/icons-material/EmailOutlined";
+import LockIcon from "@mui/icons-material/LockOutlined";
+import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 
 function Login() {
   //* Redux hooks
@@ -20,19 +22,10 @@ function Login() {
 
   //* Other
   const { email, password } = form;
-  const schema = yup.object().shape({
-    email: yup.string().required("Email is required"),
-    password: yup.string().required("Password is required"),
-  });
-
-  schema
-    .validate(form)
-    .then(function (value) {
-      console.log(value);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
+  // const schema = yup.object().shape({
+  //   email: yup.string().required("Email is required"),
+  //   password: yup.string().required("Password is required"),
+  // });
 
   //@ (handleChangeLogin): handle change input
   const handleChangeLogin = (e) => {
@@ -56,51 +49,66 @@ function Login() {
   };
 
   return (
-    <AuthContainer>
-      <Card css={{ mw: "400px", mh: "400px" }}>
-        <Card.Header className="card-header">
-          <p className="title-card">Login</p>
-        </Card.Header>
-        <Card.Divider />
-        <Card.Body css={{ py: "40px", px: "25px" }}>
-          <Input
-            bordered
-            clearable
-            labelPlaceholder="Email"
-            name="email"
-            value={email}
-            onChange={handleChangeLogin}
-          />
-          <Spacer y={1.8} />
-          <Input.Password
-            bordered
-            clearable
-            labelPlaceholder="Password"
-            name="password"
-            value={password}
-            onChange={handleChangeLogin}
-          />
-        </Card.Body>
-        <Card.Divider />
-        <Card.Footer>
-          <Row justify="flex-end">
-            <Button color="danger" width="100px" onClick={handleClearform}>
-              Clear
-            </Button>
-            <Spacer x={1} />
-            <Button
-              color="success"
-              width="100px"
-              type="submit"
-              disabled={loading === true ? true : false}
-              onClick={onSubmitLogin}
-            >
-              {loading === true ? <Loading /> : "Confirm"}
-            </Button>
-          </Row>
-        </Card.Footer>
-      </Card>
-    </AuthContainer>
+    <AnimatedLayout>
+      <AuthContainer>
+        <Card css={{ mw: "400px", mh: "400px" }}>
+          <Card.Header className="card-header">
+            <p className="title-card">Login</p>
+          </Card.Header>
+          <Card.Divider />
+          <Card.Body css={{ py: "30px", px: "25px" }}>
+            <Input
+              bordered
+              clearable
+              color="primary"
+              placeholder="Email"
+              name="email"
+              value={email}
+              onChange={handleChangeLogin}
+              contentLeft={<EmailIcon />}
+            />
+            <Spacer y={1.2} />
+            <Input.Password
+              bordered
+              clearable
+              color="primary"
+              placeholder="Password"
+              name="password"
+              value={password}
+              onChange={handleChangeLogin}
+              contentLeft={<LockIcon />}
+            />
+            <Spacer y={1.2} />
+            <Row justify="space-between">
+              <Checkbox defaultSelected={false}>
+                <Text size={14}>Remember me</Text>
+              </Checkbox>
+              <Text size={14} className="forgot-pw">
+                Forgot password?
+              </Text>
+            </Row>
+          </Card.Body>
+          <Card.Divider />
+          <Card.Footer>
+            <Row justify="flex-end">
+              <Button color="danger" width="100px" onClick={handleClearform}>
+                Clear
+              </Button>
+              <Spacer x={1} />
+              <Button
+                color="success"
+                width="100px"
+                type="submit"
+                disabled={loading === true ? true : false}
+                onClick={onSubmitLogin}
+              >
+                {loading === true ? <Loading /> : "Confirm"}
+              </Button>
+            </Row>
+          </Card.Footer>
+        </Card>
+      </AuthContainer>
+    </AnimatedLayout>
   );
 }
 

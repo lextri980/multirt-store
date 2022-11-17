@@ -3,10 +3,12 @@ import AnchorIcon from "@mui/icons-material/Anchor";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import Moon from "@mui/icons-material/DarkModeOutlined";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCart from "@mui/icons-material/ShoppingCartOutlined";
+import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
 import Sun from "@mui/icons-material/WbSunnyOutlined";
 import {
   Divider,
@@ -101,6 +103,23 @@ function NavbarMenu() {
           }}
           onClose={() => setOpenDropdown(null)}
         >
+          {location.pathname !== "/dashboard" ? (
+            <MenuItem
+              onClick={() => {
+                navigate("/dashboard");
+                setOpenDropdown(null);
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primaryTypographyProps={{ fontSize: "15px" }}>
+                Dashboard
+              </ListItemText>
+            </MenuItem>
+          ) : (
+            ""
+          )}
           <MenuItem
             onClick={() => {
               navigate("/profile");
@@ -170,14 +189,31 @@ function NavbarMenu() {
           )}
         </Navbar.Brand>
         <Navbar.Content>
-          <Input
-            className="search-input"
-            clearable
-            bordered
-            contentRightStyling={false}
-            placeholder="Search..."
-            contentLeft={<SearchIcon className="search-icon" />}
-          />
+          {location.pathname === "/profile" ? (
+            <Tooltip
+              content="Click to go to dashboard"
+              placement="bottom"
+              color="invert"
+            >
+              <div
+                className="title-profile"
+                onClick={() => navigate("/dashboard")}
+              >
+                <SupervisedUserCircleOutlinedIcon />
+                <h4>Your profile</h4>
+              </div>
+            </Tooltip>
+          ) : (
+            <Input
+              className="search-input"
+              clearable
+              bordered
+              color="primary"
+              contentRightStyling={false}
+              placeholder="Search..."
+              contentLeft={<SearchIcon className="search-icon" />}
+            />
+          )}
         </Navbar.Content>
         <Navbar.Content>
           <Badge size="sm" content="1" color="error">
