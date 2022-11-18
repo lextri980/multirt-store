@@ -1,37 +1,42 @@
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import LockIcon from "@mui/icons-material/LockOutlined";
-import UsernameIcon from "@mui/icons-material/PeopleAltOutlined";
 import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
-import {
-  Avatar,
-  Card,
-  Checkbox,
-  Input,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import UsernameIcon from "@mui/icons-material/PeopleAltOutlined";
+import { Avatar, Card, Input, Spacer } from "@nextui-org/react";
+import clsx from "clsx";
 import Button from "components/common/button/Button";
 import File from "components/common/file/File";
 import Loading from "components/common/loading/Loading";
 import Modal from "components/common/modal/Modal";
+import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { gettingProfile } from "store/actions/profile.action";
 import { formatDate } from "utils/date.util";
 import { ProfileContainer } from "./Profile.style";
-import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 
 function Profile() {
-  //* Declare global variables
-
   //* Redux hooks
   const { profile, loading } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
+  //* Declare global variables
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    oldPassword: "",
+    password: "",
+    confirmPassword: "",
+    avatar: null,
+  });
+
+  const { name, email, oldPassword, password, confirmPassword, avatar } = form;
+
   //* Local state
-  const [openModal, setOpenModal] = useState(false);
-  const [fileName, setfileName] = useState("");
+  const [openUpdateProfileModal, setOpenUpdateProfileModal] = useState(false);
+  const [openUpdateAvatarModal, setOpenUpdateAvatarModal] = useState(false);
+  const [openUpdatePasswordModal, setOpenUpdatePasswordModal] = useState(false);
+  const [fileName, setFileName] = useState("");
 
   //* Hooks
   useEffect(() => {
@@ -39,14 +44,48 @@ function Profile() {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (profile) {
+      setForm({
+        name: profile.name,
+        email: profile.email,
+      });
+    }
+  }, [profile, name, email]);
+
   //* Other
 
   //* Condition rendering
 
-  const onChange = (e) => {
-    console.log(e);
-    setfileName(e.target.value);
+  //@ (handleClearForm): clear form
+  const handleClearForm = () => {
+    setForm({
+      name: "",
+      email: "",
+      oldPassword: "",
+      password: "",
+      confirmPassword: "",
+      avatar: null,
+    });
+    setFileName("");
   };
+
+  //@ (handleChangeForm): handle event change form
+  const handleChangeForm = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  //@ (handleChangeForm): handle event change form
+  const handleChangeAvatar = (e) => {
+    setFileName(e.target.value);
+    setForm({
+      avatar: e.target.value,
+    });
+  };
+
   return (
     <AnimatedLayout>
       <ProfileContainer>
@@ -60,7 +99,7 @@ function Profile() {
         </Card>
 
         {/* //*------------------------------- Card 2 -------------------------------*/}
-        <Card css={{ mw: "420px", padding: "25px 40px", margin: '0 90px' }}>
+        <Card css={{ mw: "420px", padding: "25px 40px", margin: "0 90px" }}>
           <Card.Header className="center">
             <Avatar
               className="avatar"
@@ -69,7 +108,7 @@ function Profile() {
           </Card.Header>
           <Card.Body>
             {loading === true ? (
-              <Loading color='primary' type="gradient" size="lg" />
+              <Loading color="primary" type="gradient" size="lg" />
             ) : (
               <>
                 <p className="mb-10">
@@ -90,19 +129,64 @@ function Profile() {
                     {profile?.isAdmin === true ? "Admin" : "User"}
                   </span>
                 </p>
-                <p>
+                <p
+                  className={clsx({
+                    "mb-10": profile.createdAt !== profile.updatedAt,
+                  })}
+                >
                   <span className="title">Created</span>
                   <span className="content">
                     {formatDate(profile?.createdAt, "DD/MM/YYYY")}
                   </span>
                 </p>
+                {profile.createdAt === profile.updatedAt ? (
+                  ""
+                ) : (
+                  <p>
+                    <span className="title">Updated</span>
+                    <span className="content">
+                      {formatDate(profile?.updatedAt, "DD/MM/YYYY")}
+                    </span>
+                  </p>
+                )}
               </>
             )}
           </Card.Body>
           <Card.Footer className="center">
-            <Button color="warning" onClick={() => setOpenModal(true)}>
-              Update
+            <Button
+              color="warning"
+              width="320px"
+              onClick={() => {
+                setOpenUpdateProfileModal(true);
+                handleClearForm();
+              }}
+            >
+              Update profile
             </Button>
+            <Spacer x={1} />
+            <div className="horizontal-center">
+              <Button
+                color="success"
+                width="150px"
+                onClick={() => {
+                  setOpenUpdateAvatarModal(true);
+                  handleClearForm();
+                }}
+              >
+                Change avatar
+              </Button>
+              <Spacer x={1} />
+              <Button
+                color="danger"
+                width="150px"
+                onClick={() => {
+                  setOpenUpdatePasswordModal(true);
+                  handleClearForm();
+                }}
+              >
+                Change password
+              </Button>
+            </div>
           </Card.Footer>
         </Card>
 
@@ -116,19 +200,23 @@ function Profile() {
         </Card>
 
         {/* //!---------------- Modal section -------------------*/}
+        {/* Modal update profile ------------------------------- */}
         <Modal
-          open={openModal}
-          header="Update information"
+          open={openUpdateProfileModal}
+          header="Update profile"
           submitBtn="Update"
-          close={() => setOpenModal(false)}
+          close={() => setOpenUpdateProfileModal(false)}
         >
           <Input
             clearable
             bordered
             color="primary"
             size="lg"
-            placeholder="Username"
+            placeholder="Name"
             contentLeft={<UsernameIcon />}
+            name="name"
+            value={name}
+            onChange={handleChangeForm}
           />
           <Input
             clearable
@@ -137,35 +225,75 @@ function Profile() {
             size="lg"
             placeholder="Email"
             contentLeft={<EmailIcon />}
+            name="email"
+            value={email}
+            onChange={handleChangeForm}
           />
-          <Input.Password
-            clearable
-            bordered
-            color="primary"
-            size="lg"
-            placeholder="Password"
-            contentLeft={<LockIcon />}
-          />
-          <Input.Password
-            clearable
-            bordered
-            color="primary"
-            size="lg"
-            placeholder="Confirm password"
-            contentLeft={<LockResetOutlinedIcon />}
-          />
+        </Modal>
+
+        {/* Modal update profile ------------------------------- */}
+        <Modal
+          open={openUpdateAvatarModal}
+          header="Change avatar"
+          submitBtn="Update"
+          close={() => setOpenUpdateAvatarModal(false)}
+        >
+          <div className="horizontal-center">
+            <Avatar
+              size={"xl"}
+              text={profile?.name.charAt(0).toUpperCase()}
+              css={{ size: "$20" }}
+            />
+          </div>
           <File
-            onChange={onChange}
+            value={avatar}
+            onChange={handleChangeAvatar}
             name={fileName}
-            fileTitle="Avatar"
-            value=""
+            fileTitle="Choose avatar"
+            clear={handleClearForm}
           />
-          <Row justify="space-between">
-            <Checkbox>
-              <Text size={14}>Remember me</Text>
-            </Checkbox>
-            <Text size={14}>Forgot password?</Text>
-          </Row>
+        </Modal>
+
+        {/* Modal update profile ------------------------------- */}
+        <Modal
+          open={openUpdatePasswordModal}
+          header="Change password"
+          submitBtn="Update"
+          close={() => setOpenUpdatePasswordModal(false)}
+        >
+          <Input
+            clearable
+            bordered
+            color="primary"
+            size="lg"
+            placeholder="Old password"
+            contentLeft={<LockIcon />}
+            name="oldPassword"
+            value={oldPassword}
+            onChange={handleChangeForm}
+          />
+          <Input
+            clearable
+            bordered
+            color="primary"
+            size="lg"
+            placeholder="New password"
+            contentLeft={<LockIcon />}
+            name="password"
+            value={password}
+            onChange={handleChangeForm}
+          />
+          <Input
+            clearable
+            bordered
+            color="primary"
+            size="lg"
+            placeholder="Confirm new password"
+            contentLeft={<LockResetOutlinedIcon />}
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={handleChangeForm}
+          />
         </Modal>
       </ProfileContainer>
     </AnimatedLayout>
