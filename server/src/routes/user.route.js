@@ -6,6 +6,7 @@ const {
   deleteUser,
   getUserProfile,
   updateUserProfile,
+  updatePassword,
 } = require("../controllers/user.controller");
 const idMatch = require("../middleware/idMatch");
 const isAdmin = require("../middleware/isAdmin");
@@ -23,5 +24,7 @@ router.delete("/delete/:id", idMatch, protectedRoute, isAdmin, deleteUser); //Us
 router.get("/profile", protectedRoute, getUserProfile);
 
 router.post("/profile/update", protectedRoute, updateUserProfile);
+
+router.post("/profile/change-password", protectedRoute, updatePassword);
 
 module.exports = router;

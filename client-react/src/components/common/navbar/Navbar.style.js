@@ -32,7 +32,7 @@ export const NavbarContainer = styled.div`
   .secondary-menu {
     display: flex;
     justify-content: center;
-    margin: 10px auto 0;
+    margin: 20px auto 0;
     width: 70vw;
 
     & > button {

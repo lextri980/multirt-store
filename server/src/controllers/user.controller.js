@@ -140,7 +140,7 @@ const deleteUser = async (req, res) => {
 //! access Private/Owner
 const getUserProfile = async (req, res) => {
   try {
-    const data = await User.findById(req.user._id);
+    const data = await User.findById(req.user._id).select("-password");
     return dtoSc(res, {
       success: true,
       data,
@@ -155,10 +155,10 @@ const getUserProfile = async (req, res) => {
 //! route  POST /user/profile/update
 //! access Private/Owner
 const updateUserProfile = async (req, res) => {
-  const { email, name, password } = req.body;
+  const { email, name } = req.body;
 
   // Validate missing field
-  if (!email || !name || !password) {
+  if (!email || !name) {
     return dtoFail(res, "Missing information");
   }
 
@@ -171,16 +171,13 @@ const updateUserProfile = async (req, res) => {
     if (emailRegex.test(email === false)) {
       return dtoFail(res, "Invalid email");
     }
-    if (passwordRegex.test(password) === false) {
-      return dtoFail(res, "Invalid password");
-    }
 
     //Update data
-    let updateData = { email, name, password };
+    let updateData = { email, name };
     const updateCondition = { _id: req.user.id };
     updateData = await User.findOneAndUpdate(updateCondition, updateData, {
       new: true,
-    });
+    }).select("-password");
     if (!updateData) {
       return dtoFail(res, "User is not found");
     }
@@ -195,6 +192,51 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+//! desc   Check old password
+//! route  POST /user/profile/change-password
+//! access Private/Owner
+const updatePassword = async (req, res) => {
+  const { oldPassword, password } = req.body;
+
+  if (!oldPassword || !password) {
+    return dtoFail(res, "Missing information");
+  }
+
+  try {
+    const userProfile = await User.findById(req.user._id).select("password");
+
+    if (oldPassword !== userProfile.password) {
+      return dtoFail(res, "Your old password is not match");
+    }
+
+    if (password === userProfile.password) {
+      return dtoFail(
+        res,
+        "Your new password must be different from your old password"
+      );
+    }
+
+    let updateData = { password };
+    const updateCondition = { _id: req.user.id };
+    updateData = await User.findOneAndUpdate(updateCondition, updateData, {
+      new: true,
+    });
+
+    if (!updateData) {
+      return dtoFail(res, "User is not found");
+    }
+
+    return dtoSc(res, {
+      success: true,
+      message: "Change password successfully",
+      data: true
+    });
+  } catch (error) {
+    console.log(error);
+    return dtoServer(res);
+  }
+};
+
 module.exports = {
   getUser,
   getUserDetail,
@@ -202,4 +244,5 @@ module.exports = {
   deleteUser,
   getUserProfile,
   updateUserProfile,
+  updatePassword,
 };

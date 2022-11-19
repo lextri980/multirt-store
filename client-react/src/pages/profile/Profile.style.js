@@ -26,6 +26,13 @@ export const ProfileContainer = styled.div`
 
   .center {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .avatar-review {
+    span {
+      font-size: 30px
+    }
   }
 `;

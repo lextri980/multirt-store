@@ -1,4 +1,5 @@
 import { NextUIProvider } from "@nextui-org/react";
+import ErrorBoundary from "config/errorBoundary";
 import SetAuthContextProvider from "contexts/setAuth.context";
 import { useRoutes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -10,12 +11,14 @@ import "./themes/scss/App.scss";
 function App() {
   const route = useRoutes(routes());
   return (
-    <SetAuthContextProvider>
-      <NextUIProvider theme={theme}>
-        <ToastContainer theme="colored" pauseOnFocusLoss={false}/>
-        <div className="App">{route}</div>
-      </NextUIProvider>
-    </SetAuthContextProvider>
+    <ErrorBoundary>
+      <SetAuthContextProvider>
+        <NextUIProvider theme={theme}>
+          <ToastContainer theme="colored" pauseOnFocusLoss={true} />
+          <div className="App">{route}</div>
+        </NextUIProvider>
+      </SetAuthContextProvider>
+    </ErrorBoundary>
   );
 }
 
