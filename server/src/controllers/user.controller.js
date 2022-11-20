@@ -141,6 +141,11 @@ const deleteUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const data = await User.findById(req.user._id).select("-password");
+
+    if(!data) {
+      return dtoFail(res, 'User is not found');
+    }
+
     return dtoSc(res, {
       success: true,
       data,

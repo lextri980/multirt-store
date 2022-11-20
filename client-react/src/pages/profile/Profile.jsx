@@ -131,7 +131,7 @@ function Profile() {
                 </p>
                 <p
                   className={clsx({
-                    "mb-10": profile.createdAt !== profile.updatedAt,
+                    "mb-10": profile?.createdAt !== profile?.updatedAt,
                   })}
                 >
                   <span className="title">Created</span>
@@ -139,7 +139,7 @@ function Profile() {
                     {formatDate(profile?.createdAt, "DD/MM/YYYY")}
                   </span>
                 </p>
-                {profile.createdAt === profile.updatedAt ? (
+                {profile?.createdAt === profile?.updatedAt ? (
                   ""
                 ) : (
                   <p>
