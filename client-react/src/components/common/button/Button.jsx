@@ -2,22 +2,29 @@ import Buttonx from "@nextui-org/react/button";
 import { ButtonContainer } from "./Button.style";
 
 function Button(props) {
+  //! Props type
+  //Require: children, onClick
+  //Option: color, border, type, width, text, disabled
+  //Func: onClick
+  const { color, border, type, width, text, disabled, children, onClick } =
+    props;
+
   return (
     <ButtonContainer>
       <Buttonx
-        className={props.color || "primary"}
-        onClick={props.onClick}
+        className={color || "primary"}
+        onClick={onClick}
         aria-label="Common-btn"
-        bordered={props.border || false}
-        type={props.type || ""}
+        bordered={border || false}
+        type={type || ""}
         style={{
-          width: props.width || "170px",
-          color: props.text,
+          width: width || "170px",
+          color: text,
           minWidth: "50px",
         }}
-        disabled={props.disabled || false}
+        disabled={disabled || false}
       >
-        {props.children}
+        {children}
       </Buttonx>
     </ButtonContainer>
   );

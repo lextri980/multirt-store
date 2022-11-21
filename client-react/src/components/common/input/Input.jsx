@@ -1,13 +1,27 @@
 import { InputContainer } from "./Input.style";
-import EmailIcon from "@mui/icons-material/EmailOutlined";
+import AbcIcon from "@mui/icons-material/Abc";
 
-function InputField() {
+function InputField(props) {
+  //! Props type
+  //Require: name, value, onChange, register
+  //Option: placeholder, type, label
+  //Func: onChange, register
+  const { placeholder, value, name, register, type, label, onChange } = props;
+  
   return (
     <InputContainer>
-      <label for="input" id="label">
-        <EmailIcon />
+      <label htmlFor="input" id="label">
+        {label || <AbcIcon />}
       </label>
-      <input id="input" type="text" placeholder="name" />
+      <input
+        id="input"
+        type={type || "text"}
+        placeholder={placeholder || "Name"}
+        name={name}
+        value={value}
+        onChange={onChange}
+        {...register(name)}
+      />
     </InputContainer>
   );
 }
