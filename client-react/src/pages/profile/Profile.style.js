@@ -13,6 +13,15 @@ export const ProfileContainer = styled.div`
     span {
       font-size: 100px;
     }
+
+    @media (min-width: 768px) {
+      width: 120px;
+      height: 120px;
+
+      span {
+        font-size: 50px;
+      }
+    }
   }
 
   .mb-10 {
@@ -32,7 +41,7 @@ export const ProfileContainer = styled.div`
 
   .avatar-review {
     span {
-      font-size: 30px
+      font-size: 30px;
     }
   }
 `;

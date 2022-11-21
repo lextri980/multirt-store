@@ -8,6 +8,7 @@ import { AuthContainer } from "./Auth.style";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import LockIcon from "@mui/icons-material/LockOutlined";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
+import InputField from 'components/common/input/Input'
 
 function Login() {
   //* Redux hooks
@@ -57,6 +58,9 @@ function Login() {
           </Card.Header>
           <Card.Divider />
           <Card.Body css={{ py: "30px", px: "25px" }}>
+            <InputField />
+            <Spacer y={1.2} />
+
             <Input
               bordered
               clearable
