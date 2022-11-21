@@ -231,7 +231,7 @@ function Profile() {
           />
         </Modal>
 
-        {/* Modal update profile ------------------------------- */}
+        {/* Modal update avatar ------------------------------- */}
         <Modal
           open={openUpdateAvatarModal}
           header="Change avatar"
@@ -250,11 +250,11 @@ function Profile() {
             onChange={handleChangeAvatar}
             name={fileName}
             fileTitle="Choose avatar"
-            clear={handleClearForm}
+            onClear={handleClearForm}
           />
         </Modal>
 
-        {/* Modal update profile ------------------------------- */}
+        {/* Modal update password ------------------------------- */}
         <Modal
           open={openUpdatePasswordModal}
           header="Change password"

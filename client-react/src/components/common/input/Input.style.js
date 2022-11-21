@@ -15,9 +15,11 @@ export const InputContainer = styled.div`
     width: 100%;
     padding: 8px 12px 8px 50px;
     font-size: 14px;
+    transition: border 0.5s;
 
     &:hover {
       border: 2px solid ${color.blue};
+      transition: border 0.5s;
     }
 
     &:focus {

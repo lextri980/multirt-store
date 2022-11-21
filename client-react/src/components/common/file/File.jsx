@@ -4,27 +4,33 @@ import { color } from "themes/colors";
 import { FileContainer } from "./File.style";
 
 function File(props) {
+  //! Props type
+  //Require: value, clear, name, onChange
+  //Option: fileTitle
+  //Func: onClear, onChange
+  const { value, fileTitle, onClear, name, onChange } = props;
+  
   return (
     <FileContainer>
       <input
         type="file"
         id="file"
         class="inputfile"
-        name={props.value}
-        value={props.value}
-        onChange={props.onChange}
+        name={value}
+        value={value}
+        onChange={onChange}
       />
       <div className="input-file pointer">
         <label for="file" className="pointer">
           <AttachFileRoundedIcon style={{ fontSize: "20px" }} />
-          {props.fileTitle || "Choose a file"}
+          {fileTitle || "Choose a file"}
         </label>
         <ClearRoundedIcon
           style={{ fontSize: "20px", color: color.redP }}
-          onClick={props.clear}
+          onClick={onClear}
         />
       </div>
-      <p>{props.name}</p>
+      <p>{name}</p>
     </FileContainer>
   );
 }
