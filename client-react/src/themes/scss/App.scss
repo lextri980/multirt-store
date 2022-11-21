@@ -69,6 +69,12 @@
   align-items: center;
 }
 
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  margin: 25px 0 15px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -1,14 +1,13 @@
 import { Text } from "@nextui-org/react";
 import ModalX from "@nextui-org/react/modal";
-import Button from "../button/Button";
 import { ModalContainer } from "./Modal.style";
 
 function Modal(props) {
   //! Props type
-  //Require: open, close, children, submit
-  //Option: header, closeBtn, submitBtn
-  //Func: close, submit
-  const { open, close, header, children, closeBtn, submit, submitBtn } = props;
+  //Require: open, close, children
+  //Option: header
+  //Func: close
+  const { open, close, header, children } = props;
 
   return (
     <ModalContainer>
@@ -19,14 +18,6 @@ function Modal(props) {
           </Text>
         </ModalX.Header>
         <ModalX.Body>{children}</ModalX.Body>
-        <ModalX.Footer style={{ marginBottom: "10px" }}>
-          <Button color="danger" onClick={close}>
-            {closeBtn || "Close"}
-          </Button>
-          <Button color="success" onClick={submit}>
-            {submitBtn || "Submit"}
-          </Button>
-        </ModalX.Footer>
       </ModalX>
     </ModalContainer>
   );
