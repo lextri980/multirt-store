@@ -4,12 +4,10 @@ import { color } from "themes/colors";
 export const InputContainer = styled.div`
   #label {
     position: absolute;
-    font-size: 14px;
-    position: absolute;
     margin: 9px 0 0 15px;
   }
 
-  input[type='text'] {
+  input {
     border-radius: 7px;
     border: 2px solid ${color.gray};
     width: 100%;
@@ -24,6 +22,15 @@ export const InputContainer = styled.div`
 
     &:focus {
       border: 2px solid ${color.blue};
+    }
+  }
+
+  #pw {
+    position: absolute;
+    margin: 11px 0 0 -30px;
+
+    &:hover {
+      cursor: pointer;
     }
   }
 `;

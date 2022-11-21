@@ -1,16 +1,23 @@
-import { Card, Checkbox, Input, Row, Spacer, Text } from "@nextui-org/react";
-import Button from "components/common/button/Button";
-import Loading from "components/common/loading/Loading";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { loginning } from "store/actions/auth.action";
-import { AuthContainer } from "./Auth.style";
+import { yupResolver } from "@hookform/resolvers/yup";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import LockIcon from "@mui/icons-material/LockOutlined";
+import { Card, Checkbox, Row, Spacer, Text } from "@nextui-org/react";
+import Button from "components/common/button/Button";
+import ErrorMessage from "components/common/errorMessage/ErrorMessage";
+import Input from "components/common/input/Input";
+import Loading from "components/common/loading/Loading";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
-import InputField from "components/common/input/Input";
-import * as yup from "yup";
+import {
+FORMAT,
+PASSWORD_REQUIRED,
+REQUIRED
+} from "constants/message";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { loginning } from "store/actions/auth.action";
+import * as yup from "yup";
+import { AuthContainer } from "./Auth.style";
 
 function Login() {
   //* Redux hooks
@@ -18,39 +25,32 @@ function Login() {
   const { loading } = useSelector((state) => state.auth);
 
   //* Hooks
-  const { register } = useForm();
+  const schema = yup.object().shape({
+    email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
+    password: yup.string().required(`Password ${REQUIRED}`),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    trigger,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   //* Local state
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  //* Other
-  const { email, password } = form;
-  const schema = yup.object().shape({
-    email: yup.string().required("Email is required"),
-    password: yup.string().required("Password is required"),
-  });
-
-  //@ (handleChangeLogin): handle change input
-  const handleChangeLogin = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [typePw, setTypePw] = useState(false);
 
   //@ (handleClearform): click to clear form text
   const handleClearform = () => {
-    setForm({
-      email: "",
-      password: "",
-    });
+    resetField("email");
+    resetField("password");
   };
 
   //! async (onSubmitLogin): click to submit login form
-  const onSubmitLogin = async () => {
+  const onSubmitLogin = (form) => {
     dispatch(loginning(form));
   };
 
@@ -58,62 +58,65 @@ function Login() {
     <AnimatedLayout>
       <AuthContainer>
         <Card css={{ mw: "400px", mh: "400px" }}>
-          <Card.Header className="card-header">
-            <p className="title-card">Login</p>
-          </Card.Header>
-          <Card.Divider />
-          <Card.Body css={{ py: "30px", px: "25px" }}>
-            <InputField name='email' register={register}/>
-            <Spacer y={1.2} />
-            <Input
-              bordered
-              clearable
-              color="primary"
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={handleChangeLogin}
-              contentLeft={<EmailIcon />}
-            />
-            <Spacer y={1.2} />
-            <Input.Password
-              bordered
-              clearable
-              color="primary"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={handleChangeLogin}
-              contentLeft={<LockIcon />}
-            />
-            <Spacer y={1.2} />
-            <Row justify="space-between">
-              <Checkbox defaultSelected={false}>
-                <Text size={14}>Remember me</Text>
-              </Checkbox>
-              <Text size={14} className="forgot-pw">
-                Forgot password?
-              </Text>
-            </Row>
-          </Card.Body>
-          <Card.Divider />
-          <Card.Footer>
-            <Row justify="flex-end">
-              <Button color="danger" width="100px" onClick={handleClearform}>
-                Clear
-              </Button>
-              <Spacer x={1} />
-              <Button
-                color="success"
-                width="100px"
-                type="submit"
-                disabled={loading === true ? true : false}
-                onClick={onSubmitLogin}
-              >
-                {loading === true ? <Loading /> : "Confirm"}
-              </Button>
-            </Row>
-          </Card.Footer>
+          <form onSubmit={handleSubmit(onSubmitLogin)}>
+            <Card.Header className="card-header">
+              <p className="title-card">Login</p>
+            </Card.Header>
+            <Card.Divider />
+            <Card.Body css={{ py: "30px", px: "25px" }}>
+              <Input
+                placeholder="Email"
+                label={<EmailIcon />}
+                value="email"
+                register={register}
+              />
+              {errors.email ? (
+                <ErrorMessage>{errors.email.message}</ErrorMessage>
+              ) : (
+                <Spacer y={1.2} />
+              )}
+              <Input
+                placeholder="Password"
+                label={<LockIcon />}
+                value="password"
+                type={typePw}
+                password
+                onPassword={() => setTypePw(!typePw)}
+                register={register}
+              />
+              {errors.password ? (
+                <ErrorMessage>{errors.password.message}</ErrorMessage>
+              ) : (
+                <Spacer y={1.2} />
+              )}
+              <Row justify="space-between">
+                <Checkbox defaultSelected={false}>
+                  <Text size={14}>Remember me</Text>
+                </Checkbox>
+                <Text size={14} className="forgot-pw">
+                  Forgot password?
+                </Text>
+              </Row>
+            </Card.Body>
+            <Card.Divider />
+            <Card.Footer>
+              <Row justify="flex-end">
+                <Button color="danger" width="100px" onClick={handleClearform}>
+                  Clear
+                </Button>
+                <Spacer x={1} />
+                <Button
+                  color="success"
+                  width="100px"
+                  type="submit"
+                  disabled={loading === true ? true : false}
+                  onClick={() => trigger()}
+                >
+                  {loading === true ? <Loading /> : "Confirm"}
+                </Button>
+              </Row>
+            </Card.Footer>
+          </form>
         </Card>
       </AuthContainer>
     </AnimatedLayout>
