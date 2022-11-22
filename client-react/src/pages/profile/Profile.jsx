@@ -1,18 +1,24 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import LockIcon from "@mui/icons-material/LockOutlined";
 import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
 import UsernameIcon from "@mui/icons-material/PeopleAltOutlined";
-import { Avatar, Card, Input, Spacer } from "@nextui-org/react";
+import { Avatar, Card, Spacer } from "@nextui-org/react";
 import clsx from "clsx";
 import Button from "components/common/button/Button";
+import ErrorMessage from "components/common/errorMessage/ErrorMessage";
 import File from "components/common/file/File";
+import Input from "components/common/input/Input";
 import Loading from "components/common/loading/Loading";
 import Modal from "components/common/modal/Modal";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
+import { REQUIRED } from "constants/message";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { gettingProfile } from "store/actions/profile.action";
+import { gettingProfile, updatingProfile } from "store/actions/profile.action";
 import { formatDate } from "utils/date.util";
+import * as yup from "yup";
 import { ProfileContainer } from "./Profile.style";
 
 function Profile() {
@@ -20,38 +26,47 @@ function Profile() {
   const { profile, loading } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
-  //* Declare global variables
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    oldPassword: "",
-    password: "",
-    confirmPassword: "",
-    avatar: null,
-  });
-
-  const { name, email, oldPassword, password, confirmPassword, avatar } = form;
-
   //* Local state
   const [openUpdateProfileModal, setOpenUpdateProfileModal] = useState(false);
   const [openUpdateAvatarModal, setOpenUpdateAvatarModal] = useState(false);
   const [openUpdatePasswordModal, setOpenUpdatePasswordModal] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [pw1, setPw1] = useState(false);
+  const [pw2, setPw2] = useState(false);
+  const [pw3, setPw3] = useState(false);
 
   //* Hooks
+  const schema = yup.object().shape({
+    name: yup.string().required(`Name ${REQUIRED}`),
+    email: yup.string().required(`Email ${REQUIRED}`),
+    // oldPassword: yup.string().required(`Old password ${REQUIRED}`),
+    // password: yup.string().required(`New password ${REQUIRED}`),
+    // confirmPassword: yup.string().required(`Confirm password ${REQUIRED}`),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    resetField,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
   useEffect(() => {
     dispatch(gettingProfile());
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (profile) {
-      setForm({
+    if (profile)
+      reset({
         name: profile.name,
         email: profile.email,
       });
-    }
-  }, [profile, name, email]);
+  }, [profile]);
 
   //* Other
 
@@ -59,32 +74,39 @@ function Profile() {
 
   //@ (handleClearForm): clear form
   const handleClearForm = () => {
-    setForm({
-      name: "",
-      email: "",
-      oldPassword: "",
-      password: "",
-      confirmPassword: "",
-      avatar: null,
-    });
+    resetField("name");
+    resetField("email");
+    resetField("avatar");
+    resetField("password");
+    resetField("oldPassword");
+    resetField("confirmPassword");
     setFileName("");
-  };
-
-  //@ (handleChangeForm): handle event change form
-  const handleChangeForm = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
   };
 
   //@ (handleChangeForm): handle event change form
   const handleChangeAvatar = (e) => {
     setFileName(e.target.value);
-    setForm({
-      avatar: e.target.value,
-    });
   };
+
+  //! async (onSubmitProfile): Submit profile
+  const onSubmitProfile = (form) => {
+    dispatch(updatingProfile(form));
+    setOpenUpdateProfileModal(false);
+  };
+
+  //! async (onSubmitAvatar): Submit avatar
+  const onSubmitAvatar = (form) => {
+    console.log(form);
+  };
+
+  //! async (onSubmitPassword): Submit password
+  const onSubmitPassword = (form) => {
+    console.log(form);
+  };
+
+  schema.validate({}).catch(function (e) {
+    console.log(e);
+  });
 
   return (
     <AnimatedLayout>
@@ -207,28 +229,41 @@ function Profile() {
           submitBtn="Update"
           close={() => setOpenUpdateProfileModal(false)}
         >
-          <Input
-            clearable
-            bordered
-            color="primary"
-            size="lg"
-            placeholder="Name"
-            contentLeft={<UsernameIcon />}
-            name="name"
-            value={name}
-            onChange={handleChangeForm}
-          />
-          <Input
-            clearable
-            bordered
-            color="primary"
-            size="lg"
-            placeholder="Email"
-            contentLeft={<EmailIcon />}
-            name="email"
-            value={email}
-            onChange={handleChangeForm}
-          />
+          <form onSubmit={handleSubmit(onSubmitProfile)}>
+            <Input
+              label={<UsernameIcon />}
+              placeholder="Name"
+              value="name"
+              register={register}
+              error={errors.name ? true : false}
+            />
+            {errors.name ? (
+              <ErrorMessage>{errors.name.message}</ErrorMessage>
+            ) : (
+              <Spacer y={1} />
+            )}
+            <Input
+              label={<EmailIcon />}
+              placeholder="Email"
+              value="email"
+              register={register}
+              error={errors.email ? true : false}
+            />
+            {errors.email && (
+              <ErrorMessage>{errors.email.message}</ErrorMessage>
+            )}
+            <footer className="modal-footer">
+              <Button
+                color="danger"
+                onClick={() => setOpenUpdateProfileModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button color="success" type="submit" onClick={() => trigger()}>
+                Update
+              </Button>
+            </footer>
+          </form>
         </Modal>
 
         {/* Modal update avatar ------------------------------- */}
@@ -245,13 +280,25 @@ function Profile() {
               css={{ size: "$20" }}
             />
           </div>
-          <File
-            value={avatar}
-            onChange={handleChangeAvatar}
-            name={fileName}
-            fileTitle="Choose avatar"
-            onClear={handleClearForm}
-          />
+          <form onSubmit={handleSubmit(onSubmitAvatar)}>
+            <File
+              onChange={handleChangeAvatar}
+              name={fileName}
+              fileTitle="Choose avatar"
+              onClear={handleClearForm}
+            />
+            <footer className="modal-footer">
+              <Button
+                color="danger"
+                onClick={() => setOpenUpdateAvatarModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button color="success" type="submit">
+                Update
+              </Button>
+            </footer>
+          </form>
         </Modal>
 
         {/* Modal update password ------------------------------- */}
@@ -261,39 +308,48 @@ function Profile() {
           submitBtn="Update"
           close={() => setOpenUpdatePasswordModal(false)}
         >
-          <Input
-            clearable
-            bordered
-            color="primary"
-            size="lg"
-            placeholder="Old password"
-            contentLeft={<LockIcon />}
-            name="oldPassword"
-            value={oldPassword}
-            onChange={handleChangeForm}
-          />
-          <Input
-            clearable
-            bordered
-            color="primary"
-            size="lg"
-            placeholder="New password"
-            contentLeft={<LockIcon />}
-            name="password"
-            value={password}
-            onChange={handleChangeForm}
-          />
-          <Input
-            clearable
-            bordered
-            color="primary"
-            size="lg"
-            placeholder="Confirm new password"
-            contentLeft={<LockResetOutlinedIcon />}
-            name="confirmPassword"
-            value={confirmPassword}
-            onChange={handleChangeForm}
-          />
+          <form onSubmit={handleSubmit(onSubmitPassword)}>
+            <Input
+              placeholder="Old password"
+              label={<LockIcon />}
+              value="oldPassword"
+              register={register}
+              password
+              type={pw1}
+              onPassword={() => setPw1(!pw1)}
+            />
+            <Spacer y={1} />
+            <Input
+              placeholder="New password"
+              label={<LockIcon />}
+              value="password"
+              register={register}
+              password
+              type={pw2}
+              onPassword={() => setPw2(!pw2)}
+            />
+            <Spacer y={1} />
+            <Input
+              placeholder="Confirm new password"
+              label={<LockResetOutlinedIcon />}
+              value="newPassword"
+              register={register}
+              password
+              type={pw3}
+              onPassword={() => setPw3(!pw3)}
+            />
+            <footer className="modal-footer">
+              <Button
+                color="danger"
+                onClick={() => setOpenUpdatePasswordModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button color="success" type="submit">
+                Update
+              </Button>
+            </footer>
+          </form>
         </Modal>
       </ProfileContainer>
     </AnimatedLayout>

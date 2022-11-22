@@ -42,6 +42,7 @@ function NavbarMenu() {
   //* Redux hooks
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { profile } = useSelector((state) => state.profile);
 
   //* Local state
   const [switchChecked, setSwitchChecked] = useState(true);
@@ -82,14 +83,14 @@ function NavbarMenu() {
       <>
         <Avatar
           style={{ marginRight: "-20px" }}
-          text={user.name.charAt(0).toUpperCase()}
+          text={profile?.name.charAt(0).toUpperCase()}
           src=""
         />
         <ButtonLight
           element={<ArrowDropDownIcon />}
           onClick={(e) => setOpenDropdown(e.currentTarget)}
         >
-          {user.name}
+          {profile?.name}
           <ArrowDropDownIcon />
         </ButtonLight>
         <Menu

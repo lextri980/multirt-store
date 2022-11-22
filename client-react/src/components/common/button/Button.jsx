@@ -16,7 +16,7 @@ function Button(props) {
         onClick={onClick}
         aria-label="Common-btn"
         bordered={border || false}
-        type={type || ""}
+        type={type || "button"}
         style={{
           width: width || "170px",
           color: text,

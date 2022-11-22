@@ -20,9 +20,9 @@ function* workerLoginSaga({ payload }) {
   try {
     const response = yield call(loginApi, payload);
     if (response.status === 200) {
+      yield delay(500);
       localStorage.setItem(LOCALSTORAGE_TOKEN_NAME, response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
-      yield delay(500);
       yield put(loginSuccess(response.data));
       yield put(push("/dashboard"));
       yield toast.success(response.data.message);

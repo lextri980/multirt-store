@@ -1,29 +1,50 @@
-import { InputContainer } from "./Input.style";
 import AbcIcon from "@mui/icons-material/Abc";
+import EyeOn from "@mui/icons-material/Visibility";
+import EyeOff from "@mui/icons-material/VisibilityOff";
+import { InputContainer } from "./Input.style";
 
-function InputField(props) {
+function Input(props) {
   //! Props type
-  //Require: name, value, onChange, register
-  //Option: placeholder, type, label
-  //Func: onChange, register
-  const { placeholder, value, name, register, type, label, onChange } = props;
-  
+  //Require: value, register
+  //Option: placeholder, type, label, (password, onPassword), max
+  //Func: onChange, register, onPassword
+  const {
+    password,
+    onPassword,
+    placeholder,
+    value,
+    register,
+    type,
+    label,
+    max,
+    error,
+  } = props;
+
   return (
-    <InputContainer>
-      <label htmlFor="input" id="label">
+    <InputContainer error={error}>
+      <label htmlFor={value} id="label">
         {label || <AbcIcon />}
       </label>
       <input
-        id="input"
-        type={type || "text"}
+        maxLength={max}
+        type={type === false ? "password" : "text"}
         placeholder={placeholder || "Name"}
-        name={name}
-        value={value}
-        onChange={onChange}
-        {...register(name)}
+        error={error || false}
+        {...register(value)}
       />
+      {password ? (
+        <label htmlFor={value} id="pw" onClick={onPassword}>
+          {type === false ? (
+            <EyeOn sx={{ fontSize: "18px" }} />
+          ) : (
+            <EyeOff sx={{ fontSize: "18px" }} />
+          )}
+        </label>
+      ) : (
+        ""
+      )}
     </InputContainer>
   );
 }
 
-export default InputField;
+export default Input;
