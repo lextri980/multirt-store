@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import LockIcon from "@mui/icons-material/LockOutlined";
 import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
@@ -5,19 +6,20 @@ import UsernameIcon from "@mui/icons-material/PeopleAltOutlined";
 import { Avatar, Card, Spacer } from "@nextui-org/react";
 import clsx from "clsx";
 import Button from "components/common/button/Button";
+import ErrorMessage from "components/common/errorMessage/ErrorMessage";
 import File from "components/common/file/File";
+import Input from "components/common/input/Input";
 import Loading from "components/common/loading/Loading";
 import Modal from "components/common/modal/Modal";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
+import { REQUIRED } from "constants/message";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { gettingProfile } from "store/actions/profile.action";
+import { gettingProfile, updatingProfile } from "store/actions/profile.action";
 import { formatDate } from "utils/date.util";
-import { ProfileContainer } from "./Profile.style";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import Input from "components/common/input/Input";
+import { ProfileContainer } from "./Profile.style";
 
 function Profile() {
   //* Redux hooks
@@ -34,7 +36,13 @@ function Profile() {
   const [pw3, setPw3] = useState(false);
 
   //* Hooks
-  const schema = yup.object().shape({});
+  const schema = yup.object().shape({
+    name: yup.string().required(`Name ${REQUIRED}`),
+    email: yup.string().required(`Email ${REQUIRED}`),
+    // oldPassword: yup.string().required(`Old password ${REQUIRED}`),
+    // password: yup.string().required(`New password ${REQUIRED}`),
+    // confirmPassword: yup.string().required(`Confirm password ${REQUIRED}`),
+  });
 
   const {
     register,
@@ -82,7 +90,8 @@ function Profile() {
 
   //! async (onSubmitProfile): Submit profile
   const onSubmitProfile = (form) => {
-    console.log(form);
+    dispatch(updatingProfile(form));
+    setOpenUpdateProfileModal(false);
   };
 
   //! async (onSubmitAvatar): Submit avatar
@@ -94,6 +103,10 @@ function Profile() {
   const onSubmitPassword = (form) => {
     console.log(form);
   };
+
+  schema.validate({}).catch(function (e) {
+    console.log(e);
+  });
 
   return (
     <AnimatedLayout>
@@ -222,14 +235,23 @@ function Profile() {
               placeholder="Name"
               value="name"
               register={register}
+              error={errors.name ? true : false}
             />
-            <Spacer y={1} />
+            {errors.name ? (
+              <ErrorMessage>{errors.name.message}</ErrorMessage>
+            ) : (
+              <Spacer y={1} />
+            )}
             <Input
               label={<EmailIcon />}
               placeholder="Email"
               value="email"
               register={register}
+              error={errors.email ? true : false}
             />
+            {errors.email && (
+              <ErrorMessage>{errors.email.message}</ErrorMessage>
+            )}
             <footer className="modal-footer">
               <Button
                 color="danger"
@@ -237,7 +259,7 @@ function Profile() {
               >
                 Cancel
               </Button>
-              <Button color="success" type="submit">
+              <Button color="success" type="submit" onClick={() => trigger()}>
                 Update
               </Button>
             </footer>

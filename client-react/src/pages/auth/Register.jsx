@@ -81,6 +81,7 @@ function Register() {
                 label={<EmailIcon />}
                 value="email"
                 register={register}
+                error={errors.email ? true : false}
               />
               {errors.email ? (
                 <ErrorMessage>{errors.email.message}</ErrorMessage>
@@ -93,6 +94,7 @@ function Register() {
                 label={<UsernameIcon />}
                 value="name"
                 register={register}
+                error={errors.name ? true : false}
               />
               {errors.name ? (
                 <ErrorMessage>{errors.name.message}</ErrorMessage>
@@ -108,6 +110,7 @@ function Register() {
                 type={typePw1}
                 password
                 onPassword={() => setTypePw1(!typePw1)}
+                error={errors.password ? true : false}
               />
               {errors.password ? (
                 <ErrorMessage>{errors.password.message}</ErrorMessage>
@@ -123,6 +126,7 @@ function Register() {
                 type={typePw2}
                 password
                 onPassword={() => setTypePw2(!typePw2)}
+                error={errors.confirmPassword ? true : false}
               />
               {errors.confirmPassword && (
                 <ErrorMessage>{errors.confirmPassword.message}</ErrorMessage>

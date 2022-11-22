@@ -16,11 +16,12 @@ function Input(props) {
     register,
     type,
     label,
-    max
+    max,
+    error,
   } = props;
 
   return (
-    <InputContainer>
+    <InputContainer error={error}>
       <label htmlFor={value} id="label">
         {label || <AbcIcon />}
       </label>
@@ -28,6 +29,7 @@ function Input(props) {
         maxLength={max}
         type={type === false ? "password" : "text"}
         placeholder={placeholder || "Name"}
+        error={error || false}
         {...register(value)}
       />
       {password ? (

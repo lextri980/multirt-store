@@ -2,17 +2,20 @@ import {
   GETTING_PROFILE,
   GET_PROFILE_FAIL,
   GET_PROFILE_SUCCESS,
+  UPDATE_PROFILE_FAIL,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATING_PROFILE,
 } from "constants/actions/profile.const";
 
 const initState = {
   profile: null,
   loading: false,
-  message: null,
 };
 
 function profileReducer(state = initState, { type, payload }) {
   switch (type) {
     case GETTING_PROFILE:
+    case UPDATING_PROFILE:
       return {
         ...state,
         loading: true,
@@ -23,7 +26,19 @@ function profileReducer(state = initState, { type, payload }) {
         ...state,
         profile: payload.data,
         loading: false,
-        message: payload.message,
+      };
+
+    case UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        profile: payload.data,
+        loading: false,
+      };
+
+    case UPDATE_PROFILE_FAIL:
+      return {
+        ...state,
+        loading: false,
       };
 
     case GET_PROFILE_FAIL:
@@ -31,7 +46,6 @@ function profileReducer(state = initState, { type, payload }) {
         ...state,
         profile: null,
         loading: false,
-        message: payload.message,
       };
 
     default:

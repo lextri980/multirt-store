@@ -14,9 +14,6 @@ const initState = {
   user: null,
   isAuthenticated: false,
   loading: false,
-  success: false,
-  message: null,
-  error: null,
 };
 
 function authReducer(state = initState, { type, payload }) {
@@ -42,16 +39,6 @@ function authReducer(state = initState, { type, payload }) {
         user: payload.user,
         isAuthenticated: true,
         loading: false,
-        success: payload.success,
-        message: payload.message,
-      };
-
-    case REGISTER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        success: payload.success,
-        message: payload.message,
       };
 
     case LOGOUT_SUCCESS:
@@ -64,11 +51,10 @@ function authReducer(state = initState, { type, payload }) {
 
     case LOGIN_FAIL:
     case REGISTER_FAIL:
+    case REGISTER_SUCCESS:
       return {
         ...state,
         loading: false,
-        success: payload.success,
-        error: payload.message,
       };
 
     default:

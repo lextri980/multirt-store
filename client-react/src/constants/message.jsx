@@ -11,5 +11,5 @@ export const MIN = 'Min length:' //--->
 export const MAX = 'Max length:' //--->
 
 //! Password field
-export const CONFIRM_PW = 'Password does not match' 
+export const CONFIRM_PW = 'Password does not match'
 export const PW_FORMAT = 'Password must be at least 6 characters, 1 letter and 1 number'

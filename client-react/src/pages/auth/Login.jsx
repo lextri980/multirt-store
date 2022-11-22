@@ -69,6 +69,7 @@ function Login() {
                 label={<EmailIcon />}
                 value="email"
                 register={register}
+                error={errors.email ? true : false}
               />
               {errors.email ? (
                 <ErrorMessage>{errors.email.message}</ErrorMessage>
@@ -83,6 +84,7 @@ function Login() {
                 password
                 onPassword={() => setTypePw(!typePw)}
                 register={register}
+                error={errors.password ? true : false}
               />
               {errors.password ? (
                 <ErrorMessage>{errors.password.message}</ErrorMessage>

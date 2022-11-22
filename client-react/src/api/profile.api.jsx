@@ -8,3 +8,7 @@ export const getProfileApi = async (data) => {
 export const updateProfileApi = async (data) => {
   return await apiAxios.post(`${url}/user/profile/update`, data);
 };
+
+export const updatePasswordApi = async (data) => {
+  return await apiAxios.post(`${url}/user/profile/change-password`, data);
+};
