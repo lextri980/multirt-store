@@ -12,7 +12,7 @@ import Input from "components/common/input/Input";
 import Loading from "components/common/loading/Loading";
 import Modal from "components/common/modal/Modal";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
-import { REQUIRED } from "constants/message";
+import { FORMAT, REQUIRED } from "constants/message";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,23 +36,20 @@ function Profile() {
   const [pw3, setPw3] = useState(false);
 
   //* Hooks
-  const schema = yup.object().shape({
+  const profileSchema = yup.object().shape({
     name: yup.string().required(`Name ${REQUIRED}`),
-    email: yup.string().required(`Email ${REQUIRED}`),
-    // oldPassword: yup.string().required(`Old password ${REQUIRED}`),
-    // password: yup.string().required(`New password ${REQUIRED}`),
-    // confirmPassword: yup.string().required(`Confirm password ${REQUIRED}`),
+    email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
   });
 
   const {
-    register,
-    handleSubmit,
-    trigger,
-    resetField,
-    reset,
-    formState: { errors },
+    register: regProfile,
+    handleSubmit: handleSubmitProfile,
+    trigger: triggerProfile,
+    resetField: resetFieldProfile,
+    reset: resetProfile,
+    formState: { errors: errorsProfile },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(profileSchema),
   });
 
   useEffect(() => {
@@ -62,24 +59,21 @@ function Profile() {
 
   useEffect(() => {
     if (profile)
-      reset({
+      resetProfile({
         name: profile.name,
         email: profile.email,
       });
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
-
-  //* Other
-
-  //* Condition rendering
 
   //@ (handleClearForm): clear form
   const handleClearForm = () => {
-    resetField("name");
-    resetField("email");
-    resetField("avatar");
-    resetField("password");
-    resetField("oldPassword");
-    resetField("confirmPassword");
+    resetFieldProfile("name");
+    resetFieldProfile("email");
+    resetFieldProfile("avatar");
+    resetFieldProfile("password");
+    resetFieldProfile("oldPassword");
+    resetFieldProfile("confirmPassword");
     setFileName("");
   };
 
@@ -104,10 +98,6 @@ function Profile() {
     console.log(form);
   };
 
-  schema.validate({}).catch(function (e) {
-    console.log(e);
-  });
-
   return (
     <AnimatedLayout>
       <ProfileContainer>
@@ -116,7 +106,7 @@ function Profile() {
           <div className="horizontal-center">
             <p>Comming soon</p>
             <Spacer x={0.5}></Spacer>
-            <Loading color="primary" />
+            <Loading />
           </div>
         </Card>
 
@@ -130,7 +120,7 @@ function Profile() {
           </Card.Header>
           <Card.Body>
             {loading === true ? (
-              <Loading color="primary" type="gradient" size="lg" />
+              <Loading type="gradient" size="lg" />
             ) : (
               <>
                 <p className="mb-10">
@@ -217,7 +207,7 @@ function Profile() {
           <div className="horizontal-center">
             <p>Comming soon</p>
             <Spacer x={0.5}></Spacer>
-            <Loading color="primary" />
+            <Loading />
           </div>
         </Card>
 
@@ -229,16 +219,16 @@ function Profile() {
           submitBtn="Update"
           close={() => setOpenUpdateProfileModal(false)}
         >
-          <form onSubmit={handleSubmit(onSubmitProfile)}>
+          <form onSubmit={handleSubmitProfile(onSubmitProfile)}>
             <Input
               label={<UsernameIcon />}
               placeholder="Name"
               value="name"
-              register={register}
-              error={errors.name ? true : false}
+              register={regProfile}
+              error={errorsProfile.name ? true : false}
             />
-            {errors.name ? (
-              <ErrorMessage>{errors.name.message}</ErrorMessage>
+            {errorsProfile.name ? (
+              <ErrorMessage>{errorsProfile.name.message}</ErrorMessage>
             ) : (
               <Spacer y={1} />
             )}
@@ -246,11 +236,11 @@ function Profile() {
               label={<EmailIcon />}
               placeholder="Email"
               value="email"
-              register={register}
-              error={errors.email ? true : false}
+              register={regProfile}
+              error={errorsProfile.email ? true : false}
             />
-            {errors.email && (
-              <ErrorMessage>{errors.email.message}</ErrorMessage>
+            {errorsProfile.email && (
+              <ErrorMessage>{errorsProfile.email.message}</ErrorMessage>
             )}
             <footer className="modal-footer">
               <Button
@@ -259,7 +249,11 @@ function Profile() {
               >
                 Cancel
               </Button>
-              <Button color="success" type="submit" onClick={() => trigger()}>
+              <Button
+                color="success"
+                type="submit"
+                onClick={() => triggerProfile()}
+              >
                 Update
               </Button>
             </footer>
@@ -280,7 +274,7 @@ function Profile() {
               css={{ size: "$20" }}
             />
           </div>
-          <form onSubmit={handleSubmit(onSubmitAvatar)}>
+          <form onSubmit={handleSubmitProfile(onSubmitAvatar)}>
             <File
               onChange={handleChangeAvatar}
               name={fileName}
@@ -308,12 +302,11 @@ function Profile() {
           submitBtn="Update"
           close={() => setOpenUpdatePasswordModal(false)}
         >
-          <form onSubmit={handleSubmit(onSubmitPassword)}>
+          <form onSubmit={handleSubmitProfile(onSubmitPassword)}>
             <Input
               placeholder="Old password"
               label={<LockIcon />}
               value="oldPassword"
-              register={register}
               password
               type={pw1}
               onPassword={() => setPw1(!pw1)}
@@ -323,7 +316,6 @@ function Profile() {
               placeholder="New password"
               label={<LockIcon />}
               value="password"
-              register={register}
               password
               type={pw2}
               onPassword={() => setPw2(!pw2)}
@@ -333,7 +325,6 @@ function Profile() {
               placeholder="Confirm new password"
               label={<LockResetOutlinedIcon />}
               value="newPassword"
-              register={register}
               password
               type={pw3}
               onPassword={() => setPw3(!pw3)}

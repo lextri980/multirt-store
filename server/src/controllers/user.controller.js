@@ -142,8 +142,8 @@ const getUserProfile = async (req, res) => {
   try {
     const data = await User.findById(req.user._id).select("-password");
 
-    if(!data) {
-      return dtoFail(res, 'User is not found');
+    if (!data) {
+      return dtoFail(res, "User is not found");
     }
 
     return dtoSc(res, {
@@ -169,10 +169,6 @@ const updateUserProfile = async (req, res) => {
 
   try {
     // Validate field
-    const user = await User.findOne({ email });
-    if (user) {
-      return dtoFail(res, "Email is already existed");
-    }
     if (emailRegex.test(email === false)) {
       return dtoFail(res, "Invalid email");
     }
@@ -193,7 +189,7 @@ const updateUserProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return dtoServer(res);
+    return dtoFail(res, "Maybe email is already existed");
   }
 };
 
@@ -234,7 +230,7 @@ const updatePassword = async (req, res) => {
     return dtoSc(res, {
       success: true,
       message: "Change password successfully",
-      data: true
+      data: true,
     });
   } catch (error) {
     console.log(error);

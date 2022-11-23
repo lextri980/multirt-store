@@ -146,7 +146,7 @@ function Register() {
                   disabled={loading === true ? true : false}
                   onClick={() => trigger()}
                 >
-                  {loading === true ? <Loading /> : "Confirm"}
+                  {loading === true ? <Loading color="white" /> : "Confirm"}
                 </Button>
               </Row>
             </Card.Footer>

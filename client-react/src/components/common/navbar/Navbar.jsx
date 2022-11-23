@@ -29,20 +29,22 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutRequest } from "store/actions/auth.action";
+import { gettingProfile } from "store/actions/profile.action";
 import { color } from "themes/colors";
 import Button from "../button/Button";
 import ButtonLight from "../button/ButtonLight";
+import Loading from "../loading/Loading";
 import { NavbarContainer } from "./Navbar.style";
 
 function NavbarMenu() {
   //* Redux hooks
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { profile } = useSelector((state) => state.profile);
+  const { profile, loading } = useSelector((state) => state.profile);
 
   //* Local state
   const [switchChecked, setSwitchChecked] = useState(true);
@@ -52,6 +54,11 @@ function NavbarMenu() {
   //* Hooks
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(gettingProfile());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //@ (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
@@ -90,7 +97,7 @@ function NavbarMenu() {
           element={<ArrowDropDownIcon />}
           onClick={(e) => setOpenDropdown(e.currentTarget)}
         >
-          {profile?.name}
+          {loading === true ? <Loading type="gradient" /> : profile?.name}
           <ArrowDropDownIcon />
         </ButtonLight>
         <Menu
