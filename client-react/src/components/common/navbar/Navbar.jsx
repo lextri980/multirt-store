@@ -91,7 +91,7 @@ function NavbarMenu() {
         <Avatar
           style={{ marginRight: "-20px" }}
           text={profile?.name.charAt(0).toUpperCase()}
-          src=""
+          src={profile?.avatar?.path}
         />
         <ButtonLight
           element={<ArrowDropDownIcon />}

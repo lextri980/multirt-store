@@ -7,14 +7,14 @@ export const ProfileContainer = styled.div`
   justify-content: center;
 
   .avatar {
-    width: 250px;
-    height: 250px;
+    width: 230px;
+    height: 230px;
 
     span {
       font-size: 100px;
     }
 
-    @media (min-width: 768px) {
+    @media (max-width: 1300px) {
       width: 120px;
       height: 120px;
 

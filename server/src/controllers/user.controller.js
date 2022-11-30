@@ -193,7 +193,42 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-//! desc   Check old password
+//! desc   Update avatar
+//! route  POST /user/profile/change-avatar
+//! access Private/Owner
+const updateAvatar = async (req, res) => {
+  const avatar = req.file
+
+  if (!avatar) {
+    return dtoFail(res, "Missing information");
+  }
+
+  try {
+    let updateData = {
+      avatar,
+    };
+
+    const updateCondition = { _id: req.user.id };
+    updateData = await User.findOneAndUpdate(updateCondition, updateData, {
+      new: true,
+    });
+
+    if (!updateData) {
+      return dtoFail(res, "User is not found");
+    }
+
+    return dtoSc(res, {
+      success: true,
+      message: 'Update avatar successfully',
+      data: updateData,
+    });
+  } catch (error) {
+    console.log(error);
+    return dtoServer(res);
+  }
+};
+
+//! desc   Update password
 //! route  POST /user/profile/change-password
 //! access Private/Owner
 const updatePassword = async (req, res) => {
@@ -245,5 +280,6 @@ module.exports = {
   deleteUser,
   getUserProfile,
   updateUserProfile,
+  updateAvatar,
   updatePassword,
 };

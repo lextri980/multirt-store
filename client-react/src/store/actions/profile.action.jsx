@@ -2,10 +2,13 @@ import {
   GETTING_PROFILE,
   GET_PROFILE_FAIL,
   GET_PROFILE_SUCCESS,
+  UPDATE_AVATAR_FAIL,
+  UPDATE_AVATAR_SUCCESS,
   UPDATE_PASSWORD_FAIL,
   UPDATE_PASSWORD_SUCCESS,
   UPDATE_PROFILE_FAIL,
   UPDATE_PROFILE_SUCCESS,
+  UPDATING_AVATAR,
   UPDATING_PASSWORD,
   UPDATING_PROFILE,
 } from "constants/actions/profile.const";
@@ -55,16 +58,16 @@ export const updatePasswordFail = (error) => ({
 });
 
 export const updatingAvatar = (data) => ({
-  type: UPDATING_PROFILE,
+  type: UPDATING_AVATAR,
   payload: data,
 });
 
 export const updateAvatarSuccess = (data) => ({
-  type: UPDATE_PROFILE_SUCCESS,
+  type: UPDATE_AVATAR_SUCCESS,
   payload: data,
 });
 
 export const updateAvatarFail = (error) => ({
-  type: UPDATE_PROFILE_FAIL,
+  type: UPDATE_AVATAR_FAIL,
   payload: error,
 });
