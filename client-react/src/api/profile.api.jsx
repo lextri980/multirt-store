@@ -12,3 +12,7 @@ export const updateProfileApi = async (data) => {
 export const updatePasswordApi = async (data) => {
   return await apiAxios.post(`${url}/user/profile/change-password`, data);
 };
+
+export const updateAvatarApi = async (data) => {
+  return await apiAxios.post(`${url}/user/profile/change-avatar`, data);
+}

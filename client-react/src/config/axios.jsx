@@ -3,7 +3,7 @@ import { LOCALSTORAGE_TOKEN_NAME } from "constants/service.const";
 
 const apiAxios = axios.create({
   baseURL: process.env.BASE_URL,
-  timeout: 1000,
+  timeout: 20000,
 });
 
 // Request interceptor for API calls

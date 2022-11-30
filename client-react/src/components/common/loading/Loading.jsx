@@ -2,14 +2,14 @@ import Loadings from "@nextui-org/react/loading";
 
 function Loading(props) {
   //! Props type
-  //Require: 
+  //Require:
   //Option: color, size, type
-  //Func: 
+  //Func:
   const { color, size, type } = props;
-  
+
   return (
     <Loadings
-      color={color || "white"}
+      color={color || "primary"}
       size={size || "sm"}
       type={type || "points"}
     />

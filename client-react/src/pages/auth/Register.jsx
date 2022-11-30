@@ -135,7 +135,7 @@ function Register() {
             <Card.Divider />
             <Card.Footer>
               <Row justify="flex-end">
-                <Button color="danger" width="100px" onClick={handleClearform}>
+                <Button color="warning" width="100px" onClick={handleClearform}>
                   Clear
                 </Button>
                 <Spacer x={1} />
@@ -146,7 +146,7 @@ function Register() {
                   disabled={loading === true ? true : false}
                   onClick={() => trigger()}
                 >
-                  {loading === true ? <Loading /> : "Confirm"}
+                  {loading === true ? <Loading color="white" /> : "Confirm"}
                 </Button>
               </Row>
             </Card.Footer>

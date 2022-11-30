@@ -7,11 +7,7 @@ import ErrorMessage from "components/common/errorMessage/ErrorMessage";
 import Input from "components/common/input/Input";
 import Loading from "components/common/loading/Loading";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
-import {
-FORMAT,
-PASSWORD_REQUIRED,
-REQUIRED
-} from "constants/message";
+import { FORMAT, REQUIRED } from "constants/message";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -103,7 +99,7 @@ function Login() {
             <Card.Divider />
             <Card.Footer>
               <Row justify="flex-end">
-                <Button color="danger" width="100px" onClick={handleClearform}>
+                <Button color="warning" width="100px" onClick={handleClearform}>
                   Clear
                 </Button>
                 <Spacer x={1} />
@@ -114,7 +110,7 @@ function Login() {
                   disabled={loading === true ? true : false}
                   onClick={() => trigger()}
                 >
-                  {loading === true ? <Loading /> : "Confirm"}
+                  {loading === true ? <Loading color="white" /> : "Confirm"}
                 </Button>
               </Row>
             </Card.Footer>

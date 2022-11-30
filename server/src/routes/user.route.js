@@ -1,4 +1,5 @@
 const express = require("express");
+const uploadCloud = require("../config/cloudinary");
 const {
   getUser,
   getUserDetail,
@@ -7,6 +8,7 @@ const {
   getUserProfile,
   updateUserProfile,
   updatePassword,
+  updateAvatar,
 } = require("../controllers/user.controller");
 const idMatch = require("../middleware/idMatch");
 const isAdmin = require("../middleware/isAdmin");
@@ -26,5 +28,12 @@ router.get("/profile", protectedRoute, getUserProfile);
 router.post("/profile/update", protectedRoute, updateUserProfile);
 
 router.post("/profile/change-password", protectedRoute, updatePassword);
+
+router.post(
+  "/profile/change-avatar",
+  protectedRoute,
+  uploadCloud.single("avatar"),
+  updateAvatar
+);
 
 module.exports = router;

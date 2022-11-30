@@ -20,6 +20,11 @@ function Input(props) {
     error,
   } = props;
 
+  //@ (antiCopy): Cannot copy input text
+  const antiCopy = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <InputContainer error={error}>
       <label htmlFor={value} id="label">
@@ -31,6 +36,7 @@ function Input(props) {
         placeholder={placeholder || "Name"}
         error={error || false}
         {...register(value)}
+        onCopy={password ? antiCopy : ""}
       />
       {password ? (
         <label htmlFor={value} id="pw" onClick={onPassword}>

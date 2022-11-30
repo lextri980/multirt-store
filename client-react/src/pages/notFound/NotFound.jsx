@@ -15,10 +15,9 @@ function NotFound() {
         <p>Do you enter right url?</p>
         <Button
           width="190px"
-          name="Back to Dashboard"
           elementFront={<DashboardIcon />}
           onClick={() => navigate("/dashboard")}
-        />
+        >Back to Dashboard</Button>
       </div>
     </NotFoundContainer>
   );

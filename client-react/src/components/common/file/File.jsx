@@ -5,20 +5,18 @@ import { FileContainer } from "./File.style";
 
 function File(props) {
   //! Props type
-  //Require: value, clear, name, onChange
+  //Require: value, clear, name, onClear, register, onChange
   //Option: fileTitle
   //Func: onClear, onChange
-  const { value, fileTitle, onClear, name, onChange } = props;
-  
+  const { value, fileTitle, onClear, name, register, onChange } = props;
+
   return (
     <FileContainer>
       <input
         type="file"
         id="file"
         class="inputfile"
-        name={value}
-        value={value}
-        onChange={onChange}
+        {...register(value, { onChange })}
       />
       <div className="input-file pointer">
         <label for="file" className="pointer">

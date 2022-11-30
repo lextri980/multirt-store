@@ -12,11 +12,23 @@ import Input from "components/common/input/Input";
 import Loading from "components/common/loading/Loading";
 import Modal from "components/common/modal/Modal";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
-import { REQUIRED } from "constants/message";
+import { FILE_SIZE_MAX } from "constants/common";
+import {
+  CONFIRM_PW,
+  FILE_SIZE,
+  FILE_TYPE,
+  FORMAT,
+  REQUIRED,
+} from "constants/message";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { gettingProfile, updatingProfile } from "store/actions/profile.action";
+import {
+  gettingProfile,
+  updatingAvatar,
+  updatingPassword,
+  updatingProfile,
+} from "store/actions/profile.action";
 import { formatDate } from "utils/date.util";
 import * as yup from "yup";
 import { ProfileContainer } from "./Profile.style";
@@ -34,27 +46,75 @@ function Profile() {
   const [pw1, setPw1] = useState(false);
   const [pw2, setPw2] = useState(false);
   const [pw3, setPw3] = useState(false);
+  const [previewFile, setPreviewFile] = useState("");
 
-  //* Hooks
-  const schema = yup.object().shape({
+  //* Form and validate
+  const profileSchema = yup.object().shape({
     name: yup.string().required(`Name ${REQUIRED}`),
-    email: yup.string().required(`Email ${REQUIRED}`),
-    // oldPassword: yup.string().required(`Old password ${REQUIRED}`),
-    // password: yup.string().required(`New password ${REQUIRED}`),
-    // confirmPassword: yup.string().required(`Confirm password ${REQUIRED}`),
+    email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
+  });
+
+  const avatarSchema = yup.object().shape({
+    avatar: yup
+      .mixed()
+      .required(`Avatar ${REQUIRED}`)
+      .test("hasFile", `Avatar ${REQUIRED}`, (value) => value && value[0])
+      .test("fileType", FILE_TYPE, (value) => {
+        if (!value || !value[0]) return true;
+        return (
+          value[0].type === "image/jpeg" ||
+          value[0].type === "image/png" ||
+          value[0].type === "image/jpg" ||
+          value[0].type === "image/gif"
+        );
+      })
+      .test("fileSize", FILE_SIZE, (value) => {
+        if (!value || !value[0]) return true;
+        return value[0].size < FILE_SIZE_MAX;
+      }),
+  });
+
+  const passwordSchema = yup.object().shape({
+    oldPassword: yup.string().required(`Old password ${REQUIRED}`),
+    password: yup.string().required(`New password ${REQUIRED}`),
+    confirmPassword: yup
+      .string()
+      .required(`Confirm password ${REQUIRED}`)
+      .oneOf([yup.ref("password"), null], CONFIRM_PW),
   });
 
   const {
-    register,
-    handleSubmit,
-    trigger,
-    resetField,
-    reset,
-    formState: { errors },
+    register: regProfile,
+    handleSubmit: handleSubmitProfile,
+    trigger: triggerProfile,
+    resetField: resetFieldProfile,
+    reset: resetProfile,
+    formState: { errors: errorsProfile },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(profileSchema),
   });
 
+  const {
+    register: regAvatar,
+    handleSubmit: handleSubmitAvatar,
+    trigger: triggerAvatar,
+    resetField: resetFieldAvatar,
+    formState: { errors: errorsAvatar },
+  } = useForm({
+    resolver: yupResolver(avatarSchema),
+  });
+
+  const {
+    register: regPassword,
+    handleSubmit: handleSubmitPassword,
+    trigger: triggerPassword,
+    resetField: resetFieldPassword,
+    formState: { errors: errorsPassword },
+  } = useForm({
+    resolver: yupResolver(passwordSchema),
+  });
+
+  //* Hooks
   useEffect(() => {
     dispatch(gettingProfile());
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,30 +122,30 @@ function Profile() {
 
   useEffect(() => {
     if (profile)
-      reset({
+      resetProfile({
         name: profile.name,
         email: profile.email,
       });
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
-
-  //* Other
-
-  //* Condition rendering
 
   //@ (handleClearForm): clear form
   const handleClearForm = () => {
-    resetField("name");
-    resetField("email");
-    resetField("avatar");
-    resetField("password");
-    resetField("oldPassword");
-    resetField("confirmPassword");
+    resetFieldProfile("name");
+    resetFieldProfile("email");
+    resetFieldAvatar("avatar");
+    resetFieldPassword("password");
+    resetFieldPassword("oldPassword");
+    resetFieldPassword("confirmPassword");
     setFileName("");
+    setPreviewFile(null);
   };
 
-  //@ (handleChangeForm): handle event change form
-  const handleChangeAvatar = (e) => {
+  //@ (handleChangeFile): handle choose a file
+  const handleChangeFile = (e) => {
     setFileName(e.target.value);
+    const imagePreview = URL.createObjectURL(e.target.files[0]);
+    setPreviewFile(imagePreview);
   };
 
   //! async (onSubmitProfile): Submit profile
@@ -96,17 +156,17 @@ function Profile() {
 
   //! async (onSubmitAvatar): Submit avatar
   const onSubmitAvatar = (form) => {
-    console.log(form);
+    const formData = new FormData();
+    formData.append("avatar", form.avatar[0]);
+    dispatch(updatingAvatar(formData));
+    setOpenUpdateAvatarModal(false);
   };
 
   //! async (onSubmitPassword): Submit password
   const onSubmitPassword = (form) => {
-    console.log(form);
+    dispatch(updatingPassword(form));
+    setOpenUpdatePasswordModal(false);
   };
-
-  schema.validate({}).catch(function (e) {
-    console.log(e);
-  });
 
   return (
     <AnimatedLayout>
@@ -116,7 +176,7 @@ function Profile() {
           <div className="horizontal-center">
             <p>Comming soon</p>
             <Spacer x={0.5}></Spacer>
-            <Loading color="primary" />
+            <Loading />
           </div>
         </Card>
 
@@ -126,11 +186,12 @@ function Profile() {
             <Avatar
               className="avatar"
               text={profile?.name.charAt(0).toUpperCase()}
+              src={profile?.avatar?.path}
             />
           </Card.Header>
           <Card.Body>
             {loading === true ? (
-              <Loading color="primary" type="gradient" size="lg" />
+              <Loading type="gradient" size="lg" />
             ) : (
               <>
                 <p className="mb-10">
@@ -217,7 +278,7 @@ function Profile() {
           <div className="horizontal-center">
             <p>Comming soon</p>
             <Spacer x={0.5}></Spacer>
-            <Loading color="primary" />
+            <Loading />
           </div>
         </Card>
 
@@ -229,16 +290,16 @@ function Profile() {
           submitBtn="Update"
           close={() => setOpenUpdateProfileModal(false)}
         >
-          <form onSubmit={handleSubmit(onSubmitProfile)}>
+          <form onSubmit={handleSubmitProfile(onSubmitProfile)}>
             <Input
               label={<UsernameIcon />}
               placeholder="Name"
               value="name"
-              register={register}
-              error={errors.name ? true : false}
+              register={regProfile}
+              error={errorsProfile.name ? true : false}
             />
-            {errors.name ? (
-              <ErrorMessage>{errors.name.message}</ErrorMessage>
+            {errorsProfile.name ? (
+              <ErrorMessage>{errorsProfile.name.message}</ErrorMessage>
             ) : (
               <Spacer y={1} />
             )}
@@ -246,21 +307,26 @@ function Profile() {
               label={<EmailIcon />}
               placeholder="Email"
               value="email"
-              register={register}
-              error={errors.email ? true : false}
+              register={regProfile}
+              error={errorsProfile.email ? true : false}
             />
-            {errors.email && (
-              <ErrorMessage>{errors.email.message}</ErrorMessage>
+            {errorsProfile.email && (
+              <ErrorMessage>{errorsProfile.email.message}</ErrorMessage>
             )}
             <footer className="modal-footer">
               <Button
-                color="danger"
+                color="warning"
                 onClick={() => setOpenUpdateProfileModal(false)}
               >
                 Cancel
               </Button>
-              <Button color="success" type="submit" onClick={() => trigger()}>
-                Update
+              <Button
+                color="success"
+                type="submit"
+                disabled={loading === true ? true : false}
+                onClick={() => triggerProfile()}
+              >
+                {loading === true ? <Loading color="white" /> : "Update"}
               </Button>
             </footer>
           </form>
@@ -277,25 +343,45 @@ function Profile() {
             <Avatar
               size={"xl"}
               text={profile?.name.charAt(0).toUpperCase()}
-              css={{ size: "$20" }}
+              css={{ size: "$40" }}
+              src={previewFile}
             />
           </div>
-          <form onSubmit={handleSubmit(onSubmitAvatar)}>
+          <form onSubmit={handleSubmitAvatar(onSubmitAvatar)}>
             <File
-              onChange={handleChangeAvatar}
+              onChange={handleChangeFile}
               name={fileName}
               fileTitle="Choose avatar"
               onClear={handleClearForm}
+              register={regAvatar}
+              value="avatar"
             />
+            {errorsAvatar.avatar && (
+              <ErrorMessage>{errorsAvatar.avatar.message}</ErrorMessage>
+            )}
             <footer className="modal-footer">
               <Button
-                color="danger"
+                color="warning"
+                width="110px"
                 onClick={() => setOpenUpdateAvatarModal(false)}
               >
                 Cancel
               </Button>
-              <Button color="success" type="submit">
-                Update
+              <Button
+                color="success"
+                type="submit"
+                width="110px"
+                disabled={loading === true ? true : false}
+                onClick={() => triggerAvatar()}
+              >
+                {loading === true ? <Loading color="white" /> : "Update"}
+              </Button>
+              <Button
+                color="danger"
+                width="110px"
+                onClick={() => setOpenUpdateAvatarModal(false)}
+              >
+                Delete
               </Button>
             </footer>
           </form>
@@ -308,45 +394,66 @@ function Profile() {
           submitBtn="Update"
           close={() => setOpenUpdatePasswordModal(false)}
         >
-          <form onSubmit={handleSubmit(onSubmitPassword)}>
+          <form onSubmit={handleSubmitPassword(onSubmitPassword)}>
             <Input
               placeholder="Old password"
               label={<LockIcon />}
               value="oldPassword"
-              register={register}
+              register={regPassword}
               password
               type={pw1}
               onPassword={() => setPw1(!pw1)}
+              error={errorsPassword.oldPassword ? true : false}
             />
-            <Spacer y={1} />
+            {errorsPassword.oldPassword ? (
+              <ErrorMessage>{errorsPassword.oldPassword.message}</ErrorMessage>
+            ) : (
+              <Spacer y={1} />
+            )}
             <Input
               placeholder="New password"
               label={<LockIcon />}
               value="password"
-              register={register}
+              register={regPassword}
               password
               type={pw2}
               onPassword={() => setPw2(!pw2)}
+              error={errorsPassword.password ? true : false}
             />
-            <Spacer y={1} />
+            {errorsPassword.password ? (
+              <ErrorMessage>{errorsPassword.password.message}</ErrorMessage>
+            ) : (
+              <Spacer y={1} />
+            )}
             <Input
               placeholder="Confirm new password"
               label={<LockResetOutlinedIcon />}
-              value="newPassword"
-              register={register}
+              value="confirmPassword"
+              register={regPassword}
               password
               type={pw3}
               onPassword={() => setPw3(!pw3)}
+              error={errorsPassword.confirmPassword ? true : false}
             />
+            {errorsPassword.confirmPassword && (
+              <ErrorMessage>
+                {errorsPassword.confirmPassword.message}
+              </ErrorMessage>
+            )}
             <footer className="modal-footer">
               <Button
-                color="danger"
+                color="warning"
                 onClick={() => setOpenUpdatePasswordModal(false)}
               >
                 Cancel
               </Button>
-              <Button color="success" type="submit">
-                Update
+              <Button
+                color="success"
+                type="submit"
+                disabled={loading === true ? true : false}
+                onClick={() => triggerPassword()}
+              >
+                {loading === true ? <Loading color="white" /> : "Update"}
               </Button>
             </footer>
           </form>

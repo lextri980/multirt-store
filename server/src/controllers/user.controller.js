@@ -142,8 +142,8 @@ const getUserProfile = async (req, res) => {
   try {
     const data = await User.findById(req.user._id).select("-password");
 
-    if(!data) {
-      return dtoFail(res, 'User is not found');
+    if (!data) {
+      return dtoFail(res, "User is not found");
     }
 
     return dtoSc(res, {
@@ -169,10 +169,6 @@ const updateUserProfile = async (req, res) => {
 
   try {
     // Validate field
-    const user = await User.findOne({ email });
-    if (user) {
-      return dtoFail(res, "Email is already existed");
-    }
     if (emailRegex.test(email === false)) {
       return dtoFail(res, "Invalid email");
     }
@@ -193,11 +189,46 @@ const updateUserProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    return dtoFail(res, "Maybe email is already existed");
+  }
+};
+
+//! desc   Update avatar
+//! route  POST /user/profile/change-avatar
+//! access Private/Owner
+const updateAvatar = async (req, res) => {
+  const avatar = req.file
+
+  if (!avatar) {
+    return dtoFail(res, "Missing information");
+  }
+
+  try {
+    let updateData = {
+      avatar,
+    };
+
+    const updateCondition = { _id: req.user.id };
+    updateData = await User.findOneAndUpdate(updateCondition, updateData, {
+      new: true,
+    });
+
+    if (!updateData) {
+      return dtoFail(res, "User is not found");
+    }
+
+    return dtoSc(res, {
+      success: true,
+      message: 'Update avatar successfully',
+      data: updateData,
+    });
+  } catch (error) {
+    console.log(error);
     return dtoServer(res);
   }
 };
 
-//! desc   Check old password
+//! desc   Update password
 //! route  POST /user/profile/change-password
 //! access Private/Owner
 const updatePassword = async (req, res) => {
@@ -234,7 +265,7 @@ const updatePassword = async (req, res) => {
     return dtoSc(res, {
       success: true,
       message: "Change password successfully",
-      data: true
+      data: true,
     });
   } catch (error) {
     console.log(error);
@@ -249,5 +280,6 @@ module.exports = {
   deleteUser,
   getUserProfile,
   updateUserProfile,
+  updateAvatar,
   updatePassword,
 };
