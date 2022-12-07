@@ -28,6 +28,7 @@
   color: #61dafb;
 }
 
+//! Link redirect
 .link-redirect {
   display: flex;
   align-items: center;
@@ -41,6 +42,7 @@
   }
 }
 
+//! Hover pointer
 .icon-clickable {
   &:hover {
     cursor: pointer;
@@ -51,6 +53,16 @@
   &:hover {
     cursor: pointer;
   }
+}
+
+//! Flex display
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .horizontal-center {
@@ -69,6 +81,60 @@
   align-items: center;
 }
 
+.justify-start {
+  justify-content: flex-start;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.align-center {
+  align-items: center;
+}
+
+//! Font size
+.fs-12 {
+  font-size: 12px;
+}
+.fs-14 {
+  font-size: 14px;
+}
+.fs-16 {
+  font-size: 16px;
+}
+.fs-18 {
+  font-size: 18px;
+}
+.fs-20 {
+  font-size: 20px;
+}
+.fs-26 {
+  font-size: 26px;
+}
+.fs-32 {
+  font-size: 32px;
+}
+
+//! Margin
+.mr-5 {
+  margin-right: 5px;
+}
+.ml-5 {
+  margin-left: 5px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
+.ml-10 {
+  margin-left: 10px;
+}
+
+//+ Element
 .modal-footer {
   display: flex;
   justify-content: space-between;

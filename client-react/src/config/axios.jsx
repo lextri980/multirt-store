@@ -18,7 +18,6 @@ apiAxios.interceptors.request.use(
       Accept: "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
     };
-    console.log("request", config);
     return config;
   },
   (error) => {
@@ -29,7 +28,6 @@ apiAxios.interceptors.request.use(
 // Response interceptor for API calls
 apiAxios.interceptors.response.use(
   (response) => {
-    console.log("response", response);
     return response;
   },
   function (error) {

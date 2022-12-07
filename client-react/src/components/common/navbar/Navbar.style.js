@@ -14,6 +14,7 @@ export const NavbarContainer = styled.div`
   position: sticky;
   top: 0;
   margin-bottom: 10px;
+  width: 100vw;
 
   .logo-web {
     display: flex;
@@ -93,6 +94,32 @@ export const NavbarContainer = styled.div`
       }
     }
   }
+  .switch-theme-table {
+    div {
+      background-color: ${color.blueP};
+
+      &:hover {
+        background-color: ${color.blueP};
+      }
+
+      &:not(&:active) {
+        background-color: ${color.brick};
+      }
+    }
+  }
+  .switch-theme-card {
+    div {
+      background-color: ${color.blueP};
+
+      &:hover {
+        background-color: ${color.blueP};
+      }
+
+      &:not(&:active) {
+        background-color: ${color.green};
+      }
+    }
+  }
 
   .title-profile {
     display: flex;
@@ -109,6 +136,18 @@ export const NavbarContainer = styled.div`
 
     h4 {
       margin: 0
+    }
+  }
+
+  .switch-layout-user {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    p {
+      display: flex;
+      align-items: center;
+      margin: 5px 10px 0;
     }
   }
 `;

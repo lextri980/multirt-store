@@ -2,6 +2,7 @@ import Account from "@mui/icons-material/AccountCircleOutlined";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import CardIcon from "@mui/icons-material/CreditCardOutlined";
 import Moon from "@mui/icons-material/DarkModeOutlined";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -9,6 +10,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCart from "@mui/icons-material/ShoppingCartOutlined";
 import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
+import TableIcon from "@mui/icons-material/TableViewOutlined";
 import Sun from "@mui/icons-material/WbSunnyOutlined";
 import {
   Divider,
@@ -31,7 +33,12 @@ import {
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { logoutRequest } from "store/actions/auth.action";
 import { gettingProfile } from "store/actions/profile.action";
 import { color } from "themes/colors";
@@ -40,7 +47,7 @@ import ButtonLight from "../button/ButtonLight";
 import Loading from "../loading/Loading";
 import { NavbarContainer } from "./Navbar.style";
 
-function NavbarMenu() {
+function NavbarMenu({ switchLayout, setSwitchLayout }) {
   //* Redux hooks
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -63,6 +70,10 @@ function NavbarMenu() {
   //@ (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
     setSwitchChecked(!switchChecked);
+  };
+
+  const handleChangeLayoutSwitch = (e) => {
+    setSwitchLayout(!switchLayout);
   };
 
   //! async (onSubmitLogout):  handle logout
@@ -142,7 +153,12 @@ function NavbarMenu() {
             </ListItemText>
           </MenuItem>
           {user.isAdmin === true ? (
-            <MenuItem onClick={() => setOpenDropdown(null)}>
+            <MenuItem
+              onClick={() => {
+                navigate("/manage-user");
+                setOpenDropdown(null);
+              }}
+            >
               <ListItemIcon>
                 <PeopleIcon fontSize="small" />
               </ListItemIcon>
@@ -172,11 +188,11 @@ function NavbarMenu() {
 
   //!! Return section ---------------------------------
   return (
-    <NavbarContainer switchChecked={switchChecked}>
+    <NavbarContainer>
       <Navbar isBordered className="dark-theme">
         <Navbar.Brand
           onClick={() => navigate("/dashboard")}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", minWidth: "300px" }}
         >
           <span className="logo-web">
             <AnchorIcon />
@@ -196,6 +212,7 @@ function NavbarMenu() {
             ""
           )}
         </Navbar.Brand>
+        {/* //! Middle menu navbar ----------------------------------- */}
         <Navbar.Content>
           {location.pathname === "/profile" ? (
             <Tooltip
@@ -211,6 +228,24 @@ function NavbarMenu() {
                 <h4>Your profile</h4>
               </div>
             </Tooltip>
+          ) : location.pathname === "/manage-user" ? (
+            <div className="switch-layout-user">
+              <p>Table</p>
+              <Switch
+                checked={switchLayout}
+                size="lg"
+                shadow
+                iconOn={<CardIcon />}
+                iconOff={<TableIcon />}
+                className={clsx({
+                  "switch-theme-card": switchLayout === true,
+                  "switch-theme-table": switchLayout === false,
+                })}
+                aria-label="switch"
+                onChange={handleChangeLayoutSwitch}
+              />
+              <p>Card</p>
+            </div>
           ) : (
             <Input
               className="search-input"
@@ -223,7 +258,8 @@ function NavbarMenu() {
             />
           )}
         </Navbar.Content>
-        <Navbar.Content>
+        {/* //! Right menu navbar ----------------------------------- */}
+        <Navbar.Content style={{ cursor: "pointer", minWidth: "300px" }}>
           <Badge size="sm" content="1" color="error">
             <ShoppingCart className="icon-clickable" />
           </Badge>
@@ -240,10 +276,13 @@ function NavbarMenu() {
             aria-label="switch"
             onChange={handleChangeSwitch}
           />
+          {/* //* Group btn login checking authen */}
           {topLoginBtn}
         </Navbar.Content>
       </Navbar>
-      {location.pathname !== "/profile" ? (
+      {/* //! Secondary menu navbar ----------------------------------- */}
+      {location.pathname !== "/profile" &&
+      location.pathname !== "/manage-user" ? (
         <div className="secondary-menu">
           <Dropdown>
             <Dropdown.Button>Menu</Dropdown.Button>

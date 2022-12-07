@@ -1,5 +1,6 @@
 import AuthLayout from "components/layouts/authLayout/AuthLayout";
 import DashboardLayout from "components/layouts/dashboardLayout/DashboardLayout";
+import AdminRoute from "components/routes/AdminRoute";
 import Landing from "components/routes/Landing";
 import ProtectedRoute from "components/routes/ProtectedRoute";
 import Auth from "pages/auth/Auth";
@@ -8,6 +9,7 @@ import Register from "pages/auth/Register";
 import Dashboard from "pages/dashboard/Dashboard";
 import NotFound from "pages/notFound/NotFound";
 import Profile from "pages/profile/Profile";
+import UserManagement from "pages/userManagement/UserManagement";
 
 const routes = () => {
   return [
@@ -46,6 +48,16 @@ const routes = () => {
           element: (
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/manage-user",
+          element: (
+            <ProtectedRoute>
+              <AdminRoute>
+                <UserManagement />
+              </AdminRoute>
             </ProtectedRoute>
           ),
         },

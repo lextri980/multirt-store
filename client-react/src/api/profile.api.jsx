@@ -1,8 +1,8 @@
 import apiAxios from "config/axios";
 import { url } from "constants/service.const";
 
-export const getProfileApi = async (data) => {
-  return await apiAxios.get(`${url}/user/profile`, data);
+export const getProfileApi = async () => {
+  return await apiAxios.get(`${url}/user/profile`);
 };
 
 export const updateProfileApi = async (data) => {
