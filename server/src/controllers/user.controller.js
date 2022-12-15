@@ -17,6 +17,8 @@ const getUser = async (req, res) => {
     const page = Number(query.page) || PAGE;
     const limit = Number(query.limit) || LIMIT;
     const startIndex = (page - 1) * limit;
+    const totalData = await User.find().count();
+    const totalPage = Math.ceil(totalData / limit);
 
     //* Loop handle query search --------------------
     for (let i = 0; i < querylength; i++) {
@@ -49,7 +51,8 @@ const getUser = async (req, res) => {
       })
         .sort(sortObject)
         .skip(startIndex)
-        .limit(limit);
+        .limit(limit)
+        .select("-password");
     } else if (querylength > 0 && !query.search) {
       console.log("Advanced search");
       data = await User.find({
@@ -57,14 +60,25 @@ const getUser = async (req, res) => {
       })
         .sort(sortObject)
         .skip(startIndex)
-        .limit(limit);
+        .limit(limit)
+        .select("-password");
     } else {
       console.log("No query");
-      data = await User.find().sort({ name: 1 }).skip(startIndex).limit(limit);
+      data = await User.find()
+        .sort({ name: 1 })
+        .skip(startIndex)
+        .limit(limit)
+        .select("-password");
     }
 
     return dtoSc(res, {
       success: true,
+      pageInfo: {
+        page,
+        limit,
+        totalData,
+        totalPage,
+      },
       data,
     });
   } catch (error) {
@@ -197,7 +211,7 @@ const updateUserProfile = async (req, res) => {
 //! route  POST /user/profile/change-avatar
 //! access Private/Owner
 const updateAvatar = async (req, res) => {
-  const avatar = req.file
+  const avatar = req.file;
 
   if (!avatar) {
     return dtoFail(res, "Missing information");
@@ -219,7 +233,7 @@ const updateAvatar = async (req, res) => {
 
     return dtoSc(res, {
       success: true,
-      message: 'Update avatar successfully',
+      message: "Update avatar successfully",
       data: updateData,
     });
   } catch (error) {

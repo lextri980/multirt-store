@@ -17,6 +17,8 @@ const getProduct = async (req, res) => {
     const page = Number(query.page) || PAGE;
     const limit = Number(query.limit) || LIMIT;
     const startIndex = (page - 1) * limit;
+    const totalData = await Product.find().count();
+    const totalPage = Math.ceil(totalData / limit);
 
     //* Loop handle query search --------------------
     for (let i = 0; i < querylength; i++) {
@@ -72,6 +74,12 @@ const getProduct = async (req, res) => {
 
     return dtoSc(res, {
       success: true,
+      pageInfo: {
+        page,
+        limit,
+        totalData,
+        totalPage,
+      },
       data,
     });
   } catch (error) {
