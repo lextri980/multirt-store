@@ -6,7 +6,7 @@ import {
 
 const initState = {
   users: [],
-  count: null,
+  pageInfo: null,
   loading: false,
   message: null,
 };
@@ -23,7 +23,7 @@ function userReducer(state = initState, { type, payload }) {
       return {
         ...state,
         users: payload.data,
-        count: payload.count,
+        pageInfo: payload.pageInfo,
         loading: false,
       };
 
@@ -31,7 +31,7 @@ function userReducer(state = initState, { type, payload }) {
       return {
         ...state,
         users: [],
-        count: null,
+        pageInfo: null,
         loading: false,
       };
 

@@ -1,9 +1,9 @@
 import SearchIcon from "@mui/icons-material/Search";
-import { Input } from "@nextui-org/react";
+import { Input, Pagination } from "@nextui-org/react";
 import Button from "components/common/button/Button";
 import { SearchSendingIcon } from "components/common/icon/Icon";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
-import { useCreateQuery } from "hooks/useRoute";
+import { useCreateQuery, useRoute } from "hooks/useRoute";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useOutletContext } from "react-router";
@@ -16,29 +16,40 @@ import { UserManagementContainer } from "./UserManagement.style";
 function UserManagement() {
   //* Redux hooks
   const dispatch = useDispatch();
-  const { count } = useSelector((state) => state.user);
+  const { pageInfo } = useSelector((state) => state.user);
 
   //* Declare global variables
 
   //* Local state
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState('1');
 
   //* Hooks
   const [switchLayout] = useOutletContext();
-  const location = useLocation();
   const navigate = useNavigate();
-  const query = useCreateQuery({ search });
+  const renderQuery = useCreateQuery({ search });
+  const renderPage = useCreateQuery({ page });
+  const { pathname, query } = useRoute();
 
   //* Effect
   useEffect(() => {
-    dispatch(gettingUser(location.search));
+    dispatch(gettingUser(query));
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [switchLayout, location.search]);
+  }, [switchLayout, query]);
   //* Other
 
+  //@ (handleSearch): Common search
   const handleSearch = () => {
-    navigate(`${location.pathname}${query}`);
+    navigate(`${pathname}${renderQuery}`);
   };
+
+  //@ (handleChangePage): Change page
+  const handleChangePage = (data) => {
+    console.log(data, typeof data)
+    console.log(page, typeof page)
+    setPage(data.toString());
+    navigate(`${pathname}${renderPage}`);
+  }
 
   //! Condition rendering ------------------------------------------------
   let body;
@@ -72,6 +83,7 @@ function UserManagement() {
           <div className="btn-search">
             <Button width="100%">Advanced search</Button>
           </div>
+          <Pagination color='primary' size='sm' total={pageInfo?.totalPage} onChange={handleChangePage} />
         </div>
         {body}
       </UserManagementContainer>

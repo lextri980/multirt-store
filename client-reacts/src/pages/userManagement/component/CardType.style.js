@@ -5,7 +5,7 @@ export const CardTypeContainer = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 30px 20px;
-  margin: 30px 7vw;
+  margin: 30px 5vw;
 
   .card-user {
     width: 300px;

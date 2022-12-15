@@ -74,7 +74,7 @@ const getProduct = async (req, res) => {
 
     return dtoSc(res, {
       success: true,
-      count: {
+      pageInfo: {
         page,
         limit,
         totalData,

@@ -6,18 +6,19 @@ export const UserManagementContainer = styled.div`
 
   .search-section {
     padding: 35px 0 0 20px;
+    min-width: 360px;
   }
 
   .search-input {
     display: flex;
     align-items: flex-start;
-    width: 230px;
+    width: 100%;
     background-color: white;
   }
 
   .btn-search {
     margin-top: 20px;
-
+    margin-bottom: 20px;
   } 
 
   h4 {
