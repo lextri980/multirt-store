@@ -4,7 +4,6 @@ async function connect() {
   try {
     await mongoose.connect(
       `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@multirt-store.fobqfgi.mongodb.net/?retryWrites=true&w=majority`,
-      // `mongodb://localhost:27017/multirt-store`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
