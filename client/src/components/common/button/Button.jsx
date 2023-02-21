@@ -1,33 +1,41 @@
-import Buttonx from "@nextui-org/react/button";
+import {Button} from "antd";
 import { ButtonContainer } from "./Button.style";
 
-function Button(props) {
+function TButton(props) {
   //! Props type
   //Require: children, onClick
-  //Option: color, border, type, width, text, disabled
+  //Option: type, variant, color, disabled, size, width, textColor
   //Func: onClick
-  const { color, border, type, width, text, disabled, children, onClick } =
-    props;
+  const {
+    children,
+    type,
+    variant,
+    color,
+    disabled,
+    size,
+    width,
+    textColor,
+    onClick,
+  } = props;
 
   return (
     <ButtonContainer>
-      <Buttonx
+      <Button
         className={color || "primary"}
-        onClick={onClick}
-        aria-label="Common-btn"
-        bordered={border || false}
-        type={type || "button"}
-        style={{
-          width: width || "170px",
-          color: text,
-          minWidth: "50px",
-        }}
+        type={variant || "primary"}
+        htmlType={type || "button"}
         disabled={disabled || false}
+        size={size || "default"}
+        style={{
+          width: width || "100px",
+          color: textColor || "white",
+        }}
+        onClick={onClick}
       >
         {children}
-      </Buttonx>
+      </Button>
     </ButtonContainer>
   );
 }
 
-export default Button;
+export default TButton;

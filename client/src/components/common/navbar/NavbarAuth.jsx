@@ -1,51 +1,39 @@
-import AnchorIcon from "@mui/icons-material/Anchor";
-import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import { Button, Navbar, Text, Tooltip } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
+import { Menu } from "antd";
 import { NavbarAuthContainer } from "./NavbarAuth.style";
+import { Link } from "react-router-dom";
+import AnimatedNavLayout from "components/layouts/animatedLayout/AnimatedNavLayout";
 
-function NavbarAuth({ isActive, setIsActive }) {
+function NavbarAuth({ current, setCurrent }) {
+  const items = [
+    {
+      label: "Login",
+      key: "login",
+      icon: <LoginOutlined />,
+    },
+    {
+      label: "Register",
+      key: "register",
+      icon: <UserAddOutlined />,
+    },
+  ];
+
+  const onClick = (e) => {
+    setCurrent(e.key);
+  };
+
   return (
-    <NavbarAuthContainer>
-      <Navbar isBordered variant="floating" className="navbar-auth">
-        <Navbar.Brand>
-          <span className="logo-web">
-            <AnchorIcon />
-          </span>
-          <Text b color="inherit" hideIn="xs">
-            MULTIRT STORE
-          </Text>
-        </Navbar.Brand>
-        <Navbar.Content activeColor="success" hideIn="xs" variant="highlight">
-          <Tooltip content="Let's buy something" placement="bottom" color='invert'>
-            <Link to="/dashboard" className="link-redirect login-link">
-              <CategoryOutlinedIcon style={{ marginRight: "5px" }} />
-              Dashboard
-            </Link>
-          </Tooltip>
-        </Navbar.Content>
-        <Navbar.Content
-          activeColor="primary"
-          hideIn="xs"
-          variant="underline-rounded"
-        >
-          <Button
-            bordered={isActive === false}
-            className="btn-group"
-            onClick={() => setIsActive(true)}
-          >
-            Login
-          </Button>
-          <Button
-            bordered={isActive === true}
-            className="btn-group"
-            onClick={() => setIsActive(false)}
-          >
-            Register
-          </Button>
-        </Navbar.Content>
-      </Navbar>
-    </NavbarAuthContainer>
+    <AnimatedNavLayout>
+      <NavbarAuthContainer>
+        <Menu
+          onClick={onClick}
+          selectedKeys={[current]}
+          mode="horizontal"
+          items={items}
+          style={{width: '100%', display: 'flex', justifyContent: 'center'}}
+        />
+      </NavbarAuthContainer>
+    </AnimatedNavLayout>
   );
 }
 

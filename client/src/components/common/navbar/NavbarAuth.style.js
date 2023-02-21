@@ -13,7 +13,6 @@ const rotate = keyframes`
 export const NavbarAuthContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
 
   .logo-web {
     display: flex;
