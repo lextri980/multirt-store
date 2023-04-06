@@ -5,13 +5,13 @@ import AnimatedNavLayout from "../animatedLayout/AnimatedNavLayout";
 import { AuthLayoutContainer } from "./AuthLayout.style";
 
 function AuthLayout() {
-  const [isActive, setIsActive] = useState(true);
+  const [current, setCurrent] = useState("login");
 
   return (
     <AnimatedNavLayout>
       <AuthLayoutContainer>
-        <NavbarAuth isActive={isActive} setIsActive={setIsActive} />
-        <Outlet context={[isActive]} />
+        <NavbarAuth current={current} setCurrent={setCurrent} />
+        <Outlet context={[current]} />
       </AuthLayoutContainer>
     </AnimatedNavLayout>
   );

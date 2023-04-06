@@ -1,31 +1,19 @@
-import { useOutletContext } from "react-router";
-import { AuthContainer } from "./Auth.style";
+import { useOutletContext } from "react-router-dom";
+import { titlePage } from "utils/titlePage.util";
 import Login from "./Login";
 import Register from "./Register";
 
 function Auth() {
-  //* Redux hooks
-
-  //* Declare global variables
-
-  //* Local state
-
-  //* Hooks
-  const [current] = useOutletContext();
-
-  //* Other
-
-  //! Condition rendering -------------------------------------------------------------
-  //* Section: body
+  titlePage("Multirt | Authentication");
+  const [isActive] = useOutletContext();
   let body;
-  if (current === "login") {
+  if (isActive === true) {
     body = <Login />;
   } else {
     body = <Register />;
   }
 
-  //! Return section ------------------------------------------------------------------
-  return <AuthContainer>{body}</AuthContainer>;
+  return <div className="auth-container">{body}</div>;
 }
 
 export default Auth;

@@ -1,25 +1,18 @@
-import React from "react";
-import { LoadingContainer } from "./Loading.style";
-import { Spin } from "antd";
-import AnchorOutlinedIcon from "@mui/icons-material/AnchorOutlined";
+import Loadings from "@nextui-org/react/loading";
 
 function Loading(props) {
   //! Props type
   //Require:
-  //Option: color, size
+  //Option: color, size, type
   //Func:
-  const { color, size } = props;
+  const { color, size, type } = props;
 
   return (
-    <LoadingContainer color={color}>
-      <AnchorOutlinedIcon
-        className="spin"
-        style={{
-          color: color,
-          fontSize: size,
-        }}
-      />
-    </LoadingContainer>
+    <Loadings
+      color={color || "primary"}
+      size={size || "sm"}
+      type={type || "points"}
+    />
   );
 }
 
