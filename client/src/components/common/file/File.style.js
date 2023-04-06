@@ -27,4 +27,8 @@ export const FileContainer = styled.div`
     display: flex;
     align-items: center;
   }
+
+  .word-break {
+    word-break: break-all;
+  }
 `;

@@ -108,7 +108,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
           element={<ArrowDropDownIcon />}
           onClick={(e) => setOpenDropdown(e.currentTarget)}
         >
-          {loading === true ? <Loading type="gradient" /> : profile?.name}
+          {profile?.name}
           <ArrowDropDownIcon />
         </ButtonLight>
         <Menu

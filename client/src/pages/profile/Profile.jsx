@@ -171,7 +171,7 @@ function Profile() {
   return (
     <AnimatedLayout>
       <ProfileContainer>
-        {/* //*------------------------------- Card 1 -------------------------------*/}
+        {/* //*---------------------------------------- Card 1 ----------------------------------------*/}
         <Card css={{ mw: "420px", padding: "25px 40px" }}>
           <div className="horizontal-center">
             <p>Comming soon</p>
@@ -180,7 +180,7 @@ function Profile() {
           </div>
         </Card>
 
-        {/* //*------------------------------- Card 2 -------------------------------*/}
+        {/* //*---------------------------------------- Card 2 ----------------------------------------*/}
         <Card css={{ mw: "420px", padding: "25px 40px", margin: "0 90px" }}>
           <Card.Header className="center">
             <Avatar
@@ -273,7 +273,7 @@ function Profile() {
           </Card.Footer>
         </Card>
 
-        {/* //*------------------------------- Card 3 -------------------------------*/}
+        {/* //*----------------------------------------- Card 3 ----------------------------------------*/}
         <Card css={{ mw: "420px", padding: "25px 40px" }}>
           <div className="horizontal-center">
             <p>Comming soon</p>
@@ -282,7 +282,7 @@ function Profile() {
           </div>
         </Card>
 
-        {/* //!---------------- Modal section -------------------*/}
+        {/* //!--------------------------------- Modal section ----------------------------------------*/}
         {/* Modal update profile ------------------------------- */}
         <Modal
           open={openUpdateProfileModal}
