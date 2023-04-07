@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deletingAvatar,
   gettingProfile,
   updatingAvatar,
   updatingPassword,
@@ -34,21 +35,22 @@ import * as yup from "yup";
 import { ProfileContainer } from "./Profile.style";
 
 function Profile() {
-  //* Redux hooks
+  //* Redux hooks ------------------------------------------------------------------------------------------
   const { profile, loading } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
-  //* Local state
+  //* Local state ------------------------------------------------------------------------------------------
   const [openUpdateProfileModal, setOpenUpdateProfileModal] = useState(false);
   const [openUpdateAvatarModal, setOpenUpdateAvatarModal] = useState(false);
   const [openUpdatePasswordModal, setOpenUpdatePasswordModal] = useState(false);
+  const [avatarAction, setAvatarAction] = useState("");
   const [fileName, setFileName] = useState("");
   const [pw1, setPw1] = useState(false);
   const [pw2, setPw2] = useState(false);
   const [pw3, setPw3] = useState(false);
   const [previewFile, setPreviewFile] = useState("");
 
-  //* Form and validate
+  //* Form and validate --------------------------------------------------------------------------------------
   const profileSchema = yup.object().shape({
     name: yup.string().required(`Name ${REQUIRED}`),
     email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
@@ -114,7 +116,7 @@ function Profile() {
     resolver: yupResolver(passwordSchema),
   });
 
-  //* Hooks
+  //* Hooks -------------------------------------------------------------------------------
   useEffect(() => {
     dispatch(gettingProfile());
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,6 +150,11 @@ function Profile() {
     setPreviewFile(imagePreview);
   };
 
+  //@ (handleAvatarAction): handle update and delete avatar action
+  function handleAvatarAction(action) {
+    setAvatarAction(action);
+  }
+
   //! async (onSubmitProfile): Submit profile
   const onSubmitProfile = (form) => {
     dispatch(updatingProfile(form));
@@ -156,10 +163,16 @@ function Profile() {
 
   //! async (onSubmitAvatar): Submit avatar
   const onSubmitAvatar = (form) => {
-    const formData = new FormData();
-    formData.append("avatar", form.avatar[0]);
-    dispatch(updatingAvatar(formData));
-    setOpenUpdateAvatarModal(false);
+    if (avatarAction === "update") {
+      const formData = new FormData();
+      formData.append("avatar", form.avatar[0]);
+      dispatch(updatingAvatar(formData));
+      setOpenUpdateAvatarModal(false);
+    } else {
+      dispatch(deletingAvatar());
+      setOpenUpdateAvatarModal(false);
+    }
+    setAvatarAction("");
   };
 
   //! async (onSubmitPassword): Submit password
@@ -168,6 +181,7 @@ function Profile() {
     setOpenUpdatePasswordModal(false);
   };
 
+  //!! Return section --------------------------------------------------------------------------------------------------------"
   return (
     <AnimatedLayout>
       <ProfileContainer>
@@ -372,14 +386,19 @@ function Profile() {
                 type="submit"
                 width="110px"
                 disabled={loading === true ? true : false}
-                onClick={() => triggerAvatar()}
+                onClick={() => {
+                  triggerAvatar();
+                  handleAvatarAction("update");
+                }}
               >
                 {loading === true ? <Loading color="white" /> : "Update"}
               </Button>
               <Button
                 color="danger"
+                type="submit"
                 width="110px"
-                onClick={() => setOpenUpdateAvatarModal(false)}
+                disabled={profile?.avatar === null}
+                onClick={() => handleAvatarAction("delete")}
               >
                 Delete
               </Button>

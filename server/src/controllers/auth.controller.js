@@ -1,5 +1,8 @@
 const User = require("../models/User");
-const generateToken = require("../utils/generateToken");
+const {
+  generateToken,
+  generateRememberedToken,
+} = require("../utils/generateToken");
 const { emailRegex, passwordRegex } = require("../constants/regex");
 const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
 
@@ -7,7 +10,7 @@ const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
 //! route  POST /auth/login
 //! access Public
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, remember } = req.body;
   //Validate lack of field
   if (!email || !password) {
     return dtoFail(res, "Missing information");
@@ -20,7 +23,9 @@ const login = async (req, res) => {
     return dtoSc(res, {
       success: true,
       message: "Login successfully",
-      token: generateToken(user._id),
+      token: remember
+        ? generateRememberedToken(user._id)
+        : generateToken(user._id),
       user,
     });
   } catch (error) {

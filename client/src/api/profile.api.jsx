@@ -16,3 +16,7 @@ export const updatePasswordApi = async (data) => {
 export const updateAvatarApi = async (data) => {
   return await apiAxios.post(`${url}/user/profile/change-avatar`, data);
 }
+
+export const deleteAvatarApi = async () => {
+  return await apiAxios.put(`${url}/user/profile/delete-avatar`);
+}

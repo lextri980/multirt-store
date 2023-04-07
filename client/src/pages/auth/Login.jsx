@@ -29,6 +29,7 @@ function Login() {
   const {
     register,
     handleSubmit,
+    watch,
     resetField,
     trigger,
     formState: { errors },
@@ -47,7 +48,9 @@ function Login() {
 
   //! async (onSubmitLogin): click to submit login form
   const onSubmitLogin = (form) => {
-    dispatch(loginning(form));
+    const formData = form
+    // dispatch(loginning(form));
+    console.log(formData);
   };
 
   return (
@@ -88,7 +91,7 @@ function Login() {
                 <Spacer y={1.2} />
               )}
               <Row justify="space-between">
-                <Checkbox defaultSelected={false}>
+                <Checkbox {...register('remember')}>
                   <Text size={14}>Remember me</Text>
                 </Checkbox>
                 <Text size={14} className="forgot-pw">

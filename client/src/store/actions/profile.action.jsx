@@ -1,4 +1,7 @@
 import {
+DELETE_AVATAR_FAIL,
+DELETE_AVATAR_SUCCESS,
+DELETING_AVATAR,
   GETTING_PROFILE,
   GET_PROFILE_FAIL,
   GET_PROFILE_SUCCESS,
@@ -69,5 +72,19 @@ export const updateAvatarSuccess = (data) => ({
 
 export const updateAvatarFail = (error) => ({
   type: UPDATE_AVATAR_FAIL,
+  payload: error,
+});
+
+export const deletingAvatar = () => ({
+  type: DELETING_AVATAR,
+});
+
+export const deleteAvatarSuccess = (data) => ({
+  type: DELETE_AVATAR_SUCCESS,
+  payload: data,
+});
+
+export const deleteAvatarFail = (error) => ({
+  type: DELETE_AVATAR_FAIL,
   payload: error,
 });
