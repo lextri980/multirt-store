@@ -9,7 +9,7 @@ import Loading from "components/common/loading/Loading";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { FORMAT, REQUIRED } from "constants/message";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { loginning } from "store/actions/auth.action";
 import * as yup from "yup";
@@ -29,9 +29,9 @@ function Login() {
   const {
     register,
     handleSubmit,
-    watch,
     resetField,
     trigger,
+    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -48,9 +48,7 @@ function Login() {
 
   //! async (onSubmitLogin): click to submit login form
   const onSubmitLogin = (form) => {
-    const formData = form
-    // dispatch(loginning(form));
-    console.log(formData);
+    dispatch(loginning(form));
   };
 
   return (
@@ -91,9 +89,15 @@ function Login() {
                 <Spacer y={1.2} />
               )}
               <Row justify="space-between">
-                <Checkbox {...register('remember')}>
-                  <Text size={14}>Remember me</Text>
-                </Checkbox>
+                <Controller
+                  control={control}
+                  name="remember"
+                  render={({ field }) => (
+                    <Checkbox {...field}>
+                      <Text size={14}>Remember me</Text>
+                    </Checkbox>
+                  )}
+                ></Controller>
                 <Text size={14} className="forgot-pw">
                   Forgot password?
                 </Text>
