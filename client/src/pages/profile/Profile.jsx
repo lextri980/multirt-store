@@ -301,7 +301,6 @@ function Profile() {
         <Modal
           open={openUpdateProfileModal}
           header="Update profile"
-          submitBtn="Update"
           close={() => setOpenUpdateProfileModal(false)}
         >
           <form onSubmit={handleSubmitProfile(onSubmitProfile)}>
@@ -350,7 +349,6 @@ function Profile() {
         <Modal
           open={openUpdateAvatarModal}
           header="Change avatar"
-          submitBtn="Update"
           close={() => setOpenUpdateAvatarModal(false)}
         >
           <div className="horizontal-center">
@@ -410,7 +408,6 @@ function Profile() {
         <Modal
           open={openUpdatePasswordModal}
           header="Change password"
-          submitBtn="Update"
           close={() => setOpenUpdatePasswordModal(false)}
         >
           <form onSubmit={handleSubmitPassword(onSubmitPassword)}>

@@ -6,6 +6,7 @@ import Button from "components/common/button/Button";
 import ErrorMessage from "components/common/errorMessage/ErrorMessage";
 import Input from "components/common/input/Input";
 import Loading from "components/common/loading/Loading";
+import Modal from "components/common/modal/Modal";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { FORMAT, REQUIRED } from "constants/message";
 import { useState } from "react";
@@ -21,29 +22,46 @@ function Login() {
   const { loading } = useSelector((state) => state.auth);
 
   //* Hooks
-  const schema = yup.object().shape({
+  const loginSchema = yup.object().shape({
     email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
     password: yup.string().required(`Password ${REQUIRED}`),
   });
 
+  const sendMailSchema = yup.object().shape({
+    email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
+  });
+
   const {
-    register,
-    handleSubmit,
-    resetField,
-    trigger,
-    control,
-    formState: { errors },
+    register: regLogin,
+    handleSubmit: handleSubmitLogin,
+    resetField: resetFieldLogin,
+    trigger: triggerLogin,
+    control: controlLogin,
+    formState: { errors: loginError },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(loginSchema),
+  });
+
+  const {
+    register: regSendMail,
+    handleSubmit: handleSubmitSendMail,
+    trigger: triggerSendMail,
+    resetField: resetFieldSendMail,
+    formState: { errors: sendMailError },
+  } = useForm({
+    resolver: yupResolver(sendMailSchema),
   });
 
   //* Local state
   const [typePw, setTypePw] = useState(false);
+  const [sendMailResetPasswordModal, setSendMailResetPasswordModal] =
+    useState(false);
 
   //@ (handleClearform): click to clear form text
   const handleClearform = () => {
-    resetField("email");
-    resetField("password");
+    resetFieldLogin("email");
+    resetFieldLogin("password");
+    resetFieldSendMail("email");
   };
 
   //! async (onSubmitLogin): click to submit login form
@@ -51,11 +69,15 @@ function Login() {
     dispatch(loginning(form));
   };
 
+  const onSubmitSendMailReset = (form) => {
+    console.log(form);
+  };
+
   return (
     <AnimatedLayout>
       <AuthContainer>
         <Card css={{ mw: "400px", mh: "400px" }}>
-          <form onSubmit={handleSubmit(onSubmitLogin)}>
+          <form onSubmit={handleSubmitLogin(onSubmitLogin)}>
             <Card.Header className="card-header">
               <p className="title-card">Login</p>
             </Card.Header>
@@ -65,11 +87,11 @@ function Login() {
                 placeholder="Email"
                 label={<EmailIcon />}
                 value="email"
-                register={register}
-                error={errors.email ? true : false}
+                register={regLogin}
+                error={loginError.email ? true : false}
               />
-              {errors.email ? (
-                <ErrorMessage>{errors.email.message}</ErrorMessage>
+              {loginError.email ? (
+                <ErrorMessage>{loginError.email.message}</ErrorMessage>
               ) : (
                 <Spacer y={1.2} />
               )}
@@ -80,17 +102,17 @@ function Login() {
                 type={typePw}
                 password
                 onPassword={() => setTypePw(!typePw)}
-                register={register}
-                error={errors.password ? true : false}
+                register={regLogin}
+                error={loginError.password ? true : false}
               />
-              {errors.password ? (
-                <ErrorMessage>{errors.password.message}</ErrorMessage>
+              {loginError.password ? (
+                <ErrorMessage>{loginError.password.message}</ErrorMessage>
               ) : (
                 <Spacer y={1.2} />
               )}
               <Row justify="space-between">
                 <Controller
-                  control={control}
+                  control={controlLogin}
                   name="remember"
                   defaultValue={true}
                   render={({ field }) => (
@@ -99,7 +121,11 @@ function Login() {
                     </Checkbox>
                   )}
                 ></Controller>
-                <Text size={14} className="forgot-pw">
+                <Text
+                  size={14}
+                  className="forgot-pw"
+                  onClick={() => setSendMailResetPasswordModal(true)}
+                >
                   Forgot password?
                 </Text>
               </Row>
@@ -116,7 +142,7 @@ function Login() {
                   width="100px"
                   type="submit"
                   disabled={loading === true ? true : false}
-                  onClick={() => trigger()}
+                  onClick={() => triggerLogin()}
                 >
                   {loading === true ? <Loading color="white" /> : "Confirm"}
                 </Button>
@@ -124,6 +150,45 @@ function Login() {
             </Card.Footer>
           </form>
         </Card>
+        {/* //!--------------------------------- Modal section ----------------------------------------*/}
+        <Modal
+          header="Send mail resetting password"
+          open={sendMailResetPasswordModal}
+          close={() => {
+            setSendMailResetPasswordModal(false);
+          }}
+        >
+          <form onSubmit={handleSubmitSendMail(onSubmitSendMailReset)}>
+            <Input
+              placeholder="Email"
+              label={<EmailIcon />}
+              value="email"
+              register={regSendMail}
+              error={sendMailError.email ? true : false}
+            />
+            {sendMailError.email ? (
+              <ErrorMessage>{sendMailError.email.message}</ErrorMessage>
+            ) : (
+              ""
+            )}
+            <footer className="modal-footer">
+              <Button
+                color="warning"
+                onClick={() => setSendMailResetPasswordModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="success"
+                type="submit"
+                disabled={loading === true ? true : false}
+                onClick={() => triggerSendMail()}
+              >
+                {loading === true ? <Loading color="white" /> : "Send mail"}
+              </Button>
+            </footer>
+          </form>
+        </Modal>
       </AuthContainer>
     </AnimatedLayout>
   );
