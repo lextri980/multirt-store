@@ -11,6 +11,7 @@ const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
 //! access Public
 const login = async (req, res) => {
   const { email, password, remember } = req.body;
+  const rememberBoolean = remember === "true"; //<remember> is returned in String => change to Boolean
   //Validate lack of field
   if (!email || !password) {
     return dtoFail(res, "Missing information");
@@ -23,7 +24,7 @@ const login = async (req, res) => {
     return dtoSc(res, {
       success: true,
       message: "Login successfully",
-      token: remember
+      token: rememberBoolean
         ? generateRememberedToken(user._id)
         : generateToken(user._id),
       user,

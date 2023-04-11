@@ -1,6 +1,5 @@
 import Account from "@mui/icons-material/AccountCircleOutlined";
 import AnchorIcon from "@mui/icons-material/Anchor";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import CardIcon from "@mui/icons-material/CreditCardOutlined";
 import Moon from "@mui/icons-material/DarkModeOutlined";
@@ -12,13 +11,6 @@ import ShoppingCart from "@mui/icons-material/ShoppingCartOutlined";
 import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
 import TableIcon from "@mui/icons-material/TableViewOutlined";
 import Sun from "@mui/icons-material/WbSunnyOutlined";
-import {
-  Divider,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-} from "@mui/material";
 import {
   Avatar,
   Badge,
@@ -33,37 +25,29 @@ import {
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useOutletContext,
-} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutRequest } from "store/actions/auth.action";
 import { gettingProfile } from "store/actions/profile.action";
-import { color } from "themes/colors";
 import Button from "../button/Button";
-import ButtonLight from "../button/ButtonLight";
-import Loading from "../loading/Loading";
 import { NavbarContainer } from "./Navbar.style";
 
 function NavbarMenu({ switchLayout, setSwitchLayout }) {
   //* Redux hooks
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { profile, loading } = useSelector((state) => state.profile);
+  const { profile } = useSelector((state) => state.profile);
 
   //* Local state
   const [switchChecked, setSwitchChecked] = useState(true);
-  const [openDropdown, setOpenDropdown] = useState(null);
-  const open = Boolean(openDropdown);
 
   //* Hooks
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    dispatch(gettingProfile());
+    if (isAuthenticated) {
+      dispatch(gettingProfile());
+    }
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,7 +56,17 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
     setSwitchChecked(!switchChecked);
   };
 
-  const handleChangeLayoutSwitch = (e) => {
+  //@ (changeRoute): Change route navigation
+  const changeRoute = (key) => {
+    if (key === "logout") {
+      onSubmitLogout();
+    } else {
+      navigate(`/${key}`);
+    }
+  };
+
+  //@ (handleChangeLayoutSwitch): Change between card and table layout in Screen <manage-user>
+  const handleChangeLayoutSwitch = () => {
     setSwitchLayout(!switchLayout);
   };
 
@@ -104,84 +98,41 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
           text={profile?.name.charAt(0).toUpperCase()}
           src={profile?.avatar?.path}
         />
-        <ButtonLight
-          element={<ArrowDropDownIcon />}
-          onClick={(e) => setOpenDropdown(e.currentTarget)}
-        >
-          {profile?.name}
-          <ArrowDropDownIcon />
-        </ButtonLight>
-        <Menu
-          id="basic-menu"
-          anchorEl={openDropdown}
-          open={open}
-          PaperProps={{
-            style: {
-              width: 200,
-            },
-          }}
-          onClose={() => setOpenDropdown(null)}
-        >
-          {location.pathname !== "/dashboard" ? (
-            <MenuItem
-              onClick={() => {
-                navigate("/dashboard");
-                setOpenDropdown(null);
-              }}
-            >
-              <ListItemIcon>
-                <DashboardIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primaryTypographyProps={{ fontSize: "15px" }}>
-                Dashboard
-              </ListItemText>
-            </MenuItem>
-          ) : (
-            ""
-          )}
-          <MenuItem
-            onClick={() => {
-              navigate("/profile");
-              setOpenDropdown(null);
-            }}
-          >
-            <ListItemIcon>
-              <AssignmentIndIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ fontSize: "15px" }}>
-              Profile
-            </ListItemText>
-          </MenuItem>
-          {user.isAdmin === true ? (
-            <MenuItem
-              onClick={() => {
-                navigate("/manage-user");
-                setOpenDropdown(null);
-              }}
-            >
-              <ListItemIcon>
-                <PeopleIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primaryTypographyProps={{ fontSize: "15px" }}>
-                Manage user
-              </ListItemText>
-            </MenuItem>
-          ) : (
-            ""
-          )}
-          <Divider />
-          <MenuItem onClick={onSubmitLogout}>
-            <ListItemIcon sx={{ color: color.redP }}>
-              <LogoutIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText
-              sx={{ color: color.redP }}
-              primaryTypographyProps={{ fontSize: "15px" }}
-            >
-              Logout
-            </ListItemText>
-          </MenuItem>
-        </Menu>
+        <Dropdown>
+          <Dropdown.Button light color="primary">
+            {profile?.name}
+          </Dropdown.Button>
+          <Dropdown.Menu onAction={changeRoute} aria-label="Static Actions">
+            <Dropdown.Item key="dashboard">
+              <div className="vertical-center">
+                <DashboardIcon />
+                <span className="ml-5">Dashboard</span>
+              </div>
+            </Dropdown.Item>
+            <Dropdown.Item key="profile">
+              <div className="vertical-center">
+                <AssignmentIndIcon />
+                <span className="ml-5">Profile</span>
+              </div>
+            </Dropdown.Item>
+            {user.isAdmin ? (
+              <Dropdown.Item key="manage-user">
+                <div className="vertical-center">
+                  <PeopleIcon />
+                  <span className="ml-5">Manage user</span>
+                </div>
+              </Dropdown.Item>
+            ) : (
+              ""
+            )}
+            <Dropdown.Item color="error" key="logout">
+              <div className="vertical-center">
+                <LogoutIcon />
+                <span className="ml-5">Logout</span>
+              </div>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </>
     );
   }

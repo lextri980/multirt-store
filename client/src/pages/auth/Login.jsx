@@ -92,8 +92,9 @@ function Login() {
                 <Controller
                   control={control}
                   name="remember"
+                  defaultValue={true}
                   render={({ field }) => (
-                    <Checkbox {...field}>
+                    <Checkbox {...field} defaultSelected>
                       <Text size={14}>Remember me</Text>
                     </Checkbox>
                   )}
