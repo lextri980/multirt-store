@@ -1,7 +1,6 @@
 const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
 const Product = require("../models/Product");
 const { PAGE, LIMIT } = require("../constants/common");
-const { findOneAndUpdate } = require("../models/Product");
 
 //! desc   Get all products
 //! route  /product/list
