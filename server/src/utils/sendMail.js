@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
-const { env } = require("process");
 
-const sendEmail = async (email, subject, text) => {
+const sendEmail = async (email, subject, link) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
@@ -9,7 +8,7 @@ const sendEmail = async (email, subject, text) => {
       secure: true,
       auth: {
         user: process.env.MAIL_NAME,
-        password: process.env.MAIL_PASSWORD,
+        pass: process.env.MAIL_PASSWORD,
       },
     });
 
@@ -17,10 +16,13 @@ const sendEmail = async (email, subject, text) => {
       from: process.env.MAIL_NAME,
       to: email,
       subject,
-      text,
+      html: `
+        <h3 style="color: #ff6464">You have a request to reset password</h3>
+        <p>Click here: ${link}</p>
+      `,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
