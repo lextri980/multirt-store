@@ -24,11 +24,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deletingAvatar,
-  gettingProfile,
-  updatingAvatar,
-  updatingPassword,
-  updatingProfile,
+  deleteAvatarRequest,
+  getProfileRequest,
+  updateAvatarRequest,
+  updatePasswordRequest,
+  updateProfileRequest,
 } from "store/actions/profile.action";
 import { formatDate } from "utils/date.util";
 import * as yup from "yup";
@@ -118,7 +118,7 @@ function Profile() {
 
   //* Hooks -------------------------------------------------------------------------------
   useEffect(() => {
-    dispatch(gettingProfile());
+    dispatch(getProfileRequest());
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -157,7 +157,7 @@ function Profile() {
 
   //! async (onSubmitProfile): Submit profile
   const onSubmitProfile = (form) => {
-    dispatch(updatingProfile(form));
+    dispatch(updateProfileRequest(form));
     setOpenUpdateProfileModal(false);
   };
 
@@ -166,10 +166,10 @@ function Profile() {
     if (avatarAction === "update") {
       const formData = new FormData();
       formData.append("avatar", form.avatar[0]);
-      dispatch(updatingAvatar(formData));
+      dispatch(updateAvatarRequest(formData));
       setOpenUpdateAvatarModal(false);
     } else {
-      dispatch(deletingAvatar());
+      dispatch(deleteAvatarRequest());
       setOpenUpdateAvatarModal(false);
     }
     setAvatarAction("");
@@ -177,7 +177,7 @@ function Profile() {
 
   //! async (onSubmitPassword): Submit password
   const onSubmitPassword = (form) => {
-    dispatch(updatingPassword(form));
+    dispatch(updatePasswordRequest(form));
     setOpenUpdatePasswordModal(false);
   };
 

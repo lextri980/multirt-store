@@ -1,9 +1,8 @@
-import React from "react";
-import { NotFoundContainer } from "./NotFound.style";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import errorImg from "assets/img/error404.gif";
 import Button from "components/common/button/Button";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useNavigate } from "react-router";
+import { NotFoundContainer } from "./NotFound.style";
 
 function NotFound() {
   const navigate = useNavigate();
@@ -17,7 +16,9 @@ function NotFound() {
           width="190px"
           elementFront={<DashboardIcon />}
           onClick={() => navigate("/dashboard")}
-        >Back to Dashboard</Button>
+        >
+          Back to Dashboard
+        </Button>
       </div>
     </NotFoundContainer>
   );

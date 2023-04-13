@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import LockIcon from "@mui/icons-material/LockOutlined";
+import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
 import { Card, Checkbox, Row, Spacer, Text } from "@nextui-org/react";
 import Button from "components/common/button/Button";
 import ErrorMessage from "components/common/errorMessage/ErrorMessage";
@@ -8,11 +9,17 @@ import Input from "components/common/input/Input";
 import Loading from "components/common/loading/Loading";
 import Modal from "components/common/modal/Modal";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
-import { FORMAT, REQUIRED } from "constants/message";
-import { useState } from "react";
+import { CONFIRM_PW, FORMAT, PW_FORMAT, REQUIRED } from "constants/message";
+import { passwordRegex } from "constants/regex.const";
+import { useQuery } from "hooks/useRoute";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { loginning } from "store/actions/auth.action";
+import {
+  loginRequest,
+  resetPasswordRequest,
+  sendMailRequest,
+} from "store/actions/auth.action";
 import * as yup from "yup";
 import { AuthContainer } from "./Auth.style";
 
@@ -22,6 +29,15 @@ function Login() {
   const { loading } = useSelector((state) => state.auth);
 
   //* Hooks
+  const getQuery = useQuery();
+  useEffect(() => {
+    if (getQuery.userId && getQuery.token) {
+      setResetPasswordModal(true);
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //* Form handling
   const loginSchema = yup.object().shape({
     email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
     password: yup.string().required(`Password ${REQUIRED}`),
@@ -29,6 +45,17 @@ function Login() {
 
   const sendMailSchema = yup.object().shape({
     email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
+  });
+
+  const resetPasswordSchema = yup.object().shape({
+    password: yup
+      .string()
+      .required(`Password ${REQUIRED}`)
+      .matches(passwordRegex, `${PW_FORMAT}`),
+    confirmPassword: yup
+      .string()
+      .required(`Confirm password ${REQUIRED}`)
+      .oneOf([yup.ref("password"), null], CONFIRM_PW),
   });
 
   const {
@@ -52,25 +79,50 @@ function Login() {
     resolver: yupResolver(sendMailSchema),
   });
 
+  const {
+    register: regResetPassword,
+    handleSubmit: handleSubmitResetPassword,
+    trigger: triggerResetPassword,
+    resetField: resetFieldResetPassword,
+    formState: { errors: resetPasswordError },
+  } = useForm({ resolver: yupResolver(resetPasswordSchema) });
+
   //* Local state
   const [typePw, setTypePw] = useState(false);
   const [sendMailResetPasswordModal, setSendMailResetPasswordModal] =
     useState(false);
+  const [resetPasswordModal, setResetPasswordModal] = useState(false);
+  const [typePw1, setTypePw1] = useState(false);
+  const [typePw2, setTypePw2] = useState(false);
 
   //@ (handleClearform): click to clear form text
   const handleClearform = () => {
     resetFieldLogin("email");
     resetFieldLogin("password");
     resetFieldSendMail("email");
+    resetFieldResetPassword("password");
+    resetFieldResetPassword("confirmPassword");
   };
 
   //! async (onSubmitLogin): click to submit login form
   const onSubmitLogin = (form) => {
-    dispatch(loginning(form));
+    dispatch(loginRequest(form));
   };
 
+  //! async (onSubmitSendMailReset): click to submit send mail form
   const onSubmitSendMailReset = (form) => {
-    console.log(form);
+    dispatch(sendMailRequest(form));
+    setSendMailResetPasswordModal(false);
+  };
+
+  //! async (onSubmitSendMailReset): click to submit send mail form
+  const onSubmitResetPassword = (form) => {
+    const formData = {
+      password: form.password,
+      userId: getQuery.userId,
+      token: getQuery.token,
+    };
+    dispatch(resetPasswordRequest(formData));
   };
 
   return (
@@ -151,6 +203,7 @@ function Login() {
           </form>
         </Card>
         {/* //!--------------------------------- Modal section ----------------------------------------*/}
+        {/* //* Modal send mail ------------------------------------------- */}
         <Modal
           header="Send mail resetting password"
           open={sendMailResetPasswordModal}
@@ -185,6 +238,70 @@ function Login() {
                 onClick={() => triggerSendMail()}
               >
                 {loading === true ? <Loading color="white" /> : "Send mail"}
+              </Button>
+            </footer>
+          </form>
+        </Modal>
+
+        {/* //* Modal reset password --------------------------------------- */}
+        <Modal
+          header="Reset password"
+          open={resetPasswordModal}
+          close={() => {
+            setResetPasswordModal(false);
+          }}
+        >
+          <form onSubmit={handleSubmitResetPassword(onSubmitResetPassword)}>
+            <Input
+              placeholder="New password"
+              label={<LockIcon />}
+              value="password"
+              password
+              type={typePw1}
+              onPassword={() => setTypePw1(!typePw1)}
+              register={regResetPassword}
+              error={resetPasswordError.password ? true : false}
+            />
+            {resetPasswordError.password ? (
+              <ErrorMessage>{resetPasswordError.password.message}</ErrorMessage>
+            ) : (
+              <Spacer y={1.2} />
+            )}
+            <Input
+              placeholder="Confirm password"
+              label={<LockResetOutlinedIcon />}
+              value="confirmPassword"
+              password
+              type={typePw2}
+              onPassword={() => setTypePw2(!typePw2)}
+              register={regResetPassword}
+              error={resetPasswordError.confirmPassword ? true : false}
+            />
+            {resetPasswordError.confirmPassword ? (
+              <ErrorMessage>
+                {resetPasswordError.confirmPassword.message}
+              </ErrorMessage>
+            ) : (
+              ""
+            )}
+            <footer className="modal-footer">
+              <Button
+                color="warning"
+                onClick={() => setResetPasswordModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="success"
+                type="submit"
+                disabled={loading === true ? true : false}
+                onClick={() => triggerResetPassword()}
+              >
+                {loading === true ? (
+                  <Loading color="white" />
+                ) : (
+                  "Reset password"
+                )}
               </Button>
             </footer>
           </form>

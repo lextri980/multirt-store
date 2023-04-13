@@ -1,16 +1,16 @@
 import {
-deleteAvatarApi,
+  deleteAvatarApi,
   getProfileApi,
   updateAvatarApi,
   updatePasswordApi,
   updateProfileApi,
 } from "api/profile.api";
 import {
-DELETING_AVATAR,
-  GETTING_PROFILE,
-  UPDATING_AVATAR,
-  UPDATING_PASSWORD,
-  UPDATING_PROFILE,
+  DELETE_AVATAR_REQUEST,
+  GET_PROFILE_REQUEST,
+  UPDATE_AVATAR_REQUEST,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PROFILE_REQUEST,
 } from "constants/actions/profile.const";
 import { toast } from "react-toastify";
 import {
@@ -22,7 +22,7 @@ import {
   takeLatest,
 } from "redux-saga/effects";
 import {
-deleteAvatarFail,
+  deleteAvatarFail,
   deleteAvatarSuccess,
   getProfileFail,
   getProfileSuccess,
@@ -84,42 +84,40 @@ function* workerUpdateAvatarSaga({ payload }) {
 
 function* workerDeleteAvatarSaga() {
   try {
-    const response = yield call(deleteAvatarApi)
-    yield delay(5000)
-    yield put(deleteAvatarSuccess(response.data))
-    console.log(response.data)
-    yield toast.success(response.data.message)
+    const response = yield call(deleteAvatarApi);
+    yield delay(5000);
+    yield put(deleteAvatarSuccess(response.data));
+    yield toast.success(response.data.message);
   } catch (error) {
-    yield put(deleteAvatarFail(error.response.data))
-    yield toast.error(error.response.data.message)
+    yield put(deleteAvatarFail(error.response.data));
+    yield toast.error(error.response.data.message);
   }
-};
-
+}
 
 function* watcherProfileSaga() {
-  yield takeEvery(GETTING_PROFILE, workerProfileSaga);
+  yield takeEvery(GET_PROFILE_REQUEST, workerProfileSaga);
 }
 
 function* watcherUpdateProfileSaga() {
-  yield takeLatest(UPDATING_PROFILE, workerUpdateProfileSaga);
+  yield takeLatest(UPDATE_PROFILE_REQUEST, workerUpdateProfileSaga);
 }
 
 function* watcherUpdatePasswordSaga() {
-  yield takeLatest(UPDATING_PASSWORD, workerUpdatePasswordSaga);
+  yield takeLatest(UPDATE_PASSWORD_REQUEST, workerUpdatePasswordSaga);
 }
 
 function* watcherUpdateAvatarSaga() {
-  yield takeLatest(UPDATING_AVATAR, workerUpdateAvatarSaga);
+  yield takeLatest(UPDATE_AVATAR_REQUEST, workerUpdateAvatarSaga);
 }
 
 function* watcherDeleteAvatarSaga() {
-  yield takeLatest(DELETING_AVATAR, workerDeleteAvatarSaga)
-};
+  yield takeLatest(DELETE_AVATAR_REQUEST, workerDeleteAvatarSaga);
+}
 
 export const profileSaga = [
   fork(watcherProfileSaga),
   fork(watcherUpdateProfileSaga),
   fork(watcherUpdatePasswordSaga),
   fork(watcherUpdateAvatarSaga),
-  fork(watcherDeleteAvatarSaga)
+  fork(watcherDeleteAvatarSaga),
 ];

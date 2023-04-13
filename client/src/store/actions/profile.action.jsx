@@ -1,23 +1,23 @@
 import {
-DELETE_AVATAR_FAIL,
-DELETE_AVATAR_SUCCESS,
-DELETING_AVATAR,
-  GETTING_PROFILE,
+  DELETE_AVATAR_FAIL,
+  DELETE_AVATAR_REQUEST,
+  DELETE_AVATAR_SUCCESS,
   GET_PROFILE_FAIL,
+  GET_PROFILE_REQUEST,
   GET_PROFILE_SUCCESS,
   UPDATE_AVATAR_FAIL,
+  UPDATE_AVATAR_REQUEST,
   UPDATE_AVATAR_SUCCESS,
   UPDATE_PASSWORD_FAIL,
+  UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
   UPDATE_PROFILE_FAIL,
+  UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
-  UPDATING_AVATAR,
-  UPDATING_PASSWORD,
-  UPDATING_PROFILE,
 } from "constants/actions/profile.const";
 
-export const gettingProfile = () => ({
-  type: GETTING_PROFILE,
+export const getProfileRequest = () => ({
+  type: GET_PROFILE_REQUEST,
 });
 
 export const getProfileSuccess = (data) => ({
@@ -30,8 +30,8 @@ export const getProfileFail = (error) => ({
   payload: error,
 });
 
-export const updatingProfile = (data) => ({
-  type: UPDATING_PROFILE,
+export const updateProfileRequest = (data) => ({
+  type: UPDATE_PROFILE_REQUEST,
   payload: data,
 });
 
@@ -45,8 +45,8 @@ export const updateProfileFail = (error) => ({
   payload: error,
 });
 
-export const updatingPassword = (data) => ({
-  type: UPDATING_PASSWORD,
+export const updatePasswordRequest = (data) => ({
+  type: UPDATE_PASSWORD_REQUEST,
   payload: data,
 });
 
@@ -60,8 +60,8 @@ export const updatePasswordFail = (error) => ({
   payload: error,
 });
 
-export const updatingAvatar = (data) => ({
-  type: UPDATING_AVATAR,
+export const updateAvatarRequest = (data) => ({
+  type: UPDATE_AVATAR_REQUEST,
   payload: data,
 });
 
@@ -75,8 +75,8 @@ export const updateAvatarFail = (error) => ({
   payload: error,
 });
 
-export const deletingAvatar = () => ({
-  type: DELETING_AVATAR,
+export const deleteAvatarRequest = () => ({
+  type: DELETE_AVATAR_REQUEST,
 });
 
 export const deleteAvatarSuccess = (data) => ({

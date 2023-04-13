@@ -1,13 +1,19 @@
 import {
-  LOGINNING,
-  LOGIN_SUCCESS,
+  LOGIN_REQUEST,
   LOGIN_FAIL,
-  REGISTERING,
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  SET_AUTH,
+  LOGIN_SUCCESS,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
+  REGISTER_REQUEST,
+  REGISTER_FAIL,
+  REGISTER_SUCCESS,
+  RESET_PASSWORD_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  SEND_MAIL_FAIL,
+  SEND_MAIL_REQUEST,
+  SEND_MAIL_SUCCESS,
+  SET_AUTH,
 } from "constants/actions/auth.const";
 
 export const setAuth = (data) => ({
@@ -15,8 +21,8 @@ export const setAuth = (data) => ({
   payload: data,
 });
 
-export const loginning = (data) => ({
-  type: LOGINNING,
+export const loginRequest = (data) => ({
+  type: LOGIN_REQUEST,
   payload: data,
 });
 
@@ -30,8 +36,8 @@ export const loginFail = (error) => ({
   payload: error,
 });
 
-export const registering = (data) => ({
-  type: REGISTERING,
+export const registerRequest = (data) => ({
+  type: REGISTER_REQUEST,
   payload: data,
 });
 
@@ -42,6 +48,36 @@ export const registerSuccess = (data) => ({
 
 export const registerFail = (error) => ({
   type: REGISTER_FAIL,
+  payload: error,
+});
+
+export const sendMailRequest = (data) => ({
+  type: SEND_MAIL_REQUEST,
+  payload: data,
+});
+
+export const sendMailSuccess = (data) => ({
+  type: SEND_MAIL_SUCCESS,
+  payload: data,
+});
+
+export const sendMailFail = (error) => ({
+  type: SEND_MAIL_FAIL,
+  payload: error,
+});
+
+export const resetPasswordRequest = (data) => ({
+  type: RESET_PASSWORD_REQUEST,
+  payload: data,
+});
+
+export const resetPasswordSuccess = (data) => ({
+  type: RESET_PASSWORD_SUCCESS,
+  payload: data,
+});
+
+export const resetPasswordFail = (error) => ({
+  type: RESET_PASSWORD_FAIL ,
   payload: error,
 });
 

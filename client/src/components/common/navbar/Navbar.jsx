@@ -27,8 +27,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutRequest } from "store/actions/auth.action";
-import { gettingProfile } from "store/actions/profile.action";
+import { getProfileRequest } from "store/actions/profile.action";
 import Button from "../button/Button";
+import Modal from "../modal/Modal";
 import { NavbarContainer } from "./Navbar.style";
 
 function NavbarMenu({ switchLayout, setSwitchLayout }) {
@@ -39,6 +40,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
 
   //* Local state
   const [switchChecked, setSwitchChecked] = useState(true);
+  const [logoutModal, setLogoutModal] = useState(false);
 
   //* Hooks
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(gettingProfile());
+      dispatch(getProfileRequest());
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -59,7 +61,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
   //@ (changeRoute): Change route navigation
   const changeRoute = (key) => {
     if (key === "logout") {
-      onSubmitLogout();
+      setLogoutModal(true);
     } else {
       navigate(`/${key}`);
     }
@@ -72,6 +74,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
 
   //! async (onSubmitLogout):  handle logout
   const onSubmitLogout = () => {
+    setLogoutModal(false);
     dispatch(logoutRequest());
   };
 
@@ -265,6 +268,24 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
       ) : (
         ""
       )}
+
+      {/* //* Modal section ------------------------------------------------------- */}
+      <Modal
+        header="Do you want to logout?"
+        open={logoutModal}
+        close={() => {
+          setLogoutModal(false);
+        }}
+      >
+        <div className="modal-footer">
+          <Button color="warning" onClick={() => setLogoutModal(false)}>
+            Cancel
+          </Button>
+          <Button color="danger" type="submit" onClick={() => onSubmitLogout()}>
+            Logout
+          </Button>
+        </div>
+      </Modal>
     </NavbarContainer>
   );
 }
