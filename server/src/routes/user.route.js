@@ -9,6 +9,7 @@ const {
   updateUserProfile,
   updatePassword,
   updateAvatar,
+  deleteAvatar,
 } = require("../controllers/user.controller");
 const idMatch = require("../middleware/idMatch");
 const isAdmin = require("../middleware/isAdmin");
@@ -35,5 +36,7 @@ router.post(
   uploadCloud.single("avatar"),
   updateAvatar
 );
+
+router.put("/profile/delete-avatar", protectedRoute, deleteAvatar);
 
 module.exports = router;

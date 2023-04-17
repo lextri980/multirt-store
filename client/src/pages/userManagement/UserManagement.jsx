@@ -6,8 +6,8 @@ import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { useCreateQuery, useRoute } from "hooks/useRoute";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate, useOutletContext } from "react-router";
-import { gettingUser } from "store/actions/user.action";
+import { useNavigate, useOutletContext } from "react-router";
+import { getUserRequest } from "store/actions/user.action";
 import { color } from "themes/colors";
 import CardType from "./component/CardType";
 import TableType from "./component/TableType";
@@ -22,7 +22,7 @@ function UserManagement() {
 
   //* Local state
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState('1');
+  const [page, setPage] = useState("1");
 
   //* Hooks
   const [switchLayout] = useOutletContext();
@@ -33,9 +33,10 @@ function UserManagement() {
 
   //* Effect
   useEffect(() => {
-    dispatch(gettingUser(query));
+    dispatch(getUserRequest(query));
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [switchLayout, query]);
+
   //* Other
 
   //@ (handleSearch): Common search
@@ -45,11 +46,9 @@ function UserManagement() {
 
   //@ (handleChangePage): Change page
   const handleChangePage = (data) => {
-    console.log(data, typeof data)
-    console.log(page, typeof page)
     setPage(data.toString());
     navigate(`${pathname}${renderPage}`);
-  }
+  };
 
   //! Condition rendering ------------------------------------------------
   let body;
@@ -83,7 +82,12 @@ function UserManagement() {
           <div className="btn-search">
             <Button width="100%">Advanced search</Button>
           </div>
-          <Pagination color='primary' size='sm' total={pageInfo?.totalPage} onChange={handleChangePage} />
+          <Pagination
+            color="primary"
+            size="sm"
+            total={pageInfo?.totalPage}
+            onChange={handleChangePage}
+          />
         </div>
         {body}
       </UserManagementContainer>

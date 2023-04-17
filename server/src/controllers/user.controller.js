@@ -242,6 +242,33 @@ const updateAvatar = async (req, res) => {
   }
 };
 
+//! desc   Delete avatar
+//! route  PUT /user/profile/delete-avatar
+//! access Private/Owner
+const deleteAvatar = async (req, res) => {
+  const deleteCondition = { _id: req.user.id };
+  let deleteData = { avatar: null };
+  try {
+    deleteData = await User.findOneAndUpdate(
+      deleteCondition,
+      deleteData,
+      { new: true }
+    );
+    if(!deleteData) {
+      return dtoFail(res, 'User is not found');
+    }
+
+    return dtoSc(res, {
+      success: true,
+      message: 'Delete avatar successfully',
+      data: deleteData
+    });
+  } catch (error) {
+    console.log(error);
+    return dtoServer(res);
+  }
+};
+
 //! desc   Update password
 //! route  POST /user/profile/change-password
 //! access Private/Owner
@@ -295,5 +322,6 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   updateAvatar,
+  deleteAvatar,
   updatePassword,
 };

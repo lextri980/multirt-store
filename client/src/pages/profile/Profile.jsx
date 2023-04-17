@@ -24,31 +24,33 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  gettingProfile,
-  updatingAvatar,
-  updatingPassword,
-  updatingProfile,
+  deleteAvatarRequest,
+  getProfileRequest,
+  updateAvatarRequest,
+  updatePasswordRequest,
+  updateProfileRequest,
 } from "store/actions/profile.action";
 import { formatDate } from "utils/date.util";
 import * as yup from "yup";
 import { ProfileContainer } from "./Profile.style";
 
 function Profile() {
-  //* Redux hooks
+  //* Redux hooks ------------------------------------------------------------------------------------------
   const { profile, loading } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
-  //* Local state
+  //* Local state ------------------------------------------------------------------------------------------
   const [openUpdateProfileModal, setOpenUpdateProfileModal] = useState(false);
   const [openUpdateAvatarModal, setOpenUpdateAvatarModal] = useState(false);
   const [openUpdatePasswordModal, setOpenUpdatePasswordModal] = useState(false);
+  const [avatarAction, setAvatarAction] = useState("");
   const [fileName, setFileName] = useState("");
   const [pw1, setPw1] = useState(false);
   const [pw2, setPw2] = useState(false);
   const [pw3, setPw3] = useState(false);
   const [previewFile, setPreviewFile] = useState("");
 
-  //* Form and validate
+  //* Form and validate --------------------------------------------------------------------------------------
   const profileSchema = yup.object().shape({
     name: yup.string().required(`Name ${REQUIRED}`),
     email: yup.string().required(`Email ${REQUIRED}`).email(`${FORMAT} email`),
@@ -114,9 +116,9 @@ function Profile() {
     resolver: yupResolver(passwordSchema),
   });
 
-  //* Hooks
+  //* Hooks -------------------------------------------------------------------------------
   useEffect(() => {
-    dispatch(gettingProfile());
+    dispatch(getProfileRequest());
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -148,30 +150,42 @@ function Profile() {
     setPreviewFile(imagePreview);
   };
 
+  //@ (handleAvatarAction): handle update and delete avatar action
+  function handleAvatarAction(action) {
+    setAvatarAction(action);
+  }
+
   //! async (onSubmitProfile): Submit profile
   const onSubmitProfile = (form) => {
-    dispatch(updatingProfile(form));
+    dispatch(updateProfileRequest(form));
     setOpenUpdateProfileModal(false);
   };
 
   //! async (onSubmitAvatar): Submit avatar
   const onSubmitAvatar = (form) => {
-    const formData = new FormData();
-    formData.append("avatar", form.avatar[0]);
-    dispatch(updatingAvatar(formData));
-    setOpenUpdateAvatarModal(false);
+    if (avatarAction === "update") {
+      const formData = new FormData();
+      formData.append("avatar", form.avatar[0]);
+      dispatch(updateAvatarRequest(formData));
+      setOpenUpdateAvatarModal(false);
+    } else {
+      dispatch(deleteAvatarRequest());
+      setOpenUpdateAvatarModal(false);
+    }
+    setAvatarAction("");
   };
 
   //! async (onSubmitPassword): Submit password
   const onSubmitPassword = (form) => {
-    dispatch(updatingPassword(form));
+    dispatch(updatePasswordRequest(form));
     setOpenUpdatePasswordModal(false);
   };
 
+  //!! Return section --------------------------------------------------------------------------------------------------------"
   return (
     <AnimatedLayout>
       <ProfileContainer>
-        {/* //*------------------------------- Card 1 -------------------------------*/}
+        {/* //*---------------------------------------- Card 1 ----------------------------------------*/}
         <Card css={{ mw: "420px", padding: "25px 40px" }}>
           <div className="horizontal-center">
             <p>Comming soon</p>
@@ -180,7 +194,7 @@ function Profile() {
           </div>
         </Card>
 
-        {/* //*------------------------------- Card 2 -------------------------------*/}
+        {/* //*---------------------------------------- Card 2 ----------------------------------------*/}
         <Card css={{ mw: "420px", padding: "25px 40px", margin: "0 90px" }}>
           <Card.Header className="center">
             <Avatar
@@ -273,7 +287,7 @@ function Profile() {
           </Card.Footer>
         </Card>
 
-        {/* //*------------------------------- Card 3 -------------------------------*/}
+        {/* //*----------------------------------------- Card 3 ----------------------------------------*/}
         <Card css={{ mw: "420px", padding: "25px 40px" }}>
           <div className="horizontal-center">
             <p>Comming soon</p>
@@ -282,12 +296,11 @@ function Profile() {
           </div>
         </Card>
 
-        {/* //!---------------- Modal section -------------------*/}
+        {/* //!--------------------------------- Modal section ----------------------------------------*/}
         {/* Modal update profile ------------------------------- */}
         <Modal
           open={openUpdateProfileModal}
           header="Update profile"
-          submitBtn="Update"
           close={() => setOpenUpdateProfileModal(false)}
         >
           <form onSubmit={handleSubmitProfile(onSubmitProfile)}>
@@ -336,7 +349,6 @@ function Profile() {
         <Modal
           open={openUpdateAvatarModal}
           header="Change avatar"
-          submitBtn="Update"
           close={() => setOpenUpdateAvatarModal(false)}
         >
           <div className="horizontal-center">
@@ -372,14 +384,19 @@ function Profile() {
                 type="submit"
                 width="110px"
                 disabled={loading === true ? true : false}
-                onClick={() => triggerAvatar()}
+                onClick={() => {
+                  triggerAvatar();
+                  handleAvatarAction("update");
+                }}
               >
                 {loading === true ? <Loading color="white" /> : "Update"}
               </Button>
               <Button
                 color="danger"
+                type="submit"
                 width="110px"
-                onClick={() => setOpenUpdateAvatarModal(false)}
+                disabled={profile?.avatar === null}
+                onClick={() => handleAvatarAction("delete")}
               >
                 Delete
               </Button>
@@ -391,7 +408,6 @@ function Profile() {
         <Modal
           open={openUpdatePasswordModal}
           header="Change password"
-          submitBtn="Update"
           close={() => setOpenUpdatePasswordModal(false)}
         >
           <form onSubmit={handleSubmitPassword(onSubmitPassword)}>

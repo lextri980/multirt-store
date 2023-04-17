@@ -1,6 +1,6 @@
 import {
-  GETTING_USER,
   GET_USER_FAIL,
+  GET_USER_REQUEST,
   GET_USER_SUCCESS,
 } from "constants/actions/user.const";
 
@@ -13,7 +13,7 @@ const initState = {
 
 function userReducer(state = initState, { type, payload }) {
   switch (type) {
-    case GETTING_USER:
+    case GET_USER_REQUEST:
       return {
         ...state,
         loading: true,

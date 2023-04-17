@@ -14,7 +14,7 @@ import { passwordRegex } from "constants/regex.const";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { registering } from "store/actions/auth.action";
+import { registerRequest } from "store/actions/auth.action";
 import * as yup from "yup";
 import { AuthContainer } from "./Auth.style";
 
@@ -61,7 +61,7 @@ function Register() {
 
   //! async (onSubmitLogin): click to submit login form
   const onSubmitRegister = (form) => {
-    dispatch(registering(form));
+    dispatch(registerRequest(form));
     handleClearform();
   };
 

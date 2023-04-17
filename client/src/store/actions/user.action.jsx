@@ -1,11 +1,11 @@
 import {
-  GETTING_USER,
+  GET_USER_REQUEST,
   GET_USER_FAIL,
   GET_USER_SUCCESS,
 } from "constants/actions/user.const";
 
-export const gettingUser = (param) => ({
-  type: GETTING_USER,
+export const getUserRequest = (param) => ({
+  type: GET_USER_REQUEST,
   payload: param,
 });
 

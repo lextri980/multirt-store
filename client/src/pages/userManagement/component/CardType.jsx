@@ -1,13 +1,11 @@
 import { Avatar, Badge, Card, Spacer, Text, Tooltip } from "@nextui-org/react";
 import { DeleteIcon, UpdateIcon } from "components/common/icon/Icon";
+import Loading from "components/common/loading/Loading";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { useSelector } from "react-redux";
 import { color } from "themes/colors";
 import { formatDate } from "utils/date.util";
 import { CardTypeContainer } from "./CardType.style";
-import Skeleton from "@mui/material/Skeleton";
-import { Stack } from "@mui/material";
-import Loading from "components/common/loading/Loading";
 
 function CardType() {
   //* Redux hooks

@@ -28,7 +28,7 @@ function File(props) {
           onClick={onClear}
         />
       </div>
-      <p>{name}</p>
+      <p className="word-break">{name}</p>
     </FileContainer>
   );
 }

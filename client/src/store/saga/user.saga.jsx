@@ -1,10 +1,10 @@
 import { getUserApi } from "api/user.api";
-import { GETTING_USER } from "constants/actions/user.const";
+import { GET_USER_REQUEST } from "constants/actions/user.const";
 import { toast } from "react-toastify";
 import { call, fork, put, takeEvery } from "redux-saga/effects";
 import { getUserFail, getUserSuccess } from "store/actions/user.action";
 
-function* workerGetUserSaga({payload}) {
+function* workerGetUserSaga({ payload }) {
   try {
     //fetch api here
     const response = yield call(getUserApi, payload);
@@ -17,7 +17,7 @@ function* workerGetUserSaga({payload}) {
 }
 
 function* watcherGetUserSaga() {
-  yield takeEvery(GETTING_USER, workerGetUserSaga);
+  yield takeEvery(GET_USER_REQUEST, workerGetUserSaga);
 }
 
 export const userSaga = [fork(watcherGetUserSaga)];

@@ -33,8 +33,9 @@ export const NavbarContainer = styled.div`
   .secondary-menu {
     display: flex;
     justify-content: center;
-    margin: 20px auto 0;
-    width: 70vw;
+    padding-top: 20px;
+    width: 100vw;
+    background: rgb(255, 255, 255, 0.8);
 
     & > button {
       display: flex;
@@ -126,7 +127,7 @@ export const NavbarContainer = styled.div`
     align-items: center;
 
     &:hover {
-      cursor: pointer
+      cursor: pointer;
     }
 
     svg {
@@ -135,7 +136,7 @@ export const NavbarContainer = styled.div`
     }
 
     h4 {
-      margin: 0
+      margin: 0;
     }
   }
 

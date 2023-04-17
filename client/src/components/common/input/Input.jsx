@@ -34,9 +34,8 @@ function Input(props) {
         maxLength={max}
         type={type === false ? "password" : "text"}
         placeholder={placeholder || "Name"}
-        error={error || false}
         {...register(value)}
-        onCopy={password ? antiCopy : ""}
+        onCopy={password ? antiCopy : null}
       />
       {password ? (
         <label htmlFor={value} id="pw" onClick={onPassword}>
