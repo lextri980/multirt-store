@@ -2,6 +2,7 @@ const { emailRegex, passwordRegex } = require("../constants/regex");
 const User = require("../models/User");
 const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
 const { PAGE, LIMIT } = require("../constants/common");
+const { access } = require("fs");
 
 //! desc   Get all user
 //! route  GET /user
@@ -40,9 +41,9 @@ const getUser = async (req, res) => {
       }
     }
     data = await User.find({});
+
     //* Search function - Pagination - find() model --------------------
     if (querylength > 0 && query.search) {
-      console.log("Normal search");
       data = await User.find({
         $or: [
           { name: { $regex: query.search, $options: "i" } },
@@ -54,7 +55,6 @@ const getUser = async (req, res) => {
         .limit(limit)
         .select("-password");
     } else if (querylength > 0 && !query.search) {
-      console.log("Advanced search");
       data = await User.find({
         $and: searchArray,
       })
@@ -63,13 +63,19 @@ const getUser = async (req, res) => {
         .limit(limit)
         .select("-password");
     } else {
-      console.log("No query");
       data = await User.find()
         .sort({ name: 1 })
         .skip(startIndex)
         .limit(limit)
         .select("-password");
     }
+
+    const dataCurrentUserSorted = data.reduce((prev, curr) => {
+      if (curr.email === req.user.email) {
+        return [curr, ...prev];
+      }
+      return [...prev, curr];
+    }, []);
 
     return dtoSc(res, {
       success: true,
@@ -79,7 +85,7 @@ const getUser = async (req, res) => {
         totalData,
         totalPage,
       },
-      data,
+      data: dataCurrentUserSorted,
     });
   } catch (error) {
     console.log(error);
@@ -249,19 +255,17 @@ const deleteAvatar = async (req, res) => {
   const deleteCondition = { _id: req.user.id };
   let deleteData = { avatar: null };
   try {
-    deleteData = await User.findOneAndUpdate(
-      deleteCondition,
-      deleteData,
-      { new: true }
-    );
-    if(!deleteData) {
-      return dtoFail(res, 'User is not found');
+    deleteData = await User.findOneAndUpdate(deleteCondition, deleteData, {
+      new: true,
+    });
+    if (!deleteData) {
+      return dtoFail(res, "User is not found");
     }
 
     return dtoSc(res, {
       success: true,
-      message: 'Delete avatar successfully',
-      data: deleteData
+      message: "Delete avatar successfully",
+      data: deleteData,
     });
   } catch (error) {
     console.log(error);

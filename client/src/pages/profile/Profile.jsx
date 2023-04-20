@@ -31,10 +31,13 @@ import {
   updateProfileRequest,
 } from "store/actions/profile.action";
 import { formatDate } from "utils/date.util";
+import { titlePage } from "utils/titlePage.util";
 import * as yup from "yup";
 import { ProfileContainer } from "./Profile.style";
 
 function Profile() {
+  titlePage("Multirt | Profile");
+
   //* Redux hooks ------------------------------------------------------------------------------------------
   const { profile, loading } = useSelector((state) => state.profile);
   const dispatch = useDispatch();

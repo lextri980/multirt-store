@@ -4,7 +4,7 @@ function AdminRoute(props) {
   //* Declare global variables
   const user = JSON.parse(localStorage.getItem("user"));
 
-  return user.isAdmin === true ? props.children : <Navigate to={-1} />;
+  return user.isAdmin ? props.children : <Navigate to={-1} />;
 }
 
 export default AdminRoute;

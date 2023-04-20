@@ -1,33 +1,33 @@
 import {
-loginApi,
-registerApi,
-resetPasswordApi,
-sendMailApi
+  loginApi,
+  registerApi,
+  resetPasswordApi,
+  sendMailApi,
 } from "api/auth.api";
 import {
-LOGIN_REQUEST,
-LOGOUT_REQUEST,
-REGISTER_REQUEST,
-RESET_PASSWORD_REQUEST,
-SEND_MAIL_REQUEST
+  LOGIN_REQUEST,
+  LOGOUT_REQUEST,
+  REGISTER_REQUEST,
+  RESET_PASSWORD_REQUEST,
+  SEND_MAIL_REQUEST,
 } from "constants/actions/auth.const";
 import { LOCALSTORAGE_TOKEN_NAME } from "constants/service.const";
 import { toast } from "react-toastify";
 import { push } from "redux-first-history";
 import { call, delay, fork, put, takeLatest } from "redux-saga/effects";
 import {
-loginFail,
-loginSuccess,
-logoutSuccess,
-registerFail,
-registerSuccess,
-resetPasswordFail,
-resetPasswordSuccess,
-sendMailFail,
-sendMailSuccess
+  loginFail,
+  loginSuccess,
+  logoutSuccess,
+  registerFail,
+  registerSuccess,
+  resetPasswordFail,
+  resetPasswordSuccess,
+  sendMailFail,
+  sendMailSuccess,
 } from "store/actions/auth.action";
 
-function* workerLoginSaga({ payload }) {
+function* workerLoginSaga({ payload, callback }) {
   try {
     const response = yield call(loginApi, payload);
     if (response.status === 200) {
@@ -35,8 +35,8 @@ function* workerLoginSaga({ payload }) {
       localStorage.setItem(LOCALSTORAGE_TOKEN_NAME, response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       yield put(loginSuccess(response.data));
-      yield put(push("/dashboard"));
       yield toast.success(response.data.message);
+      callback();
     }
   } catch (error) {
     yield put(loginFail(error.response.data));
@@ -58,13 +58,14 @@ function* workerRegisterSaga({ payload }) {
   }
 }
 
-function* workerSendMailSaga({ payload }) {
+function* workerSendMailSaga({ payload, callback }) {
   try {
     const response = yield call(sendMailApi, payload);
     if (response.status === 200) {
       yield delay(500);
       yield put(sendMailSuccess(response.data));
       yield toast.success(response.data.message);
+      callback();
     }
   } catch (error) {
     yield put(sendMailFail(error.response.data));
@@ -72,13 +73,14 @@ function* workerSendMailSaga({ payload }) {
   }
 }
 
-function* workerResetPasswordSaga({ payload }) {
+function* workerResetPasswordSaga({ payload, callback }) {
   try {
     const response = yield call(resetPasswordApi, payload);
     if (response.status === 200) {
       yield delay(500);
       yield put(resetPasswordSuccess(response.data));
       yield toast.success(response.data.message);
+      callback();
     }
   } catch (error) {
     yield put(resetPasswordFail(error.response.data));
@@ -86,13 +88,14 @@ function* workerResetPasswordSaga({ payload }) {
   }
 }
 
-function* workerLogoutSaga() {
+function* workerLogoutSaga({ callback }) {
   localStorage.removeItem(LOCALSTORAGE_TOKEN_NAME);
   localStorage.removeItem("user");
   yield delay(500);
   yield put(logoutSuccess());
   yield put(push("/dashboard"));
   yield toast.success("Logout successfully");
+  callback();
 }
 
 function* watcherLoginSaga() {

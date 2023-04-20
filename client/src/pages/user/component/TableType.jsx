@@ -1,20 +1,18 @@
 import { Avatar, Badge, Spacer, Table } from "@nextui-org/react";
-import {
-  DeleteIcon,
-  DetailIcon,
-  UpdateIcon,
-} from "components/common/icon/Icon";
 import Loading from "components/common/loading/Loading";
-// import Table from "components/common/table/Table";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { useSelector } from "react-redux";
 import { color } from "themes/colors";
 import { formatDate } from "utils/date.util";
 import { TableTypeContainer } from "./TableType.style";
+import UpdateIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import DetailIcon from "@mui/icons-material/DocumentScannerOutlined";
 
 function TableType() {
   //* Redux hooks
   const { users, loading } = useSelector((state) => state.user);
+  const userLocal = JSON.parse(localStorage.getItem("user"));
 
   //* Declare global variables
   const columns = [
@@ -94,15 +92,19 @@ function TableType() {
         );
 
       case "action":
-        return (
-          <div className="horizontal-center">
-            <DetailIcon color={color.blue} />
-            <Spacer x={0.8} />
-            <UpdateIcon color={color.orangeP} />
-            <Spacer x={0.8} />
-            <DeleteIcon color={color.redP} />
-          </div>
-        );
+        if (userLocal._id === data._id) {
+          return <Badge color='success' css={{ minWidth: "60px" }}>Current User</Badge>;
+        } else {
+          return (
+            <div className="horizontal-center">
+              <DetailIcon style={{ color: color.blue }} />
+              <Spacer x={0.8} />
+              <UpdateIcon style={{ color: color.orangeP }} />
+              <Spacer x={0.8} />
+              <DeleteIcon style={{ color: color.redP }} />
+            </div>
+          );
+        }
 
       default:
         return cellValue;

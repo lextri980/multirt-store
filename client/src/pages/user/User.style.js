@@ -7,6 +7,10 @@ export const UserManagementContainer = styled.div`
   .search-section {
     padding: 35px 0 0 20px;
     min-width: 360px;
+
+    .user-title {
+      margin-bottom: 20px;
+    }
   }
 
   .search-input {
@@ -21,7 +25,9 @@ export const UserManagementContainer = styled.div`
     margin-bottom: 20px;
   } 
 
-  h4 {
-    margin: 20px 0 30px;
+  .user-information {
+    span {
+      display: inline
+    }
   }
 `;
