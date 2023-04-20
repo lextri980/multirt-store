@@ -1,8 +1,7 @@
-const { emailRegex, passwordRegex } = require("../constants/regex");
+const { emailRegex } = require("../constants/regex");
 const User = require("../models/User");
 const { dtoSc, dtoFail, dtoServer } = require("../utils/dto");
 const { PAGE, LIMIT } = require("../constants/common");
-const { access } = require("fs");
 
 //! desc   Get all user
 //! route  GET /user
@@ -13,17 +12,23 @@ const getUser = async (req, res) => {
     let data;
     const query = req.query;
     const querylength = Object.keys(query).length;
-    const searchArray = [];
+    const normalSearchArray = [
+      { name: { $regex: query.search, $options: "i" } },
+      { email: { $regex: query.search, $options: "i" } },
+    ];
+    const advancedSearchArray = [];
     const sortObject = {};
     const page = Number(query.page) || PAGE;
-    const limit = Number(query.limit) || LIMIT;
-    const startIndex = (page - 1) * limit;
-    const totalData = await User.find().count();
-    const totalPage = Math.ceil(totalData / limit);
+    const size = Number(query.size) || LIMIT;
+    const startIndex = (page - 1) * size;
+    let totalData = await User.find().count();
+    let totalPage;
 
-    //* Loop handle query search --------------------
+    //* Loop handle query advanced search --------------------
+    // Add each query sent from FE into array
+    // If not, render error undefined query
     for (let i = 0; i < querylength; i++) {
-      searchArray.push({
+      advancedSearchArray.push({
         [Object.keys(query)[i]]: {
           $regex: query[Object.keys(query)[i]],
           $options: "i",
@@ -43,33 +48,44 @@ const getUser = async (req, res) => {
     data = await User.find({});
 
     //* Search function - Pagination - find() model --------------------
-    if (querylength > 0 && query.search) {
+    // Normal search
+    if (query.search) {
       data = await User.find({
-        $or: [
-          { name: { $regex: query.search, $options: "i" } },
-          { email: { $regex: query.search, $options: "i" } },
-        ],
+        $or: normalSearchArray,
       })
         .sort(sortObject)
         .skip(startIndex)
-        .limit(limit)
+        .limit(size)
         .select("-password");
-    } else if (querylength > 0 && !query.search) {
+      totalData = await User.find({
+        $or: normalSearchArray,
+      }).count();
+    }
+    // Advanced search
+    else if (query.name || query.email) {
       data = await User.find({
-        $and: searchArray,
+        $and: advancedSearchArray,
       })
         .sort(sortObject)
         .skip(startIndex)
-        .limit(limit)
+        .limit(size)
         .select("-password");
-    } else {
+      totalData = await User.find({
+        $and: advancedSearchArray,
+      }).count();
+    }
+    // Initial status
+    else {
       data = await User.find()
         .sort({ name: 1 })
         .skip(startIndex)
-        .limit(limit)
+        .limit(size)
         .select("-password");
     }
 
+    totalPage = Math.ceil(totalData / size);
+
+    // Sort to change the current user to the top
     const dataCurrentUserSorted = data.reduce((prev, curr) => {
       if (curr.email === req.user.email) {
         return [curr, ...prev];
@@ -81,7 +97,7 @@ const getUser = async (req, res) => {
       success: true,
       pageInfo: {
         page,
-        limit,
+        size,
         totalData,
         totalPage,
       },
