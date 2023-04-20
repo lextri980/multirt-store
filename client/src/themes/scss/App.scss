@@ -43,16 +43,20 @@
 }
 
 //! Hover pointer
-.icon-clickable {
+.pointer {
   &:hover {
     cursor: pointer;
   }
 }
 
-.pointer {
+.no-cursor {
   &:hover {
-    cursor: pointer;
+    cursor: default;
   }
+}
+
+td:hover {
+  cursor: default;
 }
 
 //! Flex display

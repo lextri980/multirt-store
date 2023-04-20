@@ -30,7 +30,7 @@ import {
   updatePasswordRequest,
   updateProfileRequest,
 } from "store/actions/profile.action";
-import { formatDate } from "utils/date.util";
+import { formatDate } from "utils/function.util";
 import { titlePage } from "utils/titlePage.util";
 import * as yup from "yup";
 import { ProfileContainer } from "./Profile.style";

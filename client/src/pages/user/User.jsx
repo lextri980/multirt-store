@@ -15,19 +15,19 @@ import { UserManagementContainer } from "./User.style";
 
 function User() {
   titlePage("Multirt | Manage user");
+
   //* Redux hooks --------------------------------------------------------------------------------------------
   const dispatch = useDispatch();
-  const { pageInfo } = useSelector((state) => state.user);
+  const { pageInfo, users } = useSelector((state) => state.user);
 
   //* Declare global variables -------------------------------------------------------------------------------
 
   //* Local state --------------------------------------------------------------------------------------------
   const [searchQuery, setSearchQuery] = useState({
-    page: 1,
+    page: "1",
     search: "",
   });
 
-  console.log("render");
   //* Hooks --------------------------------------------------------------------------------------------------
   const navigate = useNavigate();
   const searchQueryUrl = useCreateQuery(searchQuery);
@@ -37,23 +37,24 @@ function User() {
   //? Effect to get user list
   useEffect(() => {
     dispatch(getUserRequest(query));
+    console.log("render");
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
-
-  //? Effect to navigate query when change pagination
-  useEffect(() => {
-    navigateQuery();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery.page]);
 
   //@ (navigateQuery): Change query -----------------------------------
   const navigateQuery = () => {
     navigate(`${pathname}${searchQueryUrl}`);
   };
 
+  //? Effect to navigate query when change pagination
+  // useEffect(() => {
+  //   navigateQuery();
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [searchQuery.page]);
+
   //@ (handleSearch): Common search -----------------------------------
   const handleSearch = () => {
-    setSearchQuery({ ...searchQuery, page: 1 });
+    setSearchQuery({ ...searchQuery });
     navigateQuery();
   };
 
@@ -90,7 +91,6 @@ function User() {
           <Pagination
             color="primary"
             size="sm"
-            page={searchQuery.page}
             total={pageInfo?.totalPage}
             onChange={(e) =>
               setSearchQuery({
@@ -103,8 +103,14 @@ function User() {
           <div className="user-information">
             <Card variant="bordered">
               <Card.Body>
-                <span className="key">User number:</span>
-                <span className="value">{pageInfo?.totalData}</span>
+                <div className="flex">
+                  <span className="key">Total user:</span>
+                  <span className="value">{pageInfo?.totalData}</span>
+                </div>
+                <div className="flex">
+                  <span className="key">User in page:</span>
+                  <span className="value">{users?.length}</span>
+                </div>
               </Card.Body>
             </Card>
           </div>
