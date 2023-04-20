@@ -15,6 +15,8 @@ import { useQuery } from "hooks/useRoute";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import {
   loginRequest,
   resetPasswordRequest,
@@ -30,6 +32,9 @@ function Login() {
 
   //* Hooks
   const getQuery = useQuery();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   useEffect(() => {
     if (getQuery.userId && getQuery.token) {
       setResetPasswordModal(true);
@@ -95,6 +100,11 @@ function Login() {
   const [typePw1, setTypePw1] = useState(false);
   const [typePw2, setTypePw2] = useState(false);
 
+  //@ (navigateRoute): Change route action
+  const navigateRoute = () => {
+    navigate("/dashboard");
+  };
+
   //@ (handleClearform): click to clear form text
   const handleClearform = () => {
     resetFieldLogin("email");
@@ -104,15 +114,28 @@ function Login() {
     resetFieldResetPassword("confirmPassword");
   };
 
+  //@ (closeModal): close all modal
+  const closeModal = () => {
+    setSendMailResetPasswordModal(false);
+    setResetPasswordModal(false);
+    const userIdParam = searchParams.get("userId");
+    const tokenParam = searchParams.get("token");
+
+    if (userIdParam && tokenParam) {
+      searchParams.delete("userId");
+      searchParams.delete("token");
+      setSearchParams(searchParams);
+    }
+  };
+
   //! async (onSubmitLogin): click to submit login form
   const onSubmitLogin = (form) => {
-    dispatch(loginRequest(form));
+    dispatch(loginRequest(form, navigateRoute));
   };
 
   //! async (onSubmitSendMailReset): click to submit send mail form
   const onSubmitSendMailReset = (form) => {
-    dispatch(sendMailRequest(form));
-    setSendMailResetPasswordModal(false);
+    dispatch(sendMailRequest(form, closeModal));
   };
 
   //! async (onSubmitSendMailReset): click to submit send mail form
@@ -122,7 +145,7 @@ function Login() {
       userId: getQuery.userId,
       token: getQuery.token,
     };
-    dispatch(resetPasswordRequest(formData));
+    dispatch(resetPasswordRequest(formData, closeModal));
   };
 
   return (

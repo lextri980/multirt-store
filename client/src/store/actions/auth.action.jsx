@@ -1,11 +1,11 @@
 import {
-  LOGIN_REQUEST,
   LOGIN_FAIL,
+  LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
-  REGISTER_REQUEST,
   REGISTER_FAIL,
+  REGISTER_REQUEST,
   REGISTER_SUCCESS,
   RESET_PASSWORD_FAIL,
   RESET_PASSWORD_REQUEST,
@@ -21,9 +21,10 @@ export const setAuth = (data) => ({
   payload: data,
 });
 
-export const loginRequest = (data) => ({
+export const loginRequest = (data, callback) => ({
   type: LOGIN_REQUEST,
   payload: data,
+  callback,
 });
 
 export const loginSuccess = (data) => ({
@@ -51,9 +52,10 @@ export const registerFail = (error) => ({
   payload: error,
 });
 
-export const sendMailRequest = (data) => ({
+export const sendMailRequest = (data, callback) => ({
   type: SEND_MAIL_REQUEST,
   payload: data,
+  callback,
 });
 
 export const sendMailSuccess = (data) => ({
@@ -66,9 +68,10 @@ export const sendMailFail = (error) => ({
   payload: error,
 });
 
-export const resetPasswordRequest = (data) => ({
+export const resetPasswordRequest = (data, callback) => ({
   type: RESET_PASSWORD_REQUEST,
   payload: data,
+  callback,
 });
 
 export const resetPasswordSuccess = (data) => ({
@@ -77,12 +80,13 @@ export const resetPasswordSuccess = (data) => ({
 });
 
 export const resetPasswordFail = (error) => ({
-  type: RESET_PASSWORD_FAIL ,
+  type: RESET_PASSWORD_FAIL,
   payload: error,
 });
 
-export const logoutRequest = () => ({
+export const logoutRequest = (callback) => ({
   type: LOGOUT_REQUEST,
+  callback,
 });
 
 export const logoutSuccess = () => ({

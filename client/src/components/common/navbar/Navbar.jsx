@@ -1,7 +1,6 @@
 import Account from "@mui/icons-material/AccountCircleOutlined";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import CardIcon from "@mui/icons-material/CreditCardOutlined";
 import Moon from "@mui/icons-material/DarkModeOutlined";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -9,7 +8,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCart from "@mui/icons-material/ShoppingCartOutlined";
 import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
-import TableIcon from "@mui/icons-material/TableViewOutlined";
 import Sun from "@mui/icons-material/WbSunnyOutlined";
 import {
   Avatar,
@@ -32,7 +30,7 @@ import Button from "../button/Button";
 import Modal from "../modal/Modal";
 import { NavbarContainer } from "./Navbar.style";
 
-function NavbarMenu({ switchLayout, setSwitchLayout }) {
+function NavbarMenu() {
   //* Redux hooks
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -51,7 +49,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
       dispatch(getProfileRequest());
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuthenticated]);
 
   //@ (handleChangeSwitch): change color for switch
   const handleChangeSwitch = () => {
@@ -67,15 +65,10 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
     }
   };
 
-  //@ (handleChangeLayoutSwitch): Change between card and table layout in Screen <manage-user>
-  const handleChangeLayoutSwitch = () => {
-    setSwitchLayout(!switchLayout);
-  };
-
   //! async (onSubmitLogout):  handle logout
   const onSubmitLogout = () => {
     setLogoutModal(false);
-    dispatch(logoutRequest());
+    dispatch(logoutRequest(() => navigate("/dashboard")));
   };
 
   //* Condition rendering
@@ -122,7 +115,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
               <Dropdown.Item key="manage-user">
                 <div className="vertical-center">
                   <PeopleIcon />
-                  <span className="ml-5">Manage user</span>
+                  <span className="ml-5">User management</span>
                 </div>
               </Dropdown.Item>
             ) : (
@@ -182,25 +175,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
                 <h4>Your profile</h4>
               </div>
             </Tooltip>
-          ) : location.pathname === "/manage-user" ? (
-            <div className="switch-layout-user">
-              <p>Table</p>
-              <Switch
-                checked={switchLayout}
-                size="lg"
-                shadow
-                iconOn={<CardIcon />}
-                iconOff={<TableIcon />}
-                className={clsx({
-                  "switch-theme-card": switchLayout === true,
-                  "switch-theme-table": switchLayout === false,
-                })}
-                aria-label="switch"
-                onChange={handleChangeLayoutSwitch}
-              />
-              <p>Card</p>
-            </div>
-          ) : (
+          ) : location.pathname === "/dashboard" ? (
             <Input
               className="search-input"
               clearable
@@ -210,7 +185,7 @@ function NavbarMenu({ switchLayout, setSwitchLayout }) {
               placeholder="Search..."
               contentLeft={<SearchIcon className="search-icon" />}
             />
-          )}
+          ) : ''}
         </Navbar.Content>
         {/* //! Right menu navbar ----------------------------------- */}
         <Navbar.Content style={{ cursor: "pointer", minWidth: "300px" }}>

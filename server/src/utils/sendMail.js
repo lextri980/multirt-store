@@ -17,8 +17,13 @@ const sendEmail = async (email, subject, link) => {
       to: email,
       subject,
       html: `
-        <h3 style="color: #ff6464">You have a request to reset password</h3>
-        <p>Click here: ${link}</p>
+        <h4 style="color: red">You have a request to reset password</h4>
+        <p>Hi ${email}!</p>
+        <p>We noticed your request to reset password. You need visit this link to move to reset password screen.</p>
+        <p>Link: ${link}</p>
+        <p>This link brings the token that <strong>will expire in 5 minutes</strong>. If you <strong>do not</strong> reset password in this time, you must <strong>send us your email again</strong> if you still want to reset password!</p>
+        <p>Thanks,</p>
+        <p>The Multirt Store team.</p>
       `,
     });
   } catch (error) {

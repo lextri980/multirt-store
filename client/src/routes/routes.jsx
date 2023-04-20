@@ -4,12 +4,10 @@ import AdminRoute from "components/routes/AdminRoute";
 import Landing from "components/routes/Landing";
 import ProtectedRoute from "components/routes/ProtectedRoute";
 import Auth from "pages/auth/Auth";
-import Login from "pages/auth/Login";
-import Register from "pages/auth/Register";
 import Dashboard from "pages/dashboard/Dashboard";
 import NotFound from "pages/notFound/NotFound";
 import Profile from "pages/profile/Profile";
-import UserManagement from "pages/userManagement/UserManagement";
+import User from "pages/user/User";
 
 const routes = () => {
   return [
@@ -24,14 +22,6 @@ const routes = () => {
         {
           path: "",
           element: <Auth />,
-        },
-        {
-          path: "login",
-          element: <Login />,
-        },
-        {
-          path: "register",
-          element: <Register />,
         },
       ],
     },
@@ -56,7 +46,7 @@ const routes = () => {
           element: (
             <ProtectedRoute>
               <AdminRoute>
-                <UserManagement />
+                <User />
               </AdminRoute>
             </ProtectedRoute>
           ),
