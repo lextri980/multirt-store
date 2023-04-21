@@ -2,6 +2,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Card, Input, Pagination } from "@nextui-org/react";
 import Button from "components/common/button/Button";
 import { SearchSendingIcon } from "components/common/icon/Icon";
+import Select from "components/common/select/Select";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
 import { useCreateQuery, useRoute } from "hooks/useRoute";
 import { useEffect, useState } from "react";
@@ -21,12 +22,19 @@ function User() {
   const { pageInfo, users } = useSelector((state) => state.user);
 
   //* Declare global variables -------------------------------------------------------------------------------
+  const sizeOption = [
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+  ];
 
   //* Local state --------------------------------------------------------------------------------------------
   const [searchQuery, setSearchQuery] = useState({
-    page: "1",
+    page: 1,
+    size: 10,
     search: "",
   });
+  const [recordSize, setRecordSize] = useState(10);
 
   //* Hooks --------------------------------------------------------------------------------------------------
   const navigate = useNavigate();
@@ -37,7 +45,6 @@ function User() {
   //? Effect to get user list
   useEffect(() => {
     dispatch(getUserRequest(query));
-    console.log("render");
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
@@ -47,16 +54,18 @@ function User() {
   };
 
   //? Effect to navigate query when change pagination
-  // useEffect(() => {
-  //   navigateQuery();
-  //   //eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [searchQuery.page]);
+  useEffect(() => {
+    navigateQuery();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery.page, searchQuery.size]);
 
   //@ (handleSearch): Common search -----------------------------------
   const handleSearch = () => {
-    setSearchQuery({ ...searchQuery });
+    setSearchQuery({ ...searchQuery, page: 1 });
     navigateQuery();
   };
+
+  console.log(searchQuery);
 
   //!! Return section ------------------------------------------------------------------------------------------------------
   return (
@@ -65,7 +74,7 @@ function User() {
         <div className="search-section">
           <h3 className="user-title">User management</h3>
           <Input
-            className="search-input"
+            className="search-input mb-20"
             clearable
             bordered
             color="primary"
@@ -85,21 +94,37 @@ function User() {
               </div>
             }
           />
+          <Select
+            label="Record size"
+            options={sizeOption}
+            clearable={false}
+            onChange={(_, selected) => {
+              setSearchQuery({
+                ...searchQuery,
+                size: selected.value ? selected.value : 10,
+              });
+            }}
+          />
           <div className="btn-search">
             <Button width="100%">Advanced search</Button>
           </div>
-          <Pagination
-            color="primary"
-            size="sm"
-            total={pageInfo?.totalPage}
-            onChange={(e) =>
-              setSearchQuery({
-                ...searchQuery,
-                page: e,
-              })
-            }
-            className="mb-20"
-          />
+          {pageInfo?.totalData > 0 ? (
+            <Pagination
+              className="mb-20"
+              color="primary"
+              size="sm"
+              total={pageInfo?.totalPage}
+              onChange={(e) => {
+                setSearchQuery({
+                  ...searchQuery,
+                  page: e,
+                });
+              }}
+            />
+          ) : (
+            ""
+          )}
+
           <div className="user-information">
             <Card variant="bordered">
               <Card.Body>
