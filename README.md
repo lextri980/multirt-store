@@ -28,6 +28,7 @@ Before you continue, ensure you meet the following requirements:
 - Form handler: `React-hook-form` `Yup`
 - UI lib: `NextUI` `Material UI`
 - Style: `SCSS` `Styled-components`
+- Date formater: `moment`
 #### 2. Server folder
 - Framework: `ExpressJS`
 - Database: `MongoDB` `Mongoose`
