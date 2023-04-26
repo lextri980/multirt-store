@@ -24,14 +24,14 @@ Before you continue, ensure you meet the following requirements:
 ### Technologies
 #### 1. Client folder
 - Framework: `ReactJS`
-- State management: `Redux` `Redux Saga`
-- Form handler: `React-hook-form` `Yup`
-- UI lib: `NextUI` `Material UI`
-- Style: `SCSS` `Styled-components`
+- State management: `redux` `redux-saga`
+- Form handler: `react-hook-form` `yup`
+- UI lib: `nextui` `material-ui`
+- Style: `scss` `styled-components`
 - Date formater: `moment`
 #### 2. Server folder
 - Framework: `ExpressJS`
-- Database: `MongoDB` `Mongoose`
-- Auth: `Jsonwebtoken`
-- Image saver lib: `Cloudinary` `Multer`
-- Mail handler: `Nodemailer`
+- Database: `mongodb` `mongoose`
+- Auth: `jsonwebtoken`
+- Image saver lib: `cloudinary` `multer`
+- Mail handler: `nodemailer`
