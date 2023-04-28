@@ -17,7 +17,7 @@ import {
   AdvancedSearchModalStyle,
   UserManagementContainer,
 } from "./User.style";
-import { RECORD_SIZE, ROLE } from "constants/common";
+import { RECORD_SIZE } from "constants/common";
 
 function User() {
   titlePage("Multirt | Manage user");
@@ -27,11 +27,6 @@ function User() {
   const { pageInfo, users } = useSelector((state) => state.user);
 
   //* Declare global variables -------------------------------------------------------------------------------
-  const sizeOption = [
-    { value: 10, label: "10" },
-    { value: 25, label: "25" },
-    { value: 50, label: "50" },
-  ];
 
   //* Local state --------------------------------------------------------------------------------------------
   const [searchQuery, setSearchQuery] = useState({
@@ -39,7 +34,12 @@ function User() {
     size: 10,
     search: "",
   });
-  const [searchCommon, setSearchCommon] = useState("");
+  const [commonSearch, setCommonSearch] = useState("");
+  const [advancedSearch, setAdvancedSearch] = useState({
+    name: '',
+    email: '',
+    isAdmin: false,
+  })
   const [advancedSearchModal, setAdvancedSearchModal] = useState(false);
 
   //* Hooks --------------------------------------------------------------------------------------------------
@@ -77,8 +77,8 @@ function User() {
             clearable
             bordered
             color="primary"
-            value={searchCommon}
-            onChange={(e) => setSearchCommon(e.target.value)}
+            value={commonSearch}
+            onChange={(e) => setCommonSearch(e.target.value)}
             contentRightStyling={false}
             placeholder="Search..."
             contentLeft={<SearchIcon className="search-icon" />}
@@ -89,7 +89,7 @@ function User() {
                   setSearchQuery({
                     ...searchQuery,
                     page: 1,
-                    search: searchCommon,
+                    search: commonSearch,
                   })
                 }
               >
@@ -165,10 +165,10 @@ function User() {
             <Spacer y={1} />
             <div className="row-modal">
               <Input bordered color="primary" label="Account type" />
-              <span className="block">
+              {/* <span className="block">
                 <label htmlFor="role-select">Account type</label>
                 <Select id="role-select" options={ROLE} />
-              </span>
+              </span> */}
             </div>
           </AdvancedSearchModalStyle>
           <div className="modal-footer-long">

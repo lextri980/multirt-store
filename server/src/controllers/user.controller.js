@@ -12,7 +12,7 @@ const getUser = async (req, res) => {
     let data;
     const query = req.query;
     const querylength = Object.keys(query).length;
-    const normalSearchArray = [
+    const commonSearchArray = [
       { name: { $regex: query.search, $options: "i" } },
       { email: { $regex: query.search, $options: "i" } },
     ];
@@ -48,21 +48,20 @@ const getUser = async (req, res) => {
     data = await User.find({});
 
     //* Search function - Pagination - find() model --------------------
-    // Normal search
     if (query.search) {
+      // Normal search
       data = await User.find({
-        $or: normalSearchArray,
+        $or: commonSearchArray,
       })
         .sort(sortObject)
         .skip(startIndex)
         .limit(size)
         .select("-password");
       totalData = await User.find({
-        $or: normalSearchArray,
+        $or: commonSearchArray,
       }).count();
-    }
-    // Advanced search
-    else if (query.name || query.email) {
+    } else if (query.name || query.email) {
+      // Advanced search
       data = await User.find({
         $and: advancedSearchArray,
       })
@@ -73,9 +72,8 @@ const getUser = async (req, res) => {
       totalData = await User.find({
         $and: advancedSearchArray,
       }).count();
-    }
-    // Initial status
-    else {
+    } else {
+      // Initial status
       data = await User.find()
         .sort({ name: 1 })
         .skip(startIndex)
