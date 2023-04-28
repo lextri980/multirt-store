@@ -30,4 +30,15 @@ export const UserManagementContainer = styled.div`
       min-width: 120px;
     }
   }
+
+  .group-btn {
+    background-color: black
+  }
+`;
+
+export const AdvancedSearchModalStyle = styled.div`
+  .row-modal {
+    display: flex !important;
+    justify-content: space-between;
+  }
 `;

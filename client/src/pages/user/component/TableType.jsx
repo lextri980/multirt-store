@@ -156,11 +156,8 @@ function TableType() {
           className="table-container"
           bordered
           color="primary"
-          hoverable
-          fixed
-          lined
         >
-          <Table.Header columns={columns}>
+          <Table.Header columns={columns} className="table-header">
             {(column) => (
               <Table.Column
                 key={column?.key}
