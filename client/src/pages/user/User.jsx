@@ -165,10 +165,6 @@ function User() {
             <Spacer y={1} />
             <div className="row-modal">
               <Input bordered color="primary" label="Account type" />
-              {/* <span className="block">
-                <label htmlFor="role-select">Account type</label>
-                <Select id="role-select" options={ROLE} />
-              </span> */}
             </div>
           </AdvancedSearchModalStyle>
           <div className="modal-footer-long">
