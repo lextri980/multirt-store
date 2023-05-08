@@ -185,12 +185,14 @@ function NavbarMenu() {
               placeholder="Search..."
               contentLeft={<SearchIcon className="search-icon" />}
             />
-          ) : ''}
+          ) : (
+            ""
+          )}
         </Navbar.Content>
         {/* //! Right menu navbar ----------------------------------- */}
         <Navbar.Content style={{ cursor: "pointer", minWidth: "300px" }}>
           <Badge size="sm" content="1" color="error">
-            <ShoppingCart className="icon-clickable" />
+            <ShoppingCart className="pointer" />
           </Badge>
           <Switch
             checked={switchChecked}

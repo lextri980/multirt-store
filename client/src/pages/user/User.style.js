@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 export const UserManagementContainer = styled.div`
-    display: flex;
-    height: 80vh;
+  display: flex;
+  height: 80vh;
 
   .search-section {
-    padding: 35px 0 0 20px;
+    padding: 35px 0 0 90px;
     min-width: 360px;
 
     .user-title {
@@ -23,11 +23,22 @@ export const UserManagementContainer = styled.div`
   .btn-search {
     margin-top: 20px;
     margin-bottom: 20px;
-  } 
+  }
 
   .user-information {
-    span {
-      display: inline
+    .key {
+      min-width: 120px;
     }
+  }
+
+  .group-btn {
+    background-color: black
+  }
+`;
+
+export const AdvancedSearchModalStyle = styled.div`
+  .row-modal {
+    display: flex !important;
+    justify-content: space-between;
   }
 `;

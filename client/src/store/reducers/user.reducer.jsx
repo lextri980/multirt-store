@@ -1,4 +1,7 @@
 import {
+  GET_DETAIL_USER_FAIL,
+  GET_DETAIL_USER_REQUEST,
+  GET_DETAIL_USER_SUCCESS,
   GET_USER_FAIL,
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
@@ -6,14 +9,15 @@ import {
 
 const initState = {
   users: [],
-  pageInfo: null,
+  user: {},
+  pageInfo: {},
   loading: false,
-  message: null,
 };
 
 function userReducer(state = initState, { type, payload }) {
   switch (type) {
     case GET_USER_REQUEST:
+    case GET_DETAIL_USER_REQUEST:
       return {
         ...state,
         loading: true,
@@ -27,12 +31,26 @@ function userReducer(state = initState, { type, payload }) {
         loading: false,
       };
 
+    case GET_DETAIL_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: payload.data,
+      };
+
     case GET_USER_FAIL:
       return {
         ...state,
         users: [],
         pageInfo: null,
         loading: false,
+      };
+
+    case GET_DETAIL_USER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        user: {},
       };
 
     default:

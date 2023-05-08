@@ -30,7 +30,7 @@ import {
   updatePasswordRequest,
   updateProfileRequest,
 } from "store/actions/profile.action";
-import { formatDate } from "utils/date.util";
+import { formatDate } from "utils/function.util";
 import { titlePage } from "utils/titlePage.util";
 import * as yup from "yup";
 import { ProfileContainer } from "./Profile.style";
@@ -300,7 +300,7 @@ function Profile() {
         </Card>
 
         {/* //!--------------------------------- Modal section ----------------------------------------*/}
-        {/* Modal update profile ------------------------------- */}
+        {/* //* Modal: update profile ------------------------------- */}
         <Modal
           open={openUpdateProfileModal}
           header="Update profile"
@@ -348,7 +348,7 @@ function Profile() {
           </form>
         </Modal>
 
-        {/* Modal update avatar ------------------------------- */}
+        {/* //* Modal: update avatar ------------------------------- */}
         <Modal
           open={openUpdateAvatarModal}
           header="Change avatar"
@@ -407,7 +407,7 @@ function Profile() {
           </form>
         </Modal>
 
-        {/* Modal update password ------------------------------- */}
+        {/* //* Modal: update password ------------------------------- */}
         <Modal
           open={openUpdatePasswordModal}
           header="Change password"
