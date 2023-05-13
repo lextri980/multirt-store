@@ -1,22 +1,32 @@
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import UpdateIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import DetailIcon from "@mui/icons-material/DocumentScannerOutlined";
-import { Avatar, Badge, Spacer, Table } from "@nextui-org/react";
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
+import { Avatar, Badge, Spacer, Switch, Table } from "@nextui-org/react";
+import Button from "components/common/button/Button";
 import Loading from "components/common/loading/Loading";
 import Modal from "components/common/modal/Modal";
 import AnimatedLayout from "components/layouts/animatedLayout/AnimatedLayout";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getDetailUserRequest } from "store/actions/user.action";
 import { color } from "themes/colors";
 import { formatDate } from "utils/function.util";
-import { TableTypeContainer } from "./TableType.style";
+import {
+  TableTypeContainer,
+  UpdateUserModalContainer,
+  UserDetailModalContainer,
+} from "./TableType.style";
 
 function TableType() {
   //* Redux hooks --------------------------------------------------------------------------------------------
-  const { users, loading } = useSelector((state) => state.user);
+  const { users, user, loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   //* Declare global variables -------------------------------------------------------------------------------
   const userLocal = JSON.parse(localStorage.getItem("user"));
+  const userForm = { isAdmin: false };
   const columns = [
     {
       key: "info",
@@ -50,15 +60,21 @@ function TableType() {
   const [userUpdatelModal, setUserUpdatelModal] = useState(false);
   const [userDeleteModal, setUserDeleteModal] = useState(false);
   const [userChosen, setUserChosen] = useState({});
+  const [switchLayout, setSwitchLayout] = useState(false);
 
   //* Form and validate --------------------------------------------------------------------------------------
   //* Hooks --------------------------------------------------------------------------------------------------
   //* Effects ------------------------------------------------------------------------------------------------
+  useEffect(() => {
+    setSwitchLayout(user?.isAdmin);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.isAdmin]);
   //* Other --------------------------------------------------------------------------------------------------
 
-  //@ (openUserModal):  -------------------------------------------------------
+  //@ (openUserModal): Open detail, update & delete user modal -------------------------------------------------------
   const openUserModal = (type, data) => {
     setUserChosen(data);
+    dispatch(getDetailUserRequest(data._id));
     if (type === "detail") {
       setUserDetailModal(true);
     } else if (type === "update") {
@@ -66,6 +82,12 @@ function TableType() {
     } else {
       setUserDeleteModal(true);
     }
+  };
+
+  //@ (onUpdateUser): Dispatch update user -------------------------------------------------------
+  const onUpdateUser = () => {
+    userForm.isAdmin = switchLayout;
+    console.log(user._id)
   };
 
   //! Condition rendering --------------------------------------------------------------------------------------------------
@@ -156,11 +178,8 @@ function TableType() {
           className="table-container"
           bordered
           color="primary"
-          hoverable
-          fixed
-          lined
         >
-          <Table.Header columns={columns}>
+          <Table.Header columns={columns} className="table-header">
             {(column) => (
               <Table.Column
                 key={column?.key}
@@ -199,15 +218,66 @@ function TableType() {
           header="User Detail"
           close={() => setUserDetailModal(false)}
         >
-          {userChosen.name}
+          <UserDetailModalContainer>
+            <div className="header">
+              <Avatar
+                size={"xl"}
+                text={user?.name?.charAt(0).toUpperCase()}
+                css={{ size: "$40" }}
+                src={user?.avatar?.path}
+              />
+              <Spacer y={0.5} />
+              <h4>{user?.name}</h4>
+              <p>
+                <b>Email:</b> {user?.email}
+              </p>
+              <p>
+                <b>Account:</b> {user?.isAdmin ? "Admin" : "User"}
+              </p>
+            </div>
+            <div className="body"></div>
+          </UserDetailModalContainer>
         </Modal>
 
         {/* //* Modal: User update ---------------------------------------------- */}
         <Modal
           open={userUpdatelModal}
-          header="Update User"
+          header="Update Account"
           close={() => setUserUpdatelModal(false)}
-        ></Modal>
+        >
+          <UpdateUserModalContainer>
+            <p>
+              Do you want change this account to
+              <b>{user?.isAdmin ? " user" : " admin"}?</b>
+            </p>
+            <Spacer y={0.5} />
+            <Switch
+              checked={switchLayout}
+              size="xl"
+              shadow
+              iconOn={<AdminPanelSettingsIcon />}
+              iconOff={<SupervisedUserCircleIcon />}
+              className={
+                switchLayout ? "switch-theme-user" : "switch-theme-admin"
+              }
+              aria-label="switch"
+              onChange={() => setSwitchLayout(!switchLayout)}
+            />
+          </UpdateUserModalContainer>
+          <div className="modal-footer">
+            <Button color="danger" onClick={() => setUserUpdatelModal(false)}>
+              Close
+            </Button>
+            <Spacer x={0.5} />
+            <Button
+              color="warning"
+              disabled={user?.isAdmin === switchLayout}
+              onClick={onUpdateUser}
+            >
+              Update
+            </Button>
+          </div>
+        </Modal>
 
         {/* //* Modal: User delete ---------------------------------------------- */}
         <Modal

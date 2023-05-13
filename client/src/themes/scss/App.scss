@@ -156,10 +156,32 @@ td:hover {
   margin-bottom: 20px;
 }
 
+//! Table
+table {
+  &::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+  }
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    background-color: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(165, 165, 165);
+  }
+}
+
 //+ Element
 .modal-footer {
   display: flex;
   justify-content: space-between;
+  margin: 25px 0 15px;
+}
+
+.modal-footer-long {
+  display: flex;
+  justify-content: flex-end;
   margin: 25px 0 15px;
 }
 

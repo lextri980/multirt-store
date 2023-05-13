@@ -3,10 +3,11 @@ import { SelectBoxContainer } from "./Select.style";
 
 function Select(props) {
   //! Props type
-  //Require: options: {value, label}, value
-  //Option: defaultValue, onChange, multiple, label, clearable
+  //Require: options: {value, label}
+  //Option: defaultValue, onChange, multiple, label, clearable, id
   //Func: onChange
-  const { options, defaultValue, onChange, label, multiple, clearable } = props;
+  const { options, defaultValue, onChange, label, multiple, clearable, id } =
+    props;
 
   const style = {
     "& .MuiOutlinedInput-root": {
@@ -34,15 +35,16 @@ function Select(props) {
   return (
     <SelectBoxContainer>
       <Autocomplete
-        // sx={style}
+        id={id || "select"}
         onChange={onChange}
         options={options}
+        disablePortal
         size="small"
         disableClearable={clearable ? false : true}
         multiple={multiple ? true : false}
         defaultValue={defaultValue || options[0]}
         renderInput={(params) => (
-          <TextField {...params} sx={style} label={label || "Selector"} />
+          <TextField {...params} sx={style} label={label || ""} />
         )}
       />
     </SelectBoxContainer>
